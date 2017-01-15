@@ -1,0 +1,22 @@
+{
+  "name": "neighborhood-map",
+  "description": "map project using html5 boilerplate",
+  "main": "",
+  "authors": [
+    "jsherman <jacob@jbsherman.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/NYCJacob/neighborhood_map",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "modernizr": "^3.3.1"
+  }
+}

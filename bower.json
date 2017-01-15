@@ -11,7 +11,8 @@
   },
   "homepage": "https://github.com/NYCJacob/neighborhood_map",
   "private": true,
-  "dependencies" : {
+  "dependencies": {
+    "requirejs-plugins": "^1.0.3"
   },
   "ignore": [
     "**/.*",

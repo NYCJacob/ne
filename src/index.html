@@ -12,7 +12,7 @@
 
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
-        <script src="bower_components/modernizr/bin/modernizr"></script>
+        <!--<script src="scripts/vendor/modernizr/bin/modernizr"></script>-->
     </head>
     <body>
         <!--[if lt IE 8]>
@@ -33,10 +33,12 @@
         </div>
 
 
-        <script src="bower_components/jquery/dist/jquery.js"></script>
-        <script>window.jQuery || document.write('<script src="bower_components/jquery/dist/jquery.js"><\/script>')</script>
-        <script src="scripts/plugins.js"></script>
-        <script src="scripts/main.js"></script>
+        <!--<script src="bower_components/jquery/dist/jquery.js"></script>-->
+        <!--<script>window.jQuery || document.write('<script src="bower_components/jquery/dist/jquery.js"><\/script>')</script>-->
+        <!--<script src="scripts/plugins.js"></script>-->
+
+        <script async data-main="scripts/main" src="scripts/vendor/requirejs/require.js"></script>
+
         <script async defer src=
                 "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyBinHw_1SkBR4Otshx5nnA_KSuT_kNwk0g&v=3&callback=initMap">
         </script>

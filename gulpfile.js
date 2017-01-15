@@ -7,6 +7,10 @@ var gulp = require('gulp');
 // and attach them to the `plugins` object
 var plugins = require('gulp-load-plugins')();
 
+// browser-sync does not seem to load in load-plugins function
+// probably because it is not a gulp plugin
+var	browserSync	=	require('browser-sync');
+
 // Temporary solution until gulp 4
 // https://github.com/gulpjs/gulp/issues/355
 var runSequence = require('run-sequence');
@@ -17,6 +21,68 @@ var dirs = pkg['h5bp-configs'].directories;
 // ---------------------------------------------------------------------
 // | Helper tasks                                                      |
 // ---------------------------------------------------------------------
+
+gulp.task('browserSync', function()	{
+    browserSync({
+        server:	{
+            baseDir: 'src'
+        }
+    })
+});
+
+
+gulp.task('watch', ['browserSync', 'sass'],	function(){
+    gulp.watch('src/sass/*.scss',	['sass']);
+    //	Other	watchers
+    //	gulp.watch(...)
+});
+
+function	errorHandler(err)	{
+    //	Logs	out	error	in	the	command	line
+    console.log(err.toString());
+    //	Ends	the	current	pipe,	so	Gulp	watch	doesn't	break
+    this.emit('end');
+}
+
+function	customPlumber(errTitle)	{
+    return	plugins.plumber({
+        errorHandler:	plugins.notify.onError({
+            //	Customizing	error	title
+            title:	errTitle	||	"Error	running	Gulp",
+            message:	"Error:	<%=	error.message	%>"
+        })
+    });
+}
+
+// TODO: need to convert to sass-lint
+gulp.task('lint:sass',	function()	{
+    return	gulp.src('src/sass/*.scss')
+        .pipe(plugins.sassLint({
+            //	Pointing	to	config	file '.scss-lint.yml'
+            configFile: '.sassLint.yml'
+        }));
+});
+
+
+gulp.task('sass',	function()	{
+    return	gulp.src('src/sass/*.scss')
+    // pass custom title to gulp-plumber error handler function
+        .pipe(customPlumber('Error Running	Sass'))
+        //	Initialize	sourcemap
+        .pipe(plugins.sourcemaps.init())
+        .pipe(plugins.sass())
+        //	Runs	produced	CSS	through	autoprefixer
+        .pipe(plugins.autoprefixer())
+        //	Writing	sourcemaps
+        .pipe(plugins.sourcemaps.write())
+        .pipe(gulp.dest('src/css'))
+        //	Tells	Browser	Sync	to	reload	files	task	is	done
+        // browserSync not loaded by load-plugins
+        .pipe(browserSync.reload({
+            stream:	true
+        }))
+});
+
 
 gulp.task('archive:create_archive_dir', function () {
     fs.mkdirSync(path.resolve(dirs.archive), '0755');

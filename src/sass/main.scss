@@ -88,9 +88,39 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+$listing-color: #eaed83;
+$map-color: #bebebe;
+$header-color:  #eeffee;
+$footer-color:  #000;
+$warning-color: #ff0000;
+$content-height:  80vh;
 
+#listings {
+    border: 2px dashed $listing-color;
+    float: left;
+    width: 40%;
+    height: $content-height;
+}
 
+#map {
+    border: 1px solid $map-color;
+    float: right;
+    width: 55%;
+    height: $content-height;
+}
 
+header {
+    border: medium dashed $header-color;
+    color: $warning-color;
+    text-align: center;
+}
+
+footer {
+    border: medium dashed $footer-color;
+    position: absolute;
+    bottom: 0;
+    min-width: 95vw;
+}
 
 
 

@@ -1,9 +1,8 @@
 require.config({
     paths: {
-        "plugins" : "plugins.js",
         "jquery":   "vendor/jquery/dist/jquery.js",
         "knockout" :    "vendor/knockout/dist/knockout.js",
-        "map"   : "map.js"
+        "map"   : "map"
     }
 });
 

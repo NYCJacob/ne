@@ -98,14 +98,14 @@ $content-height:  80vh;
 #listings {
     border: 2px dashed $listing-color;
     float: left;
-    width: 40%;
+    width: 25%;
     height: $content-height;
 }
 
 #map {
     border: 1px solid $map-color;
     float: right;
-    width: 55%;
+    width: 70%;
     height: $content-height;
 }
 

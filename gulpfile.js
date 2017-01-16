@@ -34,7 +34,8 @@ gulp.task('browserSync', function()	{
 gulp.task('watch', ['browserSync', 'sass'],	function(){
     gulp.watch('src/sass/*.scss',	['sass']);
     //	Other	watchers
-    //	gulp.watch(...)
+    //	Reloads	the	browser	when	a	JS	file	is	saved
+    gulp.watch('src/scripts/**/*.js',	browserSync.reload);
 });
 
 function	errorHandler(err)	{

@@ -70,9 +70,9 @@ function initMap() {
         }
     ];
 
-    var mapDiv = document.getElementById('map');
+    var mapEle = document.getElementById('mapDiv');
     var neighborhood = {lat: 40.7556818, lng: -73.8830701};
-    var map = new google.maps.Map(mapDiv, {
+    var map = new google.maps.Map(mapEle, {
         center: neighborhood,
         zoom: 14,
         styles: styles,
@@ -126,7 +126,8 @@ function createMarker(place) {
     //     // });
 }
 
-initMap();
+google.maps.event.addDomListener(window, 'load', initMap);
+// initMap();
 
 
 

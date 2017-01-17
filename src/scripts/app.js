@@ -1,15 +1,18 @@
 /**
  * Created by jsherman on 1/16/17.
  */
-var app = app || {};
 
 (function () {
     'use strict';
-    app.map;
-    app.resultsArray;
+    var map;
+    var resultsArray = [];
+
+    var Model = {
+        restaurants : resultsArray
+    };
 
 
-    app.initMap = function() {
+    var initMap = function() {
         var styles = [
             {
                 featureType: 'water',
@@ -82,7 +85,7 @@ var app = app || {};
             "lat" : 40.7466891,
             "lng" : -73.8908579
         };
-        app.map = new google.maps.Map(mapEle, {
+        map = new google.maps.Map(mapEle, {
             center: neighborhood,
             zoom: 16,
             styles: styles,
@@ -95,19 +98,19 @@ var app = app || {};
         // based on google map place search api example
         // https://developers.google.com/maps/documentation/javascript/examples/place-search
         // infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(app.map);
+        var service = new google.maps.places.PlacesService(map);
         service.nearbySearch({
             location: neighborhood,
             radius: 500,
             type: ['restaurant']
-        }, app.callback);
+        }, callback);
     };
-    app.callback = function(results, status) {
+    var callback = function(results, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-            app.resultsArray = results;
-            for (var i = 0; i < app.resultsArray.length; i++) {
+            resultsArray = results;
+            for (var i = 0; i < resultsArray.length; i++) {
                 // console.log(results[i]);
-                createMarker(app.resultsArray[i]);
+                createMarker(resultsArray[i]);
             }
         }
     };
@@ -152,7 +155,7 @@ var app = app || {};
     function RestaurantsViewModel() {
         var self = this;
         self.restaurants = ko.observableArray([]);
-        console.log('restaurantsViewModel' + app.resultsArray);
+        console.log('restaurantsViewModel' + resultsArray);
 
     };
 

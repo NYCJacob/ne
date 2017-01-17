@@ -72,10 +72,13 @@ function initMap() {
     ];
 
     var mapEle = document.getElementById('mapDiv');
-    var neighborhood = {lat: 40.7556818, lng: -73.8830701};
+    var neighborhood =  {  // Jackson Heights MTA Train station lat ln
+        "lat" : 40.7466891,
+        "lng" : -73.8908579
+    };
     map = new google.maps.Map(mapEle, {
         center: neighborhood,
-        zoom: 14,
+        zoom: 16,
         styles: styles,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         navigationControl: true,

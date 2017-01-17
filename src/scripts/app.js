@@ -13,8 +13,8 @@ var app = app || {};
             for (var i = 0; i < app.resultsArray.length; i++) {
                 // console.log(results[i]);
                 createMarker(app.resultsArray[i]);
+                RestaurantsViewModel();
             }
-            createViewModel(app.resultsArray)
         }
     };
 
@@ -67,20 +67,27 @@ var app = app || {};
             // types : []
 
     // our main view model
-    var RestaurantsViewModel = function (resultsArray) {
+    function RestaurantsViewModel() {
         var self = this;
-        // map array of passed in restaurants to an observableArray of restaurant objects
-        self.restaurants = ko.observableArray(resultsArray.map(function (restaurant) {
-            return new Restaurant(restaurant);
-        }));
+
+        self.SERVICE    = new google.maps.places.PlacesService(self.MAP);
+
+        var request = {
+            location     : center_marker.getPosition(),
+            keyword      : search_terms,
+            name         : name_terms,
+            minPriceLevel: price_level,
+            types        : store_types,
+            rankBy       : google.maps.places.RankBy.DISTANCE
+        };
+
+        self.SERVICE.nearbySearch(request, function(results, status) {
+            // Do stuff when I get the results returned to me
+        }
+
+
     };
 
-    // bind a new instance of our view model to the page when callback calls
-    var viewModel;
-    function createViewModel(resultsArray) {
-        viewModel = new RestaurantsViewModel(resultsArray);
-        console.log("createViewModel executed");
-    }
     // var viewModel = new ViewModel(app.resultsArray || []);
     ko.applyBindings(RestaurantsViewModel);
 

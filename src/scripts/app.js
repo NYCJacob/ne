@@ -1,18 +1,16 @@
 /**
  * Created by jsherman on 1/16/17.
  */
+var app = app || {};
 
 (function () {
     'use strict';
-    var map;
-    var resultsArray = [];
 
-    var Model = {
-        restaurants : resultsArray
-    };
+    // var Model = {
+    //     restaurants : resultsArray
+    // };
 
-
-    var initMap = function() {
+    app.initMap = function() {
         var styles = [
             {
                 featureType: 'water',
@@ -85,7 +83,7 @@
             "lat" : 40.7466891,
             "lng" : -73.8908579
         };
-        map = new google.maps.Map(mapEle, {
+        app.map = new google.maps.Map(mapEle, {
             center: neighborhood,
             zoom: 16,
             styles: styles,
@@ -98,7 +96,7 @@
         // based on google map place search api example
         // https://developers.google.com/maps/documentation/javascript/examples/place-search
         // infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(map);
+        var service = new google.maps.places.PlacesService(app.map);
         service.nearbySearch({
             location: neighborhood,
             radius: 500,
@@ -107,10 +105,10 @@
     };
     var callback = function(results, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-            resultsArray = results;
-            for (var i = 0; i < resultsArray.length; i++) {
+            app.resultsArray = results;
+            for (var i = 0; i < app.resultsArray.length; i++) {
                 // console.log(results[i]);
-                createMarker(resultsArray[i]);
+                createMarker(app.resultsArray[i]);
             }
         }
     };
@@ -155,7 +153,7 @@
     function RestaurantsViewModel() {
         var self = this;
         self.restaurants = ko.observableArray([]);
-        console.log('restaurantsViewModel' + resultsArray);
+        console.log('restaurantsViewModel' + app.resultsArray);
 
     };
 

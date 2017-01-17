@@ -1,9 +1,9 @@
 <!doctype html>
-<html class="no-js" lang="">
+<html lang="en" data-framework="knockoutjs">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title></title>
+        <title>Jackson Heights, New York Restaurant Guide</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -22,7 +22,16 @@
         <div id="container">
             <header><h1>Jackson Heights Neighborhood Map</h1></header>
             <section id="listings">
-
+                <table>
+                    <thead>
+                    <tr><th>Name</th><th>Cuisine</th></tr>
+                    </thead>
+                    <tbody data-bind="foreach: restaurants">
+                    <tr>
+                        <td data-bind="text: restaurant.name"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </section>
             <section id="mapDiv">
 
@@ -36,9 +45,11 @@
         <script src="scripts/vendor/jquery/dist/jquery.js"></script>
         <script>window.jQuery || document.write('<script src="scripts/vendor/jquery/dist/jquery.js"><\/script>')</script>
         <script src="scripts/plugins.js"></script>
+        <script src="scripts/vendor/knockout/dist/knockout.js"></script>
         <script src="scripts/map.js"></script>
-        <script src=
-                        "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyBinHw_1SkBR4Otshx5nnA_KSuT_kNwk0g&v=3&callback=initMap">
+        <script src="scripts/app.js"></script>
+        <script async defer src=
+                        "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyBinHw_1SkBR4Otshx5nnA_KSuT_kNwk0g&v=3&callback=app.initMap">
         </script>
 
     </body>

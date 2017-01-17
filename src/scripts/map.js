@@ -1,9 +1,17 @@
 /**
  * Created by jsherman on 1/15/17.
  */
-var map;
 
-function initMap() {
+var app = app || {};
+
+(function () {
+    'use strict';
+
+app.map;
+app.resultsArray;
+
+
+app.initMap = function() {
     var styles = [
         {
             featureType: 'water',
@@ -76,7 +84,7 @@ function initMap() {
         "lat" : 40.7466891,
         "lng" : -73.8908579
     };
-    map = new google.maps.Map(mapEle, {
+    app.map = new google.maps.Map(mapEle, {
         center: neighborhood,
         zoom: 16,
         styles: styles,
@@ -88,47 +96,17 @@ function initMap() {
     });
     // based on google map place search api example
     // https://developers.google.com/maps/documentation/javascript/examples/place-search
-    infowindow = new google.maps.InfoWindow();
-    var service = new google.maps.places.PlacesService(map);
+    // infowindow = new google.maps.InfoWindow();
+    var service = new google.maps.places.PlacesService(app.map);
     service.nearbySearch({
         location: neighborhood,
         radius: 500,
         type: ['restaurant']
-    }, callback);
-}
+    }, app.callback);
+};
 
-function callback(results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-        for (var i = 0; i < results.length; i++) {
-            console.log(results[i]);
-            createMarker(results[i]);
-        }
-    }
-}
 
-function createMarker(place) {
-    // set icon for marker
-    var icon = {
-        url: place.icon,
-        size: new google.maps.Size(35, 35),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(15, 34),
-        scaledSize: new google.maps.Size(25, 25)
-    };
-    // Create a marker for each place.
-    var marker = new google.maps.Marker({
-        map: map,
-        icon: icon,
-        title: place.name,
-        position: place.geometry.location,
-        id: place.place_id
-    });
-
-        // google.maps.event.addListener(marker, 'click', function() {
-        //     infowindow.setContent(place.name);
-        //     infowindow.open(map, this);
-        // });
-}
+})();
 
 
 

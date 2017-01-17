@@ -1,6 +1,7 @@
 /**
  * Created by jsherman on 1/15/17.
  */
+var map;
 
 function initMap() {
     var styles = [
@@ -72,7 +73,7 @@ function initMap() {
 
     var mapEle = document.getElementById('mapDiv');
     var neighborhood = {lat: 40.7556818, lng: -73.8830701};
-    var map = new google.maps.Map(mapEle, {
+    map = new google.maps.Map(mapEle, {
         center: neighborhood,
         zoom: 14,
         styles: styles,
@@ -126,8 +127,6 @@ function createMarker(place) {
     //     // });
 }
 
-google.maps.event.addDomListener(window, 'load', initMap);
-// initMap();
 
 
 

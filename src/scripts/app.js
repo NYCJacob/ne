@@ -172,7 +172,6 @@ var app = app || {};
     // var viewModel = new ViewModel(app.resultsArray || []);
     function callKo() {
         ko.applyBindings(new RestaurantsViewModel);
-        return true;
     }
 
 

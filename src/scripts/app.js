@@ -6,10 +6,18 @@ var app = app || {};
 (function () {
     'use strict';
 
-    // var Model = {
-    //     restaurants : resultsArray
-    // };
+       // Restaurant Model
+    // ----------
 
+    // Our basic restaurant based on google place response object
+    //  see https://developers.google.com/maps/documentation/javascript/places#place_search_responses
+    // represent a single restaurant item
+    var Restaurant = function (restaurantObj) {
+        this.geometry = ko.observable(restaurantObj.geometry);
+        this.id =ko.observable(restaurantObj.id);
+        this.name =ko.observable(restaurantObj.name);
+        this.placeId =ko.observable(restaurantObj.placeId);
+    };
     app.initMap = function() {
         var styles = [
             {
@@ -106,6 +114,7 @@ var app = app || {};
     var callback = function(results, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             app.resultsArray = results;
+            callKo();
             for (var i = 0; i < app.resultsArray.length; i++) {
                 // console.log(results[i]);
                 createMarker(app.resultsArray[i]);
@@ -152,12 +161,17 @@ var app = app || {};
     // our main view model
     function RestaurantsViewModel() {
         var self = this;
-        self.restaurants = ko.observableArray([]);
-        console.log('restaurantsViewModel' + app.resultsArray);
-
+        var restaurants = app.resultsArray.map(function (item) {
+            return new Restaurant(item);
+        });
+        console.log(restaurants);
     };
 
     // var viewModel = new ViewModel(app.resultsArray || []);
-    ko.applyBindings(new RestaurantsViewModel);
+    function callKo() {
+        ko.applyBindings(new RestaurantsViewModel);
+        return true;
+    }
+
 
 })();

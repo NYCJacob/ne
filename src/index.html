@@ -22,16 +22,16 @@
         <div id="container">
             <header><h1>Jackson Heights Neighborhood Map</h1></header>
             <section id="listings">
-                <!--<table>-->
-                    <!--<thead>-->
-                    <!--<tr><th>Name</th><th>Cuisine</th></tr>-->
-                    <!--</thead>-->
-                    <!--<tbody data-bind="foreach: restaurants">-->
-                    <!--<tr>-->
-                        <!--<td data-bind="text: restaurant.name"></td>-->
-                    <!--</tr>-->
-                    <!--</tbody>-->
-                <!--</table>-->
+                <table>
+                    <thead>
+                    <tr><th>Name</th><th>Cuisine</th></tr>
+                    </thead>
+                    <tbody data-bind=>
+                    <tr>
+                        <td data-bind="text: restaurants().length"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </section>
             <section id="mapDiv">
 

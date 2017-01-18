@@ -161,10 +161,12 @@ var app = app || {};
     // our main view model
     function RestaurantsViewModel() {
         var self = this;
-        var restaurants = app.resultsArray.map(function (item) {
+        self.restaurants = ko.observableArray();
+        var restaurantsMapped = app.resultsArray.map(function (item) {
             return new Restaurant(item);
         });
-        console.log(restaurants);
+        console.log(restaurantsMapped);
+        self.restaurants = restaurantsMapped;
     };
 
     // var viewModel = new ViewModel(app.resultsArray || []);

@@ -22,20 +22,20 @@
         <div id="container">
             <header><h1>Jackson Heights Neighborhood Map</h1></header>
             <section id="listings">
-                <button data-bind="click: function () { console.log($root); }"> Root Log </button>
-                <button data-bind="click: function () { console.log($context); }"> Context Log </button>
-                <button data-bind="click: function () { console.log($data); }"> Current Data Log </button>
-                <button data-bind="click: function () { console.log($parent); }"> Parent Log </button>
+                <!--<button data-bind="click: function () { console.log($root); }"> Root Log </button>-->
+                <!--<button data-bind="click: function () { console.log($context); }"> Context Log </button>-->
+                <!--<button data-bind="click: function () { console.log($data); }"> Current Data Log </button>-->
+                <!--<button data-bind="click: function () { console.log($parent); }"> Parent Log </button>-->
 
-                <!--<table>-->
-                    <!--<thead>-->
-                    <!--<tr><th>Name</th><th>Cuisine</th></tr>-->
-                    <!--</thead>-->
-                    <!--<tbody data-bind="foreach: restaurants">-->
-                        <!--<tr>-->
-                            <!--<td data-bind="text: restaurant.name"></td>-->
-                        <!--</tr>-->
-                    <!--</tbody>-->
+                <table>
+                    <thead>
+                    <tr><th>Name</th><th>Cuisine</th></tr>
+                    </thead>
+                    <tbody data-bind="foreach: restaurants">
+                        <tr>
+                            <td data-bind="text: name"></td>
+                        </tr>
+                    </tbody>
                 </table>
             </section>
             <section id="mapDiv">

@@ -102,6 +102,7 @@ var app = app || {};
                 style: google.maps.NavigationControlStyle.SMALL
             }
         });
+        getPlacesData();
     };  // end app.init
 
     // based on google map place search api example
@@ -113,25 +114,18 @@ var app = app || {};
             location: app.neighborhood,
             radius: 500,
             type: ['restaurant']
-        },    // callback function
-            function (results, status) {
-                if (status === google.maps.places.PlacesServiceStatus.OK) {
-                    RestaurantsVM.restaurants.push(results);
-                }
-            });
-
+        }, callback);
     };
 
-    // var callback = function(results, status) {
-    //     if (status === google.maps.places.PlacesServiceStatus.OK) {
-    //         app.resultsArray = results;
-    //         callKo();
-    //         for (var i = 0; i < app.resultsArray.length; i++) {
-    //             // console.log(results[i]);
-    //             createMarker(app.resultsArray[i]);
-    //         }
-    //     }
-    // };
+    function callback(results, status) {
+        if (status=== google.maps.places.PlacesServiceStatus.OK) {
+            app.RestaurantArray = results.map(function (item) {
+                return new Restaurant(item);
+            });
+            RestaurantsViewModel.restaurants = app.RestaurantArray;
+        }
+    };
+
 
     function createMarker(place) {
         // set icon for marker
@@ -170,8 +164,8 @@ var app = app || {};
     };
 
     // our main view model
-    var RestaurantsVM = new RestaurantsViewModel();
-    ko.applyBindings(RestaurantsVM);
+    // var RestaurantsVM = new RestaurantsViewModel();
+    // ko.applyBindings(RestaurantsVM);
 
     function RestaurantsViewModel() {
         var self = this;
@@ -183,7 +177,7 @@ var app = app || {};
         // console.log(restaurantsMapped);
         // self.restaurants = restaurantsMapped;
     };
-
+    ko.applyBindings(RestaurantsViewModel);
     // var viewModel = new ViewModel(app.resultsArray || []);
     // function callKo() {
     //     ko.applyBindings(new RestaurantsViewModel);

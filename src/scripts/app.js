@@ -6,6 +6,10 @@ var app = app || {};
 (function () {
     'use strict';
 
+    app.neighborhood =  {  // Jackson Heights MTA Train station lat ln
+        "lat" : 40.7466891,
+        "lng" : -73.8908579
+    };
        // Restaurant Model
     // ----------
 
@@ -87,12 +91,9 @@ var app = app || {};
         ];
 
         var mapEle = document.getElementById('mapDiv');
-        var neighborhood =  {  // Jackson Heights MTA Train station lat ln
-            "lat" : 40.7466891,
-            "lng" : -73.8908579
-        };
+
         app.map = new google.maps.Map(mapEle, {
-            center: neighborhood,
+            center: app.neighborhood,
             zoom: 16,
             styles: styles,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -100,27 +101,37 @@ var app = app || {};
             navigationControlOptions: {
                 style: google.maps.NavigationControlStyle.SMALL
             }
-        });
-        // based on google map place search api example
-        // https://developers.google.com/maps/documentation/javascript/examples/place-search
-        // infowindow = new google.maps.InfoWindow();
+        }, getPlacesData);
+    };  // end app.init
+
+    // based on google map place search api example
+    // https://developers.google.com/maps/documentation/javascript/examples/place-search
+    // infowindow = new google.maps.InfoWindow();
+    function getPlacesData(results, status){
         var service = new google.maps.places.PlacesService(app.map);
         service.nearbySearch({
-            location: neighborhood,
+            location: app.neighborhood,
             radius: 500,
             type: ['restaurant']
-        }, callback);
+        },    // callback function
+            function (results, status) {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    RestaurantsVM.restaurants.push(results);
+                }
+            });
+
     };
-    var callback = function(results, status) {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-            app.resultsArray = results;
-            callKo();
-            for (var i = 0; i < app.resultsArray.length; i++) {
-                // console.log(results[i]);
-                createMarker(app.resultsArray[i]);
-            }
-        }
-    };
+
+    // var callback = function(results, status) {
+    //     if (status === google.maps.places.PlacesServiceStatus.OK) {
+    //         app.resultsArray = results;
+    //         callKo();
+    //         for (var i = 0; i < app.resultsArray.length; i++) {
+    //             // console.log(results[i]);
+    //             createMarker(app.resultsArray[i]);
+    //         }
+    //     }
+    // };
 
     function createMarker(place) {
         // set icon for marker
@@ -159,20 +170,24 @@ var app = app || {};
     };
 
     // our main view model
+    var RestaurantsVM = new RestaurantsViewModel();
+    ko.applyBindings(RestaurantsVM);
+
     function RestaurantsViewModel() {
         var self = this;
         self.restaurants = ko.observableArray();
-        var restaurantsMapped = app.resultsArray.map(function (item) {
-            return new Restaurant(item);
-        });
-        console.log(restaurantsMapped);
-        self.restaurants = restaurantsMapped;
+
+        // var restaurantsMapped = app.resultsArray.map(function (item) {
+        //     return new Restaurant(item);
+        // });
+        // console.log(restaurantsMapped);
+        // self.restaurants = restaurantsMapped;
     };
 
     // var viewModel = new ViewModel(app.resultsArray || []);
-    function callKo() {
-        ko.applyBindings(new RestaurantsViewModel);
-    }
+    // function callKo() {
+    //     ko.applyBindings(new RestaurantsViewModel);
+    // }
 
 
 })();

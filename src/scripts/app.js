@@ -101,13 +101,13 @@ var app = app || {};
             navigationControlOptions: {
                 style: google.maps.NavigationControlStyle.SMALL
             }
-        }, getPlacesData);
+        });
     };  // end app.init
 
     // based on google map place search api example
     // https://developers.google.com/maps/documentation/javascript/examples/place-search
     // infowindow = new google.maps.InfoWindow();
-    function getPlacesData(results, status){
+    function getPlacesData(){
         var service = new google.maps.places.PlacesService(app.map);
         service.nearbySearch({
             location: app.neighborhood,

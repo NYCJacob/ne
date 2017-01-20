@@ -115,32 +115,7 @@ var app = app || {};
             ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray));
             // RestaurantsViewModel(app.RestaurantArray);
         }
-    };
-
-
-    function createMarker(place) {
-        // set icon for marker
-        var icon = {
-            url: place.icon,
-            size: new google.maps.Size(35, 35),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(15, 34),
-            scaledSize: new google.maps.Size(25, 25)
-        };
-        // Create a marker for each place.
-        var marker = new google.maps.Marker({
-            map: app.map,
-            icon: icon,
-            title: place.name,
-            position: place.geometry.location,
-            id: place.place_id
-        });
-
-        // google.maps.event.addListener(marker, 'click', function() {
-        //     infowindow.setContent(place.name);
-        //     infowindow.open(map, this);
-        // });
-    }
+    };  // end callback
 
 
     // Restaurant Model
@@ -151,12 +126,41 @@ var app = app || {};
         this.geometry = ko.observable(restaurantObj.geometry);
         this.id =ko.observable(restaurantObj.id);
         this.name =ko.observable(restaurantObj.name);
-        this.placeId =ko.observable(restaurantObj.placeId);
+        this.placeId =ko.observable(restaurantObj.place_id);
+        this.mapIcon = ko.observable(restaurantObj.icon)
+        this.priceLevel = ko.observable(restaurantObj.price_level);
+        this.rating = ko.observable(restaurantObj.rating);
     };
 
     function RestaurantsViewModel(mappedArray) {
         var self = this;
         self.restaurants = ko.observableArray(mappedArray);
+
+        mappedArray.forEach(createMarker);
+
+        function createMarker(place) {
+            // set icon for marker
+            var image = {
+                url: place.mapIcon,
+                size: new google.maps.Size(35, 35),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(15, 34),
+                scaledSize: new google.maps.Size(25, 25)
+            };
+            // Create a marker for each place.
+            var marker = new google.maps.Marker({
+                map: app.map,
+                icon: image,
+                title: place.name,
+                position: place.geometry.location,
+                id: place.id
+            });
+
+            // google.maps.event.addListener(marker, 'click', function() {
+            //     infowindow.setContent(place.name);
+            //     infowindow.open(map, this);
+            // });
+        }
 
         self.weather = ko.observableArray([]);
 

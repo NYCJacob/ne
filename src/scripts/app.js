@@ -11,7 +11,6 @@ var app = app || {};
         "lng" : -73.8908579
     };
 
-
     // Our basic
     app.initMap = function() {
         var styles = [
@@ -159,6 +158,14 @@ var app = app || {};
         var self = this;
         self.restaurants = ko.observableArray(mappedArray);
 
+        self.weather = ko.observableArray([]);
+
+        // Load weather data from openweather, then populate self.weather
+        var openWeatherApi = 'api.openweathermap.org/data/2.5/forecast?id=4891010&APPID=ff58a74b7a0939cd34d96dc917a5a0d6';
+        $.getJSON(openWeatherApi, function(weatherData) {
+            var mappedTasks = $.map(weatherData, function(item) { return new Task(item) });
+            self.tasks(mappedTasks);
+        });
     };
 
 

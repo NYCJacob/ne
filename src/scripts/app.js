@@ -130,18 +130,21 @@ var app = app || {};
         this.mapIcon = ko.observable(restaurantObj.icon)
         this.priceLevel = ko.observable(restaurantObj.price_level);
         this.rating = ko.observable(restaurantObj.rating);
+
     };
 
     function RestaurantsViewModel(mappedArray) {
         var self = this;
         self.restaurants = ko.observableArray(mappedArray);
 
+        var infowindow = new google.maps.InfoWindow();
+
         mappedArray.forEach(createMarker);
 
         function createMarker(place) {
             // set icon for marker
             var image = {
-                url: place.mapIcon,
+                url: place.mapIcon(),
                 size: new google.maps.Size(35, 35),
                 origin: new google.maps.Point(0, 0),
                 anchor: new google.maps.Point(15, 34),
@@ -151,15 +154,15 @@ var app = app || {};
             var marker = new google.maps.Marker({
                 map: app.map,
                 icon: image,
-                title: place.name,
-                position: place.geometry.location,
-                id: place.id
+                title: place.name(),
+                position: place.geometry().location,
+                id: place.id()
             });
 
-            // google.maps.event.addListener(marker, 'click', function() {
-            //     infowindow.setContent(place.name);
-            //     infowindow.open(map, this);
-            // });
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.setContent(place.name());
+                infowindow.open(app.map, this);
+            });
         }
 
         self.weather = ko.observableArray([]);
@@ -171,7 +174,6 @@ var app = app || {};
             self.tasks(mappedTasks);
         });
     };
-
 
 
 })();

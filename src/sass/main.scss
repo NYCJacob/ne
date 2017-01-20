@@ -93,6 +93,7 @@ $map-color: #bebebe;
 $header-color:  #eeffee;
 $footer-color:  #000;
 $warning-color: #ff0000;
+$blue-color: #0000ff;
 $content-height:  80vh;
 
 #listings {
@@ -105,7 +106,7 @@ $content-height:  80vh;
 #mapDiv {
     border: 1px solid $map-color;
     float: right;
-    width: 70%;
+    width: 74%;
     height: $content-height;
 }
 
@@ -122,11 +123,34 @@ footer {
     min-width: 95vw;
 }
 
+ul {
+    border:1px solid black;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    //display:flex;
+}
 
+li {
+    background-color: #4AB1FF;
+}
 
+a {
+    color: #FFF70D;
+    font-weight: 100;
+    letter-spacing: 2px;
+    text-decoration: none;
+    background:rgba(0,0,0,0.2);
+    //padding:20px 5px;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    transition:all 0.5s;
+}
 
-
-
+a:hover {
+    background:rgba(0,0,0,0.3);
+}
 
 
 

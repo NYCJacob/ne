@@ -29,9 +29,9 @@
                 <!--<button data-bind="click: function () { console.log($parent); }"> Parent Log </button>-->
             </header>
             <section id="listings">
-
+                <h2>Restaurants</h2>
                 <ul data-bind="foreach: restaurants">
-                    <li data-bind="text: name"></li>
+                    <li><a data-bind="text: name" href=""></a></li>
                 </ul>
 
             </section>

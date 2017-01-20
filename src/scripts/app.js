@@ -113,7 +113,8 @@ var app = app || {};
             app.RestaurantArray = results.map(function (item) {
                 return new Restaurant(item);
             });
-            RestaurantsViewModel(app.RestaurantArray);
+            ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray));
+            // RestaurantsViewModel(app.RestaurantArray);
         }
     };
 
@@ -154,25 +155,12 @@ var app = app || {};
         this.placeId =ko.observable(restaurantObj.placeId);
     };
 
-    // our main view model
-    // var RestaurantsVM = new RestaurantsViewModel();
-    // ko.applyBindings(RestaurantsVM);
-
     function RestaurantsViewModel(mappedArray) {
         var self = this;
         self.restaurants = ko.observableArray(mappedArray);
 
-        // var restaurantsMapped = app.resultsArray.map(function (item) {
-        //     return new Restaurant(item);
-        // });
-        // console.log(restaurantsMapped);
-        // self.restaurants = restaurantsMapped;
     };
-    ko.applyBindings(new RestaurantsViewModel);
-    // var viewModel = new ViewModel(app.resultsArray || []);
-    // function callKo() {
-    //     ko.applyBindings(new RestaurantsViewModel);
-    // }
+
 
 
 })();

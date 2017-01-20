@@ -10,18 +10,9 @@ var app = app || {};
         "lat" : 40.7466891,
         "lng" : -73.8908579
     };
-       // Restaurant Model
-    // ----------
 
-    // Our basic restaurant based on google place response object
-    //  see https://developers.google.com/maps/documentation/javascript/places#place_search_responses
-    // represent a single restaurant item
-    var Restaurant = function (restaurantObj) {
-        this.geometry = ko.observable(restaurantObj.geometry);
-        this.id =ko.observable(restaurantObj.id);
-        this.name =ko.observable(restaurantObj.name);
-        this.placeId =ko.observable(restaurantObj.placeId);
-    };
+
+    // Our basic
     app.initMap = function() {
         var styles = [
             {
@@ -122,7 +113,7 @@ var app = app || {};
             app.RestaurantArray = results.map(function (item) {
                 return new Restaurant(item);
             });
-            RestaurantsViewModel.restaurants = app.RestaurantArray;
+            RestaurantsViewModel(app.RestaurantArray);
         }
     };
 
@@ -167,9 +158,9 @@ var app = app || {};
     // var RestaurantsVM = new RestaurantsViewModel();
     // ko.applyBindings(RestaurantsVM);
 
-    function RestaurantsViewModel() {
+    function RestaurantsViewModel(mappedArray) {
         var self = this;
-        self.restaurants = ko.observableArray();
+        self.restaurants = ko.observableArray(mappedArray);
 
         // var restaurantsMapped = app.resultsArray.map(function (item) {
         //     return new Restaurant(item);
@@ -177,7 +168,7 @@ var app = app || {};
         // console.log(restaurantsMapped);
         // self.restaurants = restaurantsMapped;
     };
-    ko.applyBindings(RestaurantsViewModel);
+    ko.applyBindings(new RestaurantsViewModel);
     // var viewModel = new ViewModel(app.resultsArray || []);
     // function callKo() {
     //     ko.applyBindings(new RestaurantsViewModel);

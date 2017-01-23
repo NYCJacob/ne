@@ -112,10 +112,42 @@ var app = app || {};
             app.RestaurantArray = results.map(function (item) {
                 return new Restaurant(item);
             });
+
+            var infowindow = new google.maps.InfoWindow();
+
+            app.RestaurantArray.forEach(createMarker);
+
+
             ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray));
             // RestaurantsViewModel(app.RestaurantArray);
+        } else {
+            console.log("place service status error");
         }
     };  // end callback
+
+    function createMarker(place) {
+        // set icon for marker
+        var image = {
+            url: place.mapIcon(),
+            size: new google.maps.Size(35, 35),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(15, 34),
+            scaledSize: new google.maps.Size(25, 25)
+        };
+        // Create a marker for each place.
+        var marker = new google.maps.Marker({
+            map: app.map,
+            icon: image,
+            title: place.name(),
+            position: place.geometry().location,
+            id: place.id
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+            infowindow.setContent(place.name());
+            infowindow.open(app.map, this);
+        });
+    }
 
 
     // Restaurant Model
@@ -123,49 +155,28 @@ var app = app || {};
     // Our basic restaurant based on google place response object
     //  see https://developers.google.com/maps/documentation/javascript/places#place_search_responses
     var Restaurant = function (restaurantObj) {
+        this.mapIconNormal = 'img/restaurant.png';
+        this.mapIconRed = 'img/restaurant.red.png';
         this.geometry = ko.observable(restaurantObj.geometry);
         this.id =ko.observable(restaurantObj.id);
         this.name =ko.observable(restaurantObj.name);
         this.placeId =ko.observable(restaurantObj.place_id);
-        this.mapIcon = ko.observable(restaurantObj.icon)
         this.priceLevel = ko.observable(restaurantObj.price_level);
         this.rating = ko.observable(restaurantObj.rating);
-
+        this.mapIcon = ko.observable(this.mapIconNormal);
     };
 
     function RestaurantsViewModel(mappedArray) {
         var self = this;
         self.restaurants = ko.observableArray(mappedArray);
 
-        var infowindow = new google.maps.InfoWindow();
-
-        mappedArray.forEach(createMarker);
-
-        function createMarker(place) {
-            // set icon for marker
-            var image = {
-                url: place.mapIcon(),
-                size: new google.maps.Size(35, 35),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(15, 34),
-                scaledSize: new google.maps.Size(25, 25)
-            };
-            // Create a marker for each place.
-            var marker = new google.maps.Marker({
-                map: app.map,
-                icon: image,
-                title: place.name(),
-                position: place.geometry().location,
-                id: place.id()
-            });
-
-            google.maps.event.addListener(marker, 'click', function() {
-                infowindow.setContent(place.name());
-                infowindow.open(app.map, this);
-            });
-        }
-
         self.weather = ko.observableArray([]);
+
+        // viewModel functions
+        self.highlightMarker = function () {
+            console.log('highlightMarker clicked');
+            self.mapIcon = self.mapIconRed;
+        };
 
         // Load weather data from openweather, then populate self.weather
         var openWeatherApi = 'api.openweathermap.org/data/2.5/forecast?id=4891010&APPID=ff58a74b7a0939cd34d96dc917a5a0d6';
@@ -176,4 +187,4 @@ var app = app || {};
     };
 
 
-})();
+})()

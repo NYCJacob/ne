@@ -112,11 +112,7 @@ var app = app || {};
             app.RestaurantArray = results.map(function (item) {
                 return new Restaurant(item);
             });
-
-            var infowindow = new google.maps.InfoWindow();
-
             app.RestaurantArray.forEach(createMarker);
-
 
             ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray));
             // RestaurantsViewModel(app.RestaurantArray);
@@ -135,7 +131,7 @@ var app = app || {};
             scaledSize: new google.maps.Size(25, 25)
         };
         // Create a marker for each place.
-        var marker = new google.maps.Marker({
+        place.mapMarker = new google.maps.Marker({
             map: app.map,
             icon: image,
             title: place.name(),
@@ -143,12 +139,13 @@ var app = app || {};
             id: place.id
         });
 
-        google.maps.event.addListener(marker, 'click', function() {
+        var infowindow = new google.maps.InfoWindow();
+        google.maps.event.addListener(place.mapMarker, 'click', function() {
             infowindow.setContent(place.name());
-            infowindow.open(app.map, this);
+            infowindow.open(app.map, place.mapMarker);
         });
-    }
 
+    }
 
     // Restaurant Model
     // ----------
@@ -164,6 +161,7 @@ var app = app || {};
         this.priceLevel = ko.observable(restaurantObj.price_level);
         this.rating = ko.observable(restaurantObj.rating);
         this.mapIcon = ko.observable(this.mapIconNormal);
+        this.mapMarker = ko.observable();
     };
 
     function RestaurantsViewModel(mappedArray) {
@@ -173,9 +171,12 @@ var app = app || {};
         self.weather = ko.observableArray([]);
 
         // viewModel functions
-        self.highlightMarker = function () {
-            console.log('highlightMarker clicked');
-            self.mapIcon = self.mapIconRed;
+        self.highlightMarker = function (clicked) {
+            console.log('highlightMarker clicked' + clicked);
+            // self.mapIcon = this.mapIconRed;
+            clicked.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
+            // marker will keep bouncing until set to null
+            // clicked.mapMarker.setAnimation(null);
         };
 
         // Load weather data from openweather, then populate self.weather

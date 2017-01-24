@@ -176,7 +176,8 @@ var app = app || {};
             // self.mapIcon = this.mapIconRed;
             clicked.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
             // marker will keep bouncing until set to null
-            // clicked.mapMarker.setAnimation(null);
+            // each bounce is approx 700ms ???
+            setTimeout(function(){ clicked.mapMarker.setAnimation(null); }, 2100);
         };
 
         // Load weather data from openweather, then populate self.weather

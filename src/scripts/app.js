@@ -171,13 +171,19 @@ var app = app || {};
         self.weather = ko.observableArray([]);
 
         // viewModel functions
+        // track highlighted marker for easy highlight removal
+        var highlightedMarkers = null;
         self.highlightMarker = function (clicked) {
             console.log('highlightMarker clicked' + clicked);
-            // self.mapIcon = this.mapIconRed;
+            if (highlightedMarkers != null) {
+                highlightedMarkers.mapMarker.icon.url = highlightedMarkers.mapIconNormal;
+            }
+            clicked.mapMarker.icon.url = this.mapIconRed;
             clicked.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
             // marker will keep bouncing until set to null
             // each bounce is approx 700ms ???
             setTimeout(function(){ clicked.mapMarker.setAnimation(null); }, 2100);
+            highlightedMarkers = this;
         };
 
         // Load weather data from openweather, then populate self.weather

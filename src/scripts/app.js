@@ -168,13 +168,14 @@ var app = app || {};
     // ----------
     // Our basic restaurant based on google place response object
     //  see https://developers.google.com/maps/documentation/javascript/places#place_search_responses
-    var Restaurant = function (restaurantObj) {
+    var Restaurant;
+    Restaurant = function (restaurantObj) {
         this.mapIconNormal = 'img/restaurant.png';
         this.mapIconRed = 'img/restaurant.red.png';
         this.geometry = ko.observable(restaurantObj.geometry);
-        this.id =ko.observable(restaurantObj.id);
-        this.name =ko.observable(restaurantObj.name);
-        this.placeId =ko.observable(restaurantObj.place_id);
+        this.id = ko.observable(restaurantObj.id);
+        this.name = ko.observable(restaurantObj.name);
+        this.placeId = ko.observable(restaurantObj.place_id);
         this.priceLevel = ko.observable(restaurantObj.price_level);
         this.rating = ko.observable(restaurantObj.rating);
         this.vicinity = ko.observable(restaurantObj.vicinity);
@@ -182,11 +183,11 @@ var app = app || {};
         this.mapMarker = ko.observable();
         this.infoWin = '';
         this.toggleIcon = function () {
-            console.log('---toggleIcon method hit---')
-            if (this.mapMarker.icon.url === 'img/restaurant.png') {
-                this.mapMarker.icon.url = this.mapIconRed;
+            console.log('---toggleIcon method hit---');
+            if (this.mapIcon === 'img/restaurant.png') {
+                this.mapIcon = this.mapIconRed;
             } else {
-                this.mapMarker.icon.url = this.mapIconNormal;
+                this.mapIcon = this.mapIconNormal;
             }
         }
     };
@@ -199,19 +200,15 @@ var app = app || {};
 
         // viewModel functions
         // track highlighted marker for easy highlight removal
-        var highlightedMarkers = null;
         self.highlightMarker = function (clicked) {
             console.log('highlightMarker clicked' + clicked);
-            if (highlightedMarkers != null) {
-                highlightedMarkers.toggleIcon();
-            }
-            // clicked.mapMarker.icon.url = this.mapIconRed;
-            clicked.toggleIcon();
+
+            clicked.mapMarker.icon = this.mapIconRed;
+            // clicked.toggleIcon();
             clicked.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
             // marker will keep bouncing until set to null
             // each bounce is approx 700ms ???
             setTimeout(function(){ clicked.mapMarker.setAnimation(null); }, 2100);
-            highlightedMarkers = this;
         };
 
         // Load weather data from openweather, then populate self.weather
@@ -220,7 +217,6 @@ var app = app || {};
             var mappedTasks = $.map(weatherData, function(item) { return new Task(item) });
             self.tasks(mappedTasks);
         });
-    };
+    }
 
-
-})()
+})();

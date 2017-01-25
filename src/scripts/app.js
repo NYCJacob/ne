@@ -141,7 +141,8 @@ var app = app || {};
 
         var infowindow = new google.maps.InfoWindow();
         google.maps.event.addListener(place.mapMarker, 'click', function() {
-            infowindow.setContent(place.name());
+            content_node: this.content;
+            infowindow.setContent(place.name() + place.rating());
             infowindow.open(app.map, place.mapMarker);
         });
 
@@ -160,8 +161,17 @@ var app = app || {};
         this.placeId =ko.observable(restaurantObj.place_id);
         this.priceLevel = ko.observable(restaurantObj.price_level);
         this.rating = ko.observable(restaurantObj.rating);
+        this.vicinity = ko.observable(restaurantObj.vicinity);
         this.mapIcon = ko.observable(this.mapIconNormal);
         this.mapMarker = ko.observable();
+        this.toggleIcon = function () {
+            console.log('---toggleIcon method hit---')
+            if (this.mapMarker.icon.url === 'img/restaurant.png') {
+                this.mapMarker.icon.url = this.mapIconRed;
+            } else {
+                this.mapMarker.icon.url = this.mapIconNormal;
+            }
+        }
     };
 
     function RestaurantsViewModel(mappedArray) {
@@ -176,9 +186,10 @@ var app = app || {};
         self.highlightMarker = function (clicked) {
             console.log('highlightMarker clicked' + clicked);
             if (highlightedMarkers != null) {
-                highlightedMarkers.mapMarker.icon.url = highlightedMarkers.mapIconNormal;
+                highlightedMarkers.toggleIcon();
             }
-            clicked.mapMarker.icon.url = this.mapIconRed;
+            // clicked.mapMarker.icon.url = this.mapIconRed;
+            clicked.toggleIcon();
             clicked.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
             // marker will keep bouncing until set to null
             // each bounce is approx 700ms ???

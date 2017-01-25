@@ -139,12 +139,28 @@ var app = app || {};
             id: place.id
         });
 
+        function createWindowNode(place){
+            var windowDiv= $("<div/>", {
+                html: '<h1>' + place.name() + '</h1>'
+            });
+            $("<div/>", {
+                html: 'Rating: ' + place.rating()
+            }).appendTo(windowDiv);
+
+        }
+
         var infowindow = new google.maps.InfoWindow();
+
         google.maps.event.addListener(place.mapMarker, 'click', function() {
-            content_node: this.content;
-            infowindow.setContent(place.name() + place.rating());
+            // infowindow.setContent(place.name() + place.rating());
+            infowindow.setContent(
+                '<div><h3>' + place.name() + '</h3>' + '<br>' +
+                'Rating: ' + place.rating() + '</div>' + '<br>' +
+                    'Price Level (0 - 4): ' + place.priceLevel()
+            );
             infowindow.open(app.map, place.mapMarker);
         });
+
 
     }
 
@@ -164,6 +180,7 @@ var app = app || {};
         this.vicinity = ko.observable(restaurantObj.vicinity);
         this.mapIcon = ko.observable(this.mapIconNormal);
         this.mapMarker = ko.observable();
+        this.infoWin = '';
         this.toggleIcon = function () {
             console.log('---toggleIcon method hit---')
             if (this.mapMarker.icon.url === 'img/restaurant.png') {

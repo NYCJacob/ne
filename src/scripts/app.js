@@ -195,21 +195,41 @@ var app = app || {};
     function RestaurantsViewModel(mappedArray) {
         var self = this;
         self.restaurants = ko.observableArray(mappedArray);
+        // method to find restaurant object by place id
+        self.getRestaurantIndex = function (placeId) {
+            for (var x = 0; x < restaurants.length(); x++) {
+                if (restaurants[x].placeId = placeId) {
+                    return x;
+                }
+            }
+            return -1;
+        };
 
         self.weather = ko.observableArray([]);
 
         // viewModel functions
         // track highlighted marker for easy highlight removal
+        var currentHighlight;
+        var priorHighlight;
+        var clickIndex;
         self.highlightMarker = function (clicked) {
             console.log('highlightMarker clicked' + clicked);
+            // clear prior highlighted icon if any
+            if (priorHighlight !== undefined) {
+                priorHighlight.mapMarker.icon = this.mapIconNormal;
+            }
 
+            // currentHighlight = getRestaurantIndex(clicked.id());
             clicked.mapMarker.icon = this.mapIconRed;
             // clicked.toggleIcon();
             clicked.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
             // marker will keep bouncing until set to null
             // each bounce is approx 700ms ???
             setTimeout(function(){ clicked.mapMarker.setAnimation(null); }, 2100);
+
+            priorHighlight = clicked;
         };
+
 
         // Load weather data from openweather, then populate self.weather
         var openWeatherApi = 'api.openweathermap.org/data/2.5/forecast?id=4891010&APPID=ff58a74b7a0939cd34d96dc917a5a0d6';

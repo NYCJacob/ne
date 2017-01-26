@@ -11,7 +11,6 @@ var app = app || {};
         "lng" : -73.8908579
     };
 
-    // Our basic
     app.initMap = function() {
         var styles = [
             {
@@ -105,8 +104,7 @@ var app = app || {};
             radius: 500,
             type: ['restaurant']
         }, callback);
-    };
-
+    }
     function callback(results, status) {
         if (status=== google.maps.places.PlacesServiceStatus.OK) {
             app.RestaurantArray = results.map(function (item) {
@@ -119,8 +117,7 @@ var app = app || {};
         } else {
             console.log("place service status error");
         }
-    };  // end callback
-
+    }  // end callback
     function createMarker(place) {
         // set icon for marker
         var image = {
@@ -163,6 +160,23 @@ var app = app || {};
 
 
     }
+
+    // NYC Restaurant inspection api request
+    var search = 'Dosa';
+    $.ajax({
+        url: "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
+        type: "GET",
+        data: {
+            "zipcode" : '11372',
+            "$limit" : 500,
+            "$$app_token" : "PCvLGVSSaI1KBWr0dwX7vhl1E",
+            "$q": search,
+            "$select": "*"
+        }
+    }).done(function(data) {
+        alert("Retrieved " + data.length + " records from the dataset!");
+        console.log(data);
+    });
 
     // Restaurant Model
     // ----------
@@ -232,11 +246,11 @@ var app = app || {};
 
 
         // Load weather data from openweather, then populate self.weather
-        var openWeatherApi = 'api.openweathermap.org/data/2.5/forecast?id=4891010&APPID=ff58a74b7a0939cd34d96dc917a5a0d6';
-        $.getJSON(openWeatherApi, function(weatherData) {
-            var mappedTasks = $.map(weatherData, function(item) { return new Task(item) });
-            self.tasks(mappedTasks);
-        });
+        // var openWeatherApi = 'api.openweathermap.org/data/2.5/forecast?id=4891010&APPID=ff58a74b7a0939cd34d96dc917a5a0d6&units=imperial';
+        // $.getJSON(openWeatherApi, function(weatherData) {
+            // var mappedTasks = $.map(weatherData, function(item) { return new Task(item) });
+            // self.tasks(mappedTasks);
+        // });
     }
 
 })();

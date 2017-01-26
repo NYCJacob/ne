@@ -161,6 +161,7 @@ var app = app || {};
 
     }
 
+    //TODO need to make a function from click on infowindow
     // NYC Restaurant inspection api request
     var search = 'Dosa';
     $.ajax({

@@ -96,6 +96,11 @@ $warning-color: #ff0000;
 $blue-color: #0000ff;
 $content-height:  80vh;
 
+#weather {
+    color: black;
+    font-size: 3vh;
+}
+
 #listings {
     border: 2px dashed $listing-color;
     float: left;

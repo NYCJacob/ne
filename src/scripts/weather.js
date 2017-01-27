@@ -2,7 +2,6 @@
  * Created by jsherman on 1/20/17.
  */
 
-
     (function() {
 
         // View Model
@@ -35,16 +34,50 @@
             this.temp =  ko.observable(data.currently.temperature);
             this.tempFeel =  ko.observable(data.currently.apparentTemperature);
             this.dailySummary =  ko.observable(data.daily.summary);
-
+            this.getIcon = displayIcon(this.icon);
         };
+
+        // Weather.getIcon = displayIcon;
 
         var weatherIcons = {
             "rain" : 'img/SVG/Cloud-Rain.svg',
             "snow" : 'img/SVG/Cloud-Snow.svg',
-            "sleet" : 'img/SVG/Cloud-Hail-alt.svg',
-            "hail" : 'img/SVG/Cloud-Hail-alt.svg',
+            "sleet" : 'img/SVG/Cloud-Hail-Alt.svg',
+            "hail" : 'img/SVG/Cloud-Hail-Alt.svg',
             "wind" : 'img/SVG/Wind.svg',
-            "wind" : 'img/SVG/Wind.svg',
+            "fog" : 'img/SVG/Cloud-Fog-Alt.svg',
+            "cloudy" : 'img/SVG/Cloud.svg',
+            "partly_cloudy_day" : 'img/SVG/Cloud-Sun.svg',
+            "partly_cloudy_night" : 'img/SVG/Cloud-Moon.svg',
+            "clear_day" : 'img/SVG/Sun.svg',
+            "clear_night" : 'img/SVG/Moon.svg'
+        };
+
+        function displayIcon(icon) {
+            if (this.icon === 'rain') {
+                return weatherIcons.rain;
+            } else if (this.icon === 'snow') {
+                return weatherIcons.snow;
+            } else if (this.icon === 'sleet') {
+                return weatherIcons.sleet;
+            } else if (this.icon === 'hail') {
+                return weatherIcons.sleet;
+            } else if (this.icon === 'wind') {
+                return weatherIcons.wind;
+            } else if (this.icon === 'fog') {
+                return weatherIcons.fog;
+            } else if (this.icon === 'cloudy') {
+                return weatherIcons.cloudy;
+            } else if (this.icon === 'partly-cloudy-day') {
+                return weatherIcons.partly_cloudy_day;
+            } else if (this.icon === 'partly-cloudy-night') {
+                return weatherIcons.partly_cloudy_night;
+            } else if (icon === 'clear-day') {
+                return weatherIcons.clear_day;
+            } else if (icon === 'clear-night') {
+                return weatherIcons.clear_night;
+            }
+            return weatherIcons.cloudy;
         }
 
     })();

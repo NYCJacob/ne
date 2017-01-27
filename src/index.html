@@ -21,24 +21,26 @@
 
         <div id="container">
             <header><h1>Jackson Heights Neighborhood Map</h1>
-                <div id='openweathermap-widget'></div>
+                <div id='weather'></div>
 
                 <!--<button data-bind="click: function () { console.log($root); }"> Root Log </button>-->
                 <!--<button data-bind="click: function () { console.log($context); }"> Context Log </button>-->
                 <!--<button data-bind="click: function () { console.log($data); }"> Current Data Log </button>-->
                 <!--<button data-bind="click: function () { console.log($parent); }"> Parent Log </button>-->
             </header>
-            <section id="listings">
-                <h2>Restaurants</h2>
-                <ul data-bind="foreach: restaurants">
-                    <li><a data-bind="text: name, click: $parent.highlightMarker" href="#"></a></li>
-                </ul>
+            <div id="mapView">
+                <section id="listings">
+                    <h2>Restaurants</h2>
+                    <ul data-bind="foreach: restaurants">
+                        <li><a data-bind="text: name, click: $parent.highlightMarker" href="#"></a></li>
+                    </ul>
+                </section>
 
-            </section>
+                <section id="mapDiv">
 
-            <section id="mapDiv">
+                </section>
+            </div>
 
-            </section>
 
             <footer>social icons go here including github</footer>
 
@@ -50,6 +52,7 @@
         <script src="scripts/plugins.js"></script>
         <script src="scripts/vendor/knockout/dist/knockout.js"></script>
         <script src="scripts/app.js"></script>
+        <!--<script async defer src="scripts/weather.js"></script>-->
         <script async defer src=
                         "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyBinHw_1SkBR4Otshx5nnA_KSuT_kNwk0g&v=3&callback=app.initMap">
         </script>

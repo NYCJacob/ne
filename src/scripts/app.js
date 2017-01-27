@@ -111,9 +111,7 @@ var app = app || {};
                 return new Restaurant(item);
             });
             app.RestaurantArray.forEach(createMarker);
-
-            ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray));
-            // RestaurantsViewModel(app.RestaurantArray);
+            ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray), document.getElementById('mapView'));
         } else {
             console.log("place service status error");
         }
@@ -220,8 +218,6 @@ var app = app || {};
             return -1;
         };
 
-        self.weather = ko.observableArray([]);
-
         // viewModel functions
         // track highlighted marker for easy highlight removal
         var currentHighlight;
@@ -245,13 +241,6 @@ var app = app || {};
             priorHighlight = clicked;
         };
 
-
-        // Load weather data from openweather, then populate self.weather
-        // var openWeatherApi = 'api.openweathermap.org/data/2.5/forecast?id=4891010&APPID=ff58a74b7a0939cd34d96dc917a5a0d6&units=imperial';
-        // $.getJSON(openWeatherApi, function(weatherData) {
-            // var mappedTasks = $.map(weatherData, function(item) { return new Task(item) });
-            // self.tasks(mappedTasks);
-        // });
     }
 
 })();

@@ -21,7 +21,15 @@
 
         <div id="container">
             <header><h1>Jackson Heights Neighborhood Map</h1>
-                <div id='weather'></div>
+                <div id='weather'>
+                    <aside>
+                        <button data-bind="click: function () { console.log($root); }"> Root Log </button>
+                        <button data-bind="click: function () { console.log($context); }"> Context Log </button>
+                        <button data-bind="click: function () { console.log($data); }"> Current Data Log </button>
+                        <button data-bind="click: function () { console.log($parent); }"> Parent Log </button>
+                        <h2 data-bind="text: summary"></h2>
+                    </aside>
+                </div>
 
                 <!--<button data-bind="click: function () { console.log($root); }"> Root Log </button>-->
                 <!--<button data-bind="click: function () { console.log($context); }"> Context Log </button>-->
@@ -52,7 +60,7 @@
         <script src="scripts/plugins.js"></script>
         <script src="scripts/vendor/knockout/dist/knockout.js"></script>
         <script src="scripts/app.js"></script>
-        <!--<script async defer src="scripts/weather.js"></script>-->
+        <script async defer src="scripts/weather.js"></script>
         <script async defer src=
                         "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyBinHw_1SkBR4Otshx5nnA_KSuT_kNwk0g&v=3&callback=app.initMap">
         </script>

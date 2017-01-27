@@ -173,7 +173,6 @@ var app = app || {};
             "$select": "*"
         }
     }).done(function(data) {
-        alert("Retrieved " + data.length + " records from the dataset!");
         console.log(data);
     });
 
@@ -227,7 +226,7 @@ var app = app || {};
             console.log('highlightMarker clicked' + clicked);
             // clear prior highlighted icon if any
             if (priorHighlight !== undefined) {
-                priorHighlight.mapMarker.icon = this.mapIconNormal;
+                priorHighlight.mapMarker.setIcon(this.mapIconNormal);
             }
 
             // currentHighlight = getRestaurantIndex(clicked.id());

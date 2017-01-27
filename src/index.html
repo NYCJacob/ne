@@ -23,18 +23,13 @@
             <header><h1>Jackson Heights Neighborhood Map</h1>
                 <div id='weather'>
                     <aside>
-                        <button data-bind="click: function () { console.log($root); }"> Root Log </button>
-                        <button data-bind="click: function () { console.log($context); }"> Context Log </button>
-                        <button data-bind="click: function () { console.log($data); }"> Current Data Log </button>
-                        <button data-bind="click: function () { console.log($parent); }"> Parent Log </button>
-                        <h2 data-bind="text: summary"></h2>
+                        <span class="weather-icon"></span>
+                        <span class="weather-summary" data-bind="text: summary"></span>
+                        <span class="weather-summary" data-bind="text:temp"></span><span>˚</span>
+                        <span>Feels like <span data-bind="text:tempFeel"></span>˚</span>
+                        <span>Rain Probablity <span data-bind="text:rainProb"></span>%</span>
                     </aside>
                 </div>
-
-                <!--<button data-bind="click: function () { console.log($root); }"> Root Log </button>-->
-                <!--<button data-bind="click: function () { console.log($context); }"> Context Log </button>-->
-                <!--<button data-bind="click: function () { console.log($data); }"> Current Data Log </button>-->
-                <!--<button data-bind="click: function () { console.log($parent); }"> Parent Log </button>-->
             </header>
             <div id="mapView">
                 <section id="listings">

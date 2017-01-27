@@ -20,8 +20,7 @@
                     console.log('ajax request success\n' + data );
                     // Weather(data);
                     weather = new Weather(data);
-                    // weather = data;
-
+                    ko.applyBindings(weather, document.getElementById('weather'));
                 },
                 error : function () {console.log('ajax request failed.');}
             });
@@ -29,17 +28,24 @@
 
         // ko model only one object
         // class not needed ???
-        var Weather;
-        Weather = function(data) {
+        var Weather = function(data) {
             this.summary = ko.observable(data.currently.summary);
             this.icon = ko.observable(data.currently.icon);
             this.rainProb =  ko.observable(data.currently.precipProbability);
             this.temp =  ko.observable(data.currently.temperature);
             this.tempFeel =  ko.observable(data.currently.apparentTemperature);
+            this.dailySummary =  ko.observable(data.daily.summary);
+
         };
 
-
-        ko.applyBindings(weather, document.getElementById('weather'));
+        var weatherIcons = {
+            "rain" : 'img/SVG/Cloud-Rain.svg',
+            "snow" : 'img/SVG/Cloud-Snow.svg',
+            "sleet" : 'img/SVG/Cloud-Hail-alt.svg',
+            "hail" : 'img/SVG/Cloud-Hail-alt.svg',
+            "wind" : 'img/SVG/Wind.svg',
+            "wind" : 'img/SVG/Wind.svg',
+        }
 
     })();
 

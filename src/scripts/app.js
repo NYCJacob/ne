@@ -9,6 +9,7 @@ var app = app || {};
         "lat" : 40.7466891,
         "lng" : -73.8908579
     };
+    var infowindow;
 
     app.initMap = function() {
         var styles = [
@@ -97,6 +98,7 @@ var app = app || {};
     // https://developers.google.com/maps/documentation/javascript/examples/place-search
     // infowindow = new google.maps.InfoWindow();
     function getPlacesData(){
+        infowindow = new google.maps.InfoWindow();
         var service = new google.maps.places.PlacesService(app.map);
         service.nearbySearch({
             location: app.neighborhood,
@@ -115,6 +117,7 @@ var app = app || {};
             console.log("place service status error");
         }
     }  // end callback
+
     function createMarker(place) {
         // set icon for marker
         var image = {
@@ -133,32 +136,15 @@ var app = app || {};
             id: place.id
         });
 
-        function createWindowNode(place){
-            var windowDiv= $("<div/>", {
-                html: '<h1>' + place.name() + '</h1>'
-            });
-            $("<div/>", {
-                html: 'Rating: ' + place.rating()
-            }).appendTo(windowDiv);
-
-        }
-
-        var infowindow = new google.maps.InfoWindow();
-
-        google.maps.event.addListener(place.mapMarker, 'click', function() {
-            // infowindow.setContent(place.name() + place.rating());
-            infowindow.setContent(
-                '<div><h3>' + place.name() + '</h3>' + '<br>' +
-                'Rating: ' + place.rating() + '</div>' + '<br>' +
-                    'Price Level (0 - 4): ' + place.priceLevel()
-            );
-            infowindow.open(app.map, place.mapMarker);
+        google.maps.event.addListener(place.mapMarker, 'click', function () {
+            infowindow.setContent(place.name);
+            infowindow.open(app.map, this);
         });
 
+    } // end create marker
 
-    }
 
-    //TODO need to make a function from click on infowindow
+
     // NYC Restaurant inspection api request
 
     var search = 'Dosa';

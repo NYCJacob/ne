@@ -37,8 +37,9 @@
             this.getIcon = displayIcon(this.icon);
         };
 
-        // Weather.getIcon = displayIcon;
+        //TODO: make the weatherIcons object work with the Weather class
 
+        // Weather.getIcon = displayIcon;
         var weatherIcons = {
             "rain" : 'img/SVG/Cloud-Rain.svg',
             "snow" : 'img/SVG/Cloud-Snow.svg',

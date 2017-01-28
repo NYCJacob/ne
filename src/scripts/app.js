@@ -166,15 +166,19 @@ var app = app || {};
         app.inspectionsArray = data.map(function (inspection) {
             return new Inspection(inspection);
         });
+
         searchRestaurants(app.inspectionsArray);
     });
 
     // function checks if any restaurants have inspection data
     function searchRestaurants(inspectionArray) {
-        RestaurantsViewModel.restaurants.forEach(function (restaurant) {
-            inspectionArray.forEach(function (in) {
-                
-            })
+        //TODO not able to get at restaurant array in RestaurantViewModel
+        ????.forEach(function (restaurant) {
+            for (var i = 0; inspectionArray.length; i++) {
+                if (restaurant.name() === inspectionArray[i].dba) {
+                    return inspectionArray[i];
+                }
+            }
         })
     }
 
@@ -253,6 +257,9 @@ var app = app || {};
     function RestaurantsViewModel(mappedArray) {
         var self = this;
         self.restaurants = ko.observableArray(mappedArray);
+        self.getRestaurants = function () {
+            return self.restaurants;
+        };
         // viewModel functions
         // track highlighted marker for easy highlight removal
         var priorHighlight;

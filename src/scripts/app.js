@@ -10,6 +10,7 @@ var app = app || {};
         "lng" : -73.8908579
     };
     var infowindow;
+    app.inspectionsArray = [];
 
     app.initMap = function() {
         var styles = [
@@ -134,13 +135,13 @@ var app = app || {};
             title: place.name(),
             position: place.geometry().location,
             id: place.id,
-            content: place.name()
+            content: place.name() + '<br>' + 'Rating: ' + place.rating() + '<br>' + 'Price Level (0 - 4): ' + place.priceLevel()
         });
 
         google.maps.event.addListener(place.mapMarker, 'click', function () {
             infowindow.setContent(this.content);
             infowindow.open(app.map, this);
-        });
+        })
 
     } // end create marker
 
@@ -161,8 +162,55 @@ var app = app || {};
         }
     }).done(function(data) {
         console.log(data);
+        // data is an array of objections returned from api
+        app.inspectionsArray = data.map(function (inspection) {
+            return new Inspection(inspection);
+        });
     });
 
+
+    //  Restaurant Inspections Model (class)
+    // storing ajx request from NYC health dept api
+    var Inspection = function (inspectObj) {
+        this.action = inspectObj.action;
+        this.boro = inspectObj.boro;
+        this.building = inspectObj.building;
+        this.critical = inspectObj.critical_flag;
+        this.dba = inspectObj.dba;
+        this.grade = inspectObj.grade;
+        this.grade_date = inspectObj.grade_date;
+        this.inspection_type = inspectObj.inspection_type;
+        this.inspection_date = inspectObj.inspection_date;
+        this.score = inspectObj.score;
+        this.street = inspectObj.street;
+        this.violation_code = inspectObj.violation_code;
+        this.violation_description = inspectObj.violation_description;
+        this.zipcode = inspectObj.zipcode;
+        // getter methods
+        this.getName = function () {
+            return this.dba;
+        };
+        this.getInspectionResult = function () {
+            return {
+                "action" : this.action,
+                "boro" : this.boro,
+                "building" : this.building,
+                "critical" : this.critical,
+                "dba" : this.dba,
+                "grade" : this.grade,
+                "grade_date" : this.grade_date,
+                "inspection_type" : this.inspection_type,
+                "inspection_date" : this.inspection_date,
+                "score" : this.score,
+                "street" : this.street,
+                "violation_code" : this.violation_code,
+                "violation_description" : this.violation_description,
+                "zipcode" : this.zipcode
+        }
+
+        }
+    };
+    
     // Restaurant Model
     // ----------
     // Our basic restaurant based on google place response object
@@ -180,14 +228,11 @@ var app = app || {};
         this.vicinity = ko.observable(restaurantObj.vicinity);
         this.mapIcon = ko.observable(this.mapIconNormal);
         this.mapMarker = ko.observable();
-        this.infoWin = '';
-        this.toggleIcon = function () {
-            console.log('---toggleIcon method hit---');
-            if (this.mapIcon === 'img/restaurant.png') {
-                this.mapIcon = this.mapIconRed;
-            } else {
-                this.mapIcon = this.mapIconNormal;
-            }
+        this.inspections = function () {
+            app.inspectionsArray.forEach(function (inspection) {
+                console.log(inspection.getName());
+                return inspection.getName();
+            })
         }
     };
 

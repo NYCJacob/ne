@@ -133,11 +133,12 @@ var app = app || {};
             icon: image,
             title: place.name(),
             position: place.geometry().location,
-            id: place.id
+            id: place.id,
+            content: place.name()
         });
 
         google.maps.event.addListener(place.mapMarker, 'click', function () {
-            infowindow.setContent(place.name);
+            infowindow.setContent(this.content);
             infowindow.open(app.map, this);
         });
 

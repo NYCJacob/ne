@@ -132,9 +132,7 @@ var app = app || {};
             position: place.geometry().location,
             id: place.id
         });
-    }  // end createMarker(place)
 
-        var infowindow = new google.maps.InfoWindow();
         function createWindowNode(place){
             var windowDiv= $("<div/>", {
                 html: '<h1>' + place.name() + '</h1>'
@@ -142,6 +140,10 @@ var app = app || {};
             $("<div/>", {
                 html: 'Rating: ' + place.rating()
             }).appendTo(windowDiv);
+
+        }
+
+        var infowindow = new google.maps.InfoWindow();
 
         google.maps.event.addListener(place.mapMarker, 'click', function() {
             // infowindow.setContent(place.name() + place.rating());
@@ -158,7 +160,7 @@ var app = app || {};
 
     //TODO need to make a function from click on infowindow
     // NYC Restaurant inspection api request
-    // TODO need to hook health inspection api into view- Dosa is a test search to limit results for dev purposes
+
     var search = 'Dosa';
     $.ajax({
         url: "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",

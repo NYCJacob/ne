@@ -166,7 +166,17 @@ var app = app || {};
         app.inspectionsArray = data.map(function (inspection) {
             return new Inspection(inspection);
         });
+        searchRestaurants(app.inspectionsArray);
     });
+
+    // function checks if any restaurants have inspection data
+    function searchRestaurants(inspectionArray) {
+        RestaurantsViewModel.restaurants.forEach(function (restaurant) {
+            inspectionArray.forEach(function (in) {
+                
+            })
+        })
+    }
 
 
     //  Restaurant Inspections Model (class)
@@ -228,39 +238,30 @@ var app = app || {};
         this.vicinity = ko.observable(restaurantObj.vicinity);
         this.mapIcon = ko.observable(this.mapIconNormal);
         this.mapMarker = ko.observable();
-        this.inspections = function () {
-            app.inspectionsArray.forEach(function (inspection) {
-                console.log(inspection.getName());
-                return inspection.getName();
-            })
+        // this.inspections = function () {
+        //     app.inspectionsArray.forEach(function (inspection) {
+        //         console.log(inspection.getName());
+        //         return inspection.getName();
+        //     })
+        // }
+        this.inspections = ko.observableArray();
+        this.getName = function () {
+            return this.name;
         }
     };
 
     function RestaurantsViewModel(mappedArray) {
         var self = this;
         self.restaurants = ko.observableArray(mappedArray);
-        // method to find restaurant object by place id
-        self.getRestaurantIndex = function (placeId) {
-            for (var x = 0; x < restaurants.length(); x++) {
-                if (restaurants[x].placeId = placeId) {
-                    return x;
-                }
-            }
-            return -1;
-        };
-
         // viewModel functions
         // track highlighted marker for easy highlight removal
-        var currentHighlight;
         var priorHighlight;
-        var clickIndex;
         self.highlightMarker = function (clicked) {
             console.log('highlightMarker clicked' + clicked);
             // clear prior highlighted icon if any
             if (priorHighlight !== undefined) {
                 priorHighlight.mapMarker.setIcon(this.mapIconNormal);
             }
-
             // currentHighlight = getRestaurantIndex(clicked.id());
             clicked.mapMarker.icon = this.mapIconRed;
             // clicked.toggleIcon();
@@ -268,7 +269,6 @@ var app = app || {};
             // marker will keep bouncing until set to null
             // each bounce is approx 700ms ???
             setTimeout(function(){ clicked.mapMarker.setAnimation(null); }, 2100);
-
             priorHighlight = clicked;
         };
 

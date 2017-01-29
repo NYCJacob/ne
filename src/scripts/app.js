@@ -192,29 +192,6 @@ var app = app || {};
         self.getRestaurants = function () {
             return self.restaurants;
         };
-        // viewModel functions
-        // track highlighted marker for easy highlight removal
-        var priorHighlight;
-        self.highlightMarker = function (clicked) {
-            console.log('highlightMarker clicked' + clicked);
-            // clear prior highlighted icon if any
-            if (priorHighlight !== undefined) {
-                priorHighlight.mapMarker.setIcon(this.mapIconNormal);
-            }
-            // currentHighlight = getRestaurantIndex(clicked.id());
-            clicked.mapMarker.icon = this.mapIconRed;
-            // clicked.toggleIcon();
-            clicked.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
-            // marker will keep bouncing until set to null
-            // each bounce is approx 700ms ???
-            setTimeout(function(){ clicked.mapMarker.setAnimation(null); }, 2100);
-            priorHighlight = clicked;
-
-            // see this post re adding dynamic content using single infoWindow
-            // http://stackoverflow.com/questions/9475830/google-maps-api-v3-markers-all-share-the-same-infowindow?rq=1
-            infowindow.setContent(this.content);
-            infowindow.open(app.map, this);
-        };
 
     }
 

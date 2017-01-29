@@ -134,6 +134,7 @@ var app = app || {};
             map: app.map,
             icon: image,
             title: place.name(),
+            animation: google.maps.Animation.DROP,
             position: place.geometry().location,
             id: place.id,
             content: place.name() + '<br>' + 'Rating: ' + place.rating() + '<br>' + 'Price Level (0 - 4): ' + place.priceLevel()
@@ -266,13 +267,6 @@ var app = app || {};
         this.vicinity = ko.observable(restaurantObj.vicinity);
         this.mapIcon = ko.observable(this.mapIconNormal);
         this.mapMarker = ko.observable();
-        // this.inspections = function () {
-        //     app.inspectionsArray.forEach(function (inspection) {
-        //         console.log(inspection.getName());
-        //         return inspection.getName();
-        //     })
-        // }
-        this.inspections = ko.observableArray();
         this.getName = function () {
             return this.name;
         }

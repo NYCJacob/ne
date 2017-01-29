@@ -34,16 +34,15 @@
                 return this.icon;
             };
             this.rainProb =  ko.observable(data.currently.precipProbability);
-            this.temp =  ko.observable(data.currently.temperature);
-            this.tempFeel =  ko.observable(data.currently.apparentTemperature);
+            this.temp =  ko.computed(function () {
+                return Math.round(data.currently.temperature)
+            } );
+            this.tempFeel =  ko.computed(function () {
+                return Math.round(data.currently.apparentTemperature)
+            } );
             this.dailySummary =  ko.observable(data.daily.summary);
             // this.weatherImg = ko.computed(displayIcon(this.icon)).extend({ deferred: true });
-            this.weatherImg = ko.observable(displayIcon(this.icon));
-            // this.weatherImg = ko.observable('');
-            // this.setImg = function (url) {
-            //     this.weatherImg = url;
-            //     console.log(this.weatherImg);
-            // }
+            this.weatherImg = ko.observable(displayIcon(this.icon()));
         };
 
         //TODO: make the weatherIcons object work with the Weather class

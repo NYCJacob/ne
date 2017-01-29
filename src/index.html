@@ -23,7 +23,7 @@
             <header><h1>Jackson Heights Neighborhood Map</h1>
                 <div id='weather'>
                     <aside>
-                        <span class="weather-icon"></span>
+                        <img class="weather-icon" data-bind="attr: {src: getIcon}">
                         <span class="weather-summary" data-bind="text: summary"></span>
                         <br>
                         <span class="weather-summary" data-bind="text:temp"></span><span>˚</span>
@@ -60,6 +60,7 @@
         <script async defer src=
                         "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyBinHw_1SkBR4Otshx5nnA_KSuT_kNwk0g&v=3&callback=app.initMap">
         </script>
+        <script type="text/javascript" src="scripts/vendor/jso/src/jso.js"></script>
 
     </body>
 </html>

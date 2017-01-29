@@ -227,7 +227,28 @@ var app = app || {};
 
         }
     };
-    
+
+
+    // yelp oAuth request
+    // var yelpAuth = $.ajax({
+    //         url: "https://api.yelp.com/oauth2/token",
+    //         type: "POST",
+    //         data: {
+    //             "format" : "json",
+    //             "grant_type" : "client_credentials",
+    //             "client_id" : 'Nsxn2KaNaFNlZQkHoRj4XA',
+    //             "client_secret" : 'YaEwjUrVIT7UmS6eboSEE1XiNtv29uRZjloeBmnUC9bedaQKi0uPCvUintSLpFp4'
+    //         },
+    //     dataType : "jsonp"
+    //     }).done(function(data) {
+    //         console.log("yelp success");
+    //         console.log(data);
+    //     });
+
+
+
+
+
     // Restaurant Model
     // ----------
     // Our basic restaurant based on google place response object

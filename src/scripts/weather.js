@@ -73,6 +73,8 @@
                 return weatherIcons.partly_cloudy_day;
             } else if (this.icon === 'partly-cloudy-night') {
                 return weatherIcons.partly_cloudy_night;
+            } else if (icon === 'clear') {
+                return weatherIcons.clear_day;
             } else if (icon === 'clear-day') {
                 return weatherIcons.clear_day;
             } else if (icon === 'clear-night') {

@@ -12,6 +12,8 @@ var app = app || {};
     var infowindow;
     app.inspectionsArray = [];
     app.RestaurantArray= [];
+    // used to track highlight for reset on next click
+    app.currentHighlight = null;
 
     app.initMap = function() {
         var styles = [
@@ -141,13 +143,80 @@ var app = app || {};
         });
 
         google.maps.event.addListener(place.mapMarker, 'click', function () {
+            console.log('mapMarker clicked');
+            place.octoHighlighter();
+        })
+
+    } // end create marker
+
+
+
+    // Restaurant Model
+    // ----------
+    // Our basic restaurant based on google place response object
+    //  see https://developers.google.com/maps/documentation/javascript/places#place_search_responses
+    var Restaurant;
+    Restaurant = function (restaurantObj) {
+        this.mapIconNormal = 'img/restaurant.png';
+        this.mapIconRed = 'img/restaurant.red.png';
+        this.geometry = ko.observable(restaurantObj.geometry);
+        this.id = ko.observable(restaurantObj.id);
+        this.name = ko.observable(restaurantObj.name);
+        this.placeId = ko.observable(restaurantObj.place_id);
+        this.priceLevel = ko.observable(restaurantObj.price_level);
+        this.rating = ko.observable(restaurantObj.rating);
+        this.vicinity = ko.observable(restaurantObj.vicinity);
+        this.mapIcon = ko.observable(this.mapIconNormal);
+        this.mapMarker = ko.observable();
+        this.getName = function () {
+            return this.name;
+        };
+
+        // function called when either list of marker clicked
+        this.octoHighlighter = function () {
+            if (app.currentHighlight !== null) {
+                app.currentHighlight.setIcon(this.mapIconNormal);
+            }
+            this.mapMarker.setIcon(this.mapIconRed);
+            // see this post re adding dynamic content using single infoWindow
+            // http://stackoverflow.com/questions/9475830/google-maps-api-v3-markers-all-share-the-same-infowindow?rq=1
+            infowindow.setContent(this.mapMarker.content);
+            infowindow.open(app.map, this.mapMarker);
+            app.currentHighlight = this.mapMarker;
+        }
+    };
+
+    function RestaurantsViewModel(mappedArray) {
+        var self = this;
+        self.restaurants = ko.observableArray(mappedArray);
+        self.getRestaurants = function () {
+            return self.restaurants;
+        };
+        // viewModel functions
+        // track highlighted marker for easy highlight removal
+        var priorHighlight;
+        self.highlightMarker = function (clicked) {
+            console.log('highlightMarker clicked' + clicked);
+            // clear prior highlighted icon if any
+            if (priorHighlight !== undefined) {
+                priorHighlight.mapMarker.setIcon(this.mapIconNormal);
+            }
+            // currentHighlight = getRestaurantIndex(clicked.id());
+            clicked.mapMarker.icon = this.mapIconRed;
+            // clicked.toggleIcon();
+            clicked.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
+            // marker will keep bouncing until set to null
+            // each bounce is approx 700ms ???
+            setTimeout(function(){ clicked.mapMarker.setAnimation(null); }, 2100);
+            priorHighlight = clicked;
+
             // see this post re adding dynamic content using single infoWindow
             // http://stackoverflow.com/questions/9475830/google-maps-api-v3-markers-all-share-the-same-infowindow?rq=1
             infowindow.setContent(this.content);
             infowindow.open(app.map, this);
-        })
+        };
 
-    } // end create marker
+    }
 
 
 
@@ -170,7 +239,6 @@ var app = app || {};
         app.inspectionsArray = data.map(function (inspection) {
             return new Inspection(inspection);
         });
-
         searchRestaurants(app.inspectionsArray);
     });
 
@@ -224,7 +292,7 @@ var app = app || {};
                 "violation_code" : this.violation_code,
                 "violation_description" : this.violation_description,
                 "zipcode" : this.zipcode
-        }
+            }
 
         }
     };
@@ -245,58 +313,5 @@ var app = app || {};
     //         console.log("yelp success");
     //         console.log(data);
     //     });
-
-
-
-
-
-    // Restaurant Model
-    // ----------
-    // Our basic restaurant based on google place response object
-    //  see https://developers.google.com/maps/documentation/javascript/places#place_search_responses
-    var Restaurant;
-    Restaurant = function (restaurantObj) {
-        this.mapIconNormal = 'img/restaurant.png';
-        this.mapIconRed = 'img/restaurant.red.png';
-        this.geometry = ko.observable(restaurantObj.geometry);
-        this.id = ko.observable(restaurantObj.id);
-        this.name = ko.observable(restaurantObj.name);
-        this.placeId = ko.observable(restaurantObj.place_id);
-        this.priceLevel = ko.observable(restaurantObj.price_level);
-        this.rating = ko.observable(restaurantObj.rating);
-        this.vicinity = ko.observable(restaurantObj.vicinity);
-        this.mapIcon = ko.observable(this.mapIconNormal);
-        this.mapMarker = ko.observable();
-        this.getName = function () {
-            return this.name;
-        }
-    };
-
-    function RestaurantsViewModel(mappedArray) {
-        var self = this;
-        self.restaurants = ko.observableArray(mappedArray);
-        self.getRestaurants = function () {
-            return self.restaurants;
-        };
-        // viewModel functions
-        // track highlighted marker for easy highlight removal
-        var priorHighlight;
-        self.highlightMarker = function (clicked) {
-            console.log('highlightMarker clicked' + clicked);
-            // clear prior highlighted icon if any
-            if (priorHighlight !== undefined) {
-                priorHighlight.mapMarker.setIcon(this.mapIconNormal);
-            }
-            // currentHighlight = getRestaurantIndex(clicked.id());
-            clicked.mapMarker.icon = this.mapIconRed;
-            // clicked.toggleIcon();
-            clicked.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
-            // marker will keep bouncing until set to null
-            // each bounce is approx 700ms ???
-            setTimeout(function(){ clicked.mapMarker.setAnimation(null); }, 2100);
-            priorHighlight = clicked;
-        };
-
-    }
 
 })();

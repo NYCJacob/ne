@@ -11,6 +11,7 @@ var app = app || {};
     };
     var infowindow;
     app.inspectionsArray = [];
+    app.RestaurantArray= [];
 
     app.initMap = function() {
         var styles = [
@@ -139,6 +140,8 @@ var app = app || {};
         });
 
         google.maps.event.addListener(place.mapMarker, 'click', function () {
+            // see this post re adding dynamic content using single infoWindow
+            // http://stackoverflow.com/questions/9475830/google-maps-api-v3-markers-all-share-the-same-infowindow?rq=1
             infowindow.setContent(this.content);
             infowindow.open(app.map, this);
         })
@@ -173,7 +176,7 @@ var app = app || {};
     // function checks if any restaurants have inspection data
     function searchRestaurants(inspectionArray) {
         //TODO not able to get at restaurant array in RestaurantViewModel
-        ????.forEach(function (restaurant) {
+        app.RestaurantArray.forEach(function (restaurant) {
             for (var i = 0; inspectionArray.length; i++) {
                 if (restaurant.name() === inspectionArray[i].dba) {
                     return inspectionArray[i];

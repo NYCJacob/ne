@@ -19,6 +19,7 @@
                     console.log('ajax request success\n' + data );
                     // Weather(data);
                     weather = new Weather(data);
+                    displayIcon(weather.getIcon());
                     ko.applyBindings(weather, document.getElementById('weather'));
                 },
                 error : function () {console.log('ajax request failed.');}
@@ -26,20 +27,27 @@
 
 
         // ko model only one object
-        // class not needed ???
         var Weather = function(data) {
             this.summary = ko.observable(data.currently.summary);
             this.icon = ko.observable(data.currently.icon);
+            this.getIcon = function () {
+                return this.icon;
+            };
             this.rainProb =  ko.observable(data.currently.precipProbability);
             this.temp =  ko.observable(data.currently.temperature);
             this.tempFeel =  ko.observable(data.currently.apparentTemperature);
             this.dailySummary =  ko.observable(data.daily.summary);
-            this.getIcon = displayIcon(this.icon);
+            // this.weatherImg = ko.computed(displayIcon(this.icon)).extend({ deferred: true });
+            this.weatherImg = ko.observable(displayIcon(this.icon));
+            // this.weatherImg = ko.observable('');
+            // this.setImg = function (url) {
+            //     this.weatherImg = url;
+            //     console.log(this.weatherImg);
+            // }
         };
 
         //TODO: make the weatherIcons object work with the Weather class
 
-        // Weather.getIcon = displayIcon;
         var weatherIcons = {
             "rain" : 'img/SVG/Cloud-Rain.svg',
             "snow" : 'img/SVG/Cloud-Snow.svg',

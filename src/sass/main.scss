@@ -101,6 +101,24 @@ $content-height:  80vh;
     font-size: 3vh;
 }
 
+#weather-headline {
+    font-weight: 600;
+}
+
+#weather-details {
+    font-weight: 300;
+}
+
+#weather-fn {
+    font-size: small;
+
+    a {
+        display: inline;
+        color: #4AB1FF;
+        background: none;
+    }
+}
+
 #listings {
     border: 2px dashed $listing-color;
     float: left;

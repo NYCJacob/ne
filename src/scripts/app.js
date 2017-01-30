@@ -9,6 +9,8 @@ var app = app || {};
         "lat" : 40.7466891,
         "lng" : -73.8908579
     };
+    // google place search global because needed for google's getDetails method
+    app.service;
     var infowindow;
     app.inspectionsArray = [];
     app.RestaurantArray= [];
@@ -103,8 +105,8 @@ var app = app || {};
     // infowindow = new google.maps.InfoWindow();
     function getPlacesData(){
         infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(app.map);
-        service.nearbySearch({
+        app.service = new google.maps.places.PlacesService(app.map);
+        app.service.nearbySearch({
             location: app.neighborhood,
             radius: 500,
             type: ['restaurant']
@@ -178,11 +180,28 @@ var app = app || {};
                 app.currentHighlight.setIcon(this.mapIconNormal);
             }
             this.mapMarker.setIcon(this.mapIconRed);
+
+            // request google place details based on google placeI
+            // placeId was part of google placeSearch results
+            var request = {
+                placeId : this.placeId
+            };
+            app.service.getDetails(request, callback);
+            function callback(place, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    console.log('google details received');
+                    console.log(place);
+                }
+            }
+
             // see this post re adding dynamic content using single infoWindow
             // http://stackoverflow.com/questions/9475830/google-maps-api-v3-markers-all-share-the-same-infowindow?rq=1
             infowindow.setContent(this.mapMarker.content);
             infowindow.open(app.map, this.mapMarker);
             app.currentHighlight = this.mapMarker;
+
+            // search other api data
+
         }
     };
 
@@ -198,81 +217,23 @@ var app = app || {};
 
 
     // NYC Restaurant inspection api request
-
-    var search = 'Dosa';
-    $.ajax({
-        url: "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
-        type: "GET",
-        data: {
-            "zipcode" : '11372',
-            "$limit" : 500,
-            "$$app_token" : "PCvLGVSSaI1KBWr0dwX7vhl1E",
-            "$q": search,
-            "$select": "*"
-        }
-    }).done(function(data) {
-        console.log(data);
-        // data is an array of objections returned from api
-        app.inspectionsArray = data.map(function (inspection) {
-            return new Inspection(inspection);
-        });
-        searchRestaurants(app.inspectionsArray);
-    });
-
-    // function checks if any restaurants have inspection data
-    function searchRestaurants(inspectionArray) {
-        //TODO not able to get at restaurant array in RestaurantViewModel
-        app.RestaurantArray.forEach(function (restaurant) {
-            for (var i = 0; inspectionArray.length; i++) {
-                if (restaurant.name() === inspectionArray[i].dba) {
-                    return inspectionArray[i];
-                }
+    function searchNYCinspections(name, building, street, boro) {
+        $.ajax({
+            url: "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
+            type: "GET",
+            data: {
+                "zipcode" : '11372',
+                "$limit" : 500,
+                "$$app_token" : "PCvLGVSSaI1KBWr0dwX7vhl1E",
+                "$q": search,
+                "$select": "*"
             }
-        })
+        }).done(function(data) {
+            console.log(data);
+            // data is an array of objections returned from api
+        });
     }
 
-
-    //  Restaurant Inspections Model (class)
-    // storing ajx request from NYC health dept api
-    var Inspection = function (inspectObj) {
-        this.action = inspectObj.action;
-        this.boro = inspectObj.boro;
-        this.building = inspectObj.building;
-        this.critical = inspectObj.critical_flag;
-        this.dba = inspectObj.dba;
-        this.grade = inspectObj.grade;
-        this.grade_date = inspectObj.grade_date;
-        this.inspection_type = inspectObj.inspection_type;
-        this.inspection_date = inspectObj.inspection_date;
-        this.score = inspectObj.score;
-        this.street = inspectObj.street;
-        this.violation_code = inspectObj.violation_code;
-        this.violation_description = inspectObj.violation_description;
-        this.zipcode = inspectObj.zipcode;
-        // getter methods
-        this.getName = function () {
-            return this.dba;
-        };
-        this.getInspectionResult = function () {
-            return {
-                "action" : this.action,
-                "boro" : this.boro,
-                "building" : this.building,
-                "critical" : this.critical,
-                "dba" : this.dba,
-                "grade" : this.grade,
-                "grade_date" : this.grade_date,
-                "inspection_type" : this.inspection_type,
-                "inspection_date" : this.inspection_date,
-                "score" : this.score,
-                "street" : this.street,
-                "violation_code" : this.violation_code,
-                "violation_description" : this.violation_description,
-                "zipcode" : this.zipcode
-            }
-
-        }
-    };
 
 
     // yelp oAuth request

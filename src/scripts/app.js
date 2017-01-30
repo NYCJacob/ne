@@ -113,9 +113,12 @@ var app = app || {};
         }, callback);
     }
     function callback(results, status) {
+        // details need to be stored for searching other api data not just to display in infoWindow
+        app.detailsArray = [];
         if (status=== google.maps.places.PlacesServiceStatus.OK) {
-            app.RestaurantArray = results.map(function (item) {
-                return new Restaurant(item);
+            results.forEach(function (item) {
+                // get details based on place_id
+                 googleDetails(item.place_id);
             });
             app.RestaurantArray.forEach(createMarker);
             ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray), document.getElementById('mapView'));
@@ -123,6 +126,20 @@ var app = app || {};
             console.log("place service status error");
         }
     }  // end callback
+
+    function googleDetails(id) {
+        var serviceDetails =  new google.maps.places.PlacesService(app.map);
+        var request = { placeId: id };
+        serviceDetails.getDetails(request, callback);
+        function callback(details, status){
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                console.log(details);
+                app.detailsArray.push(details);
+            } else {
+                console.log("details error " + status);
+            }
+        }
+    }
 
     function createMarker(place) {
         // set icon for marker

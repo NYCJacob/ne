@@ -42,7 +42,6 @@
             <div id="mapView">
                 <section id="listings">
                     <h2>Restaurants</h2>
-
                     <ul data-bind="foreach: restaurants">
                         <li><a data-bind="text: name, click: octoHighlighter" href="#"></a></li>
                     </ul>
@@ -54,10 +53,17 @@
             </div>
 
 
-            <footer>social icons go here including github</footer>
+            <footer>social icons go here including github  <a href="https://mapicons.mapsmarker.com"><img src="img/mapMakerIcons/miclogo-88x31.gif"></a> </footer>
 
         </div>
 
+        <!-- Knockout template -->
+        <script type="text/html" id="info-window-template">
+            <h3 data-bind="text: name"></h3>
+            <span data-bind="text: formatted_address"></span>
+            <span data-bind="text: formatted_phone_number"></span>
+
+        </script>
 
         <script src="scripts/vendor/jquery/dist/jquery.js"></script>
         <script>window.jQuery || document.write('<script src="scripts/vendor/jquery/dist/jquery.js"><\/script>')</script>

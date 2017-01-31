@@ -118,7 +118,9 @@ var app = app || {};
     function callback(results, status) {
         if (status=== google.maps.places.PlacesServiceStatus.OK) {
             app.RestaurantArray = results.map(function (item) {
-                return new Restaurant(item);
+                // passing index for map marker/list numbering
+                var itemIndex = results.indexOf(item);
+                return new Restaurant(item, itemIndex);
             });
             app.RestaurantArray.forEach(createMarker);
             ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray), document.getElementById('mapView'));
@@ -152,20 +154,24 @@ var app = app || {};
         }
     }  // end callback
 
-    function googleDetails(Restaurant) {
+    function googleDetails(restaurant) {
         var serviceDetails =  new google.maps.places.PlacesService(app.map);
-        var request = { placeId: Restaurant.placeId };
+        var request = { placeId: restaurant.placeId };
         serviceDetails.getDetails(request, callback);
         function callback(details, status){
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 console.log('Details received ' + details);
-
-            } else {
+                // need to send details to the restaurant object
+                restaurant.addDetails(details);
+            }else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                setTimeout(function() {
+                    googleDetails(restaurant);
+                }, 200);}
+            else {
                 console.log("details error " + status);
-
             }
         }
-    }
+    } // end googleDetails
 
     function processError(status) {
         switch (status) {
@@ -202,7 +208,7 @@ var app = app || {};
     function createMarker(place) {
         // set icon for marker
         var image = {
-            url: place.mapIcon(),
+            url: place.mapIcon,
             size: new google.maps.Size(35, 35),
             origin: new google.maps.Point(0, 0),
             anchor: new google.maps.Point(15, 34),
@@ -212,11 +218,11 @@ var app = app || {};
         place.mapMarker = new google.maps.Marker({
             map: app.map,
             icon: image,
-            title: place.name(),
+            title: place.name,
             animation: google.maps.Animation.DROP,
-            position: place.geometry().location,
+            position: place.geometry.location,
             id: place.id,
-            content: place.name() + '<br>' + 'Rating: ' + place.rating() + '<br>' + 'Price Level (0 - 4): ' + place.priceLevel()
+            content: place.name + '<br>' + 'Rating: ' + place.rating + '<br>' + 'Price Level (0 - 4): ' + place.priceLevel
         });
 
         google.maps.event.addListener(place.mapMarker, 'click', function () {
@@ -233,32 +239,47 @@ var app = app || {};
     // Our basic restaurant based on google place response object
     //  see https://developers.google.com/maps/documentation/javascript/places#place_search_responses
     var Restaurant;
-    Restaurant = function (restaurantObj) {
-        this.mapIconNormal = 'img/restaurant.png';
-        this.mapIconRed = 'img/restaurant.red.png';
+    Restaurant = function (restaurantObj, index) {
+        //todo decide whether to use index numbering in map- hard to place number in restaurant icon
+        this.index = index + 1;   // 1 added for UI numbering ;
+        this.mapIconNormal = 'img/mapMakerIcons/3b8dc8/restaurant.png';
+        this.mapIconRed = 'img/mapMakerIcons/ff0000/restaurant.png';
         // details search geometry object includes
         // location object and viewport object
-        this.geometry = ko.observable(restaurantObj.geometry);
-        this.address_formatted = ko.observable(restaurantObj.formatted_address);
-        this.address_components = ko.observable(restaurantObj.address_components);
-        this.phone = ko.observable(restaurantObj.formatted_phone_number);
-        this.hours = ko.observable(restaurantObj.opening_hours);
-        this.photos = ko.observable(restaurantObj.photos);
-        this.reviews = ko.observable(restaurantObj.reviews);
-        this.website = ko.observable(restaurantObj.website);
-        this.id = ko.observable(restaurantObj.id);
-        this.name = ko.observable(restaurantObj.name);
-        this.placeId = ko.observable(restaurantObj.place_id);
-        this.priceLevel = ko.observable(restaurantObj.price_level);
-        this.rating = ko.observable(restaurantObj.rating);
-        this.vicinity = ko.observable(restaurantObj.vicinity);
-        this.mapIcon = ko.observable(this.mapIconNormal);
-        this.mapMarker = ko.observable();
+        this.geometry = restaurantObj.geometry;
+        this.address_formatted = restaurantObj.formatted_address;
+        this.address_components = restaurantObj.address_components;
+        this.phone = restaurantObj.formatted_phone_number;
+        this.hours = restaurantObj.opening_hours;
+        this.photos = restaurantObj.photos;
+        this.reviews = restaurantObj.reviews;
+        this.website = restaurantObj.website;
+        this.id = restaurantObj.id;
+        this.name = restaurantObj.name;
+        this.placeId = restaurantObj.place_id;
+        this.priceLevel = restaurantObj.price_level;
+        this.rating = restaurantObj.rating;
+        this.vicinity = restaurantObj.vicinity;
+        this.mapIcon = this.mapIconNormal;
+        this.mapMarker = '';
         this.getName = function () {
             return this.name;
         };
 
-        // function called when either list or marker clicked
+        // method to process details data into object
+        this.addDetails = function(details){
+            this.address_components = details.address_components;
+            this.address_formatted = details.formatted_address;
+            this.phone = details.formatted_phone_number;
+            this.geometry = details.geometry;
+            this.hours = details.opening_hours;
+            this.rating = details.rating;
+            this.photos = details.photos;
+            this.reviews = details.reviews;
+            this.website = details.website;
+        };
+
+        // method called when either list or marker clicked
         this.octoHighlighter = function () {
             if (app.currentHighlight !== null) {
                 app.currentHighlight.setIcon(this.mapIconNormal);
@@ -295,22 +316,6 @@ var app = app || {};
         self.getRestaurants = function () {
             return self.restaurants;
         };
-        self.status = ko.observable();
-        self.noError = ko.observable(true);
-
-        self.setStatus = function(status){
-            self.status = status;
-            self.noError = false;
-        };
-
-        var errorMsg = {
-            "UNKNOWN_ERROR":  "indicates a server-side error; trying again may be successful",
-            "ZERO_RESULTS": "indicates that the reference was valid but no longer refers to a valid result. This may occur if the establishment is no longer in business.",
-            "OVER_QUERY_LIMIT":  "indicates that you are over your quota.",
-            "REQUEST_DENIED": "indicates that your request was denied, generally because of lack of an invalid key parameter.",
-            "INVALID_REQUEST":  "generally indicates that the query (reference) is missing.",
-            "NOT_FOUND":  "indicates that the referenced location was not found in the Places database."
-        }
 
     }
 

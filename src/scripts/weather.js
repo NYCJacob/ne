@@ -29,7 +29,7 @@
         // ko model only one object
         var Weather = function(data) {
             this.summary = ko.observable(data.currently.summary);
-            this.icon = ko.observable(data.currently.icon);
+            this.icon = data.currently.icon;
             this.getIcon = function () {
                 return this.icon;
             };
@@ -42,7 +42,7 @@
             } );
             this.dailySummary =  ko.observable(data.daily.summary);
             // this.weatherImg = ko.computed(displayIcon(this.icon)).extend({ deferred: true });
-            this.weatherImg = ko.observable(displayIcon(this.icon()));
+            this.weatherImg = displayIcon(this.icon);
         };
 
         //TODO: make the weatherIcons object work with the Weather class
@@ -62,23 +62,23 @@
         };
 
         function displayIcon(icon) {
-            if (this.icon === 'rain') {
+            if (icon === 'rain') {
                 return weatherIcons.rain;
-            } else if (this.icon === 'snow') {
+            } else if (icon === 'snow') {
                 return weatherIcons.snow;
-            } else if (this.icon === 'sleet') {
+            } else if (icon === 'sleet') {
                 return weatherIcons.sleet;
-            } else if (this.icon === 'hail') {
+            } else if (icon === 'hail') {
                 return weatherIcons.sleet;
-            } else if (this.icon === 'wind') {
+            } else if (icon === 'wind') {
                 return weatherIcons.wind;
-            } else if (this.icon === 'fog') {
+            } else if (icon === 'fog') {
                 return weatherIcons.fog;
-            } else if (this.icon === 'cloudy') {
+            } else if (icon === 'cloudy') {
                 return weatherIcons.cloudy;
-            } else if (this.icon === 'partly-cloudy-day') {
+            } else if (icon === 'partly-cloudy-day') {
                 return weatherIcons.partly_cloudy_day;
-            } else if (this.icon === 'partly-cloudy-night') {
+            } else if (icon === 'partly-cloudy-night') {
                 return weatherIcons.partly_cloudy_night;
             } else if (icon === 'clear') {
                 return weatherIcons.clear_day;

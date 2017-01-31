@@ -112,7 +112,21 @@ var app = app || {};
             type: ['restaurant']
         }, callback);
     }
+
     function callback(results, status) {
+        if (status=== google.maps.places.PlacesServiceStatus.OK) {
+            app.RestaurantArray = results.map(function (item) {
+                return new Restaurant(item);
+            });
+            app.RestaurantArray.forEach(createMarker);
+            ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray), document.getElementById('mapView'));
+        } else {
+            console.log("place service status error");
+        }
+    }  // end callback
+
+    // this was the details results callback
+    function _callback(results, status) {
         // details need to be stored for searching other api data not just to display in infoWindow
         app.detailsArray = [];
         if (status=== google.maps.places.PlacesServiceStatus.OK) {
@@ -120,6 +134,12 @@ var app = app || {};
                 // get details based on place_id
                  googleDetails(item.place_id);
             });
+            // app.detailsArray is array of detail results from google based
+            // places results place_id with each result pushed into app.detailsArray
+            app.RestaurantArray = app.detailsArray.map(function (item) {
+                return new Restaurant(item);
+            });
+
             app.RestaurantArray.forEach(createMarker);
             ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray), document.getElementById('mapView'));
         } else {
@@ -137,7 +157,43 @@ var app = app || {};
                 app.detailsArray.push(details);
             } else {
                 console.log("details error " + status);
+                // var errorCode = processError(status);
             }
+            if (errorCode === 2) {
+
+            }
+        }
+    }
+
+    function processError(status) {
+        switch (status) {
+            case "UNKNOWN_ERROR":
+                // do something
+                console.log(status + "possible server-side error; trying again may be successful");
+                break;
+            case "ZERO_RESULTS":
+                // do something
+                console.log(status + "possible server-side error; trying again may be successful");
+                break;
+            case "OVER_QUERY_LIMIT":
+                // do something
+                console.log(status + "possible server-side error; trying again may be successful");
+                break;
+            case "REQUEST_DENIED":
+                // do something
+                console.log(status + "possible server-side error; trying again may be successful");
+                break;
+            case "INVALID_REQUEST":
+                // do something
+                console.log(status + "possible server-side error; trying again may be successful");
+                break;
+            case "NOT_FOUND":
+                // do something
+                console.log(status + "possible server-side error; trying again may be successful");
+                break;
+            default:
+                // do something
+                break;
         }
     }
 
@@ -178,7 +234,16 @@ var app = app || {};
     Restaurant = function (restaurantObj) {
         this.mapIconNormal = 'img/restaurant.png';
         this.mapIconRed = 'img/restaurant.red.png';
+        // details search geometry object includes
+        // location object and viewport object
         this.geometry = ko.observable(restaurantObj.geometry);
+        this.address_formatted = ko.observable(restaurantObj.formatted_address);
+        this.address_components = ko.observable(restaurantObj.address_components);
+        this.phone = ko.observable(restaurantObj.formatted_phone_number);
+        this.hours = ko.observable(restaurantObj.opening_hours);
+        this.photos = ko.observable(restaurantObj.photos);
+        this.reviews = ko.observable(restaurantObj.reviews);
+        this.website = ko.observable(restaurantObj.website);
         this.id = ko.observable(restaurantObj.id);
         this.name = ko.observable(restaurantObj.name);
         this.placeId = ko.observable(restaurantObj.place_id);
@@ -191,7 +256,7 @@ var app = app || {};
             return this.name;
         };
 
-        // function called when either list of marker clicked
+        // function called when either list or marker clicked
         this.octoHighlighter = function () {
             if (app.currentHighlight !== null) {
                 app.currentHighlight.setIcon(this.mapIconNormal);
@@ -228,6 +293,22 @@ var app = app || {};
         self.getRestaurants = function () {
             return self.restaurants;
         };
+        self.status = ko.observable();
+        self.noError = ko.observable(true);
+
+        self.setStatus = function(status){
+            self.status = status;
+            self.noError = false;
+        };
+
+        var errorMsg = {
+            "UNKNOWN_ERROR":  "indicates a server-side error; trying again may be successful",
+            "ZERO_RESULTS": "indicates that the reference was valid but no longer refers to a valid result. This may occur if the establishment is no longer in business.",
+            "OVER_QUERY_LIMIT":  "indicates that you are over your quota.",
+            "REQUEST_DENIED": "indicates that your request was denied, generally because of lack of an invalid key parameter.",
+            "INVALID_REQUEST":  "generally indicates that the query (reference) is missing.",
+            "NOT_FOUND":  "indicates that the referenced location was not found in the Places database."
+        }
 
     }
 

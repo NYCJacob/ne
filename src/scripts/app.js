@@ -97,6 +97,8 @@ var app = app || {};
                 style: google.maps.NavigationControlStyle.SMALL
             }
         });
+        // first get standard place data - need place_id for details search
+        //TODO: need onerror handler
         getPlacesData();
     };  // end app.init
 
@@ -120,13 +122,15 @@ var app = app || {};
             });
             app.RestaurantArray.forEach(createMarker);
             ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray), document.getElementById('mapView'));
+            app.RestaurantArray.forEach(googleDetails);
+
         } else {
             console.log("place service status error");
         }
     }  // end callback
 
     // this was the details results callback
-    function _callback(results, status) {
+    function BAD_callback(results, status) {
         // details need to be stored for searching other api data not just to display in infoWindow
         app.detailsArray = [];
         if (status=== google.maps.places.PlacesServiceStatus.OK) {
@@ -142,24 +146,22 @@ var app = app || {};
 
             app.RestaurantArray.forEach(createMarker);
             ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray), document.getElementById('mapView'));
+
         } else {
             console.log("place service status error");
         }
     }  // end callback
 
-    function googleDetails(id) {
+    function googleDetails(Restaurant) {
         var serviceDetails =  new google.maps.places.PlacesService(app.map);
-        var request = { placeId: id };
+        var request = { placeId: Restaurant.placeId };
         serviceDetails.getDetails(request, callback);
         function callback(details, status){
             if (status == google.maps.places.PlacesServiceStatus.OK) {
-                console.log(details);
-                app.detailsArray.push(details);
+                console.log('Details received ' + details);
+
             } else {
                 console.log("details error " + status);
-                // var errorCode = processError(status);
-            }
-            if (errorCode === 2) {
 
             }
         }

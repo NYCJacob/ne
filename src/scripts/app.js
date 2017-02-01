@@ -98,9 +98,11 @@ var app = app || {};
             }
         });
 
+
+
         // single infoWindow instance
         app.infoWindow = new google.maps.InfoWindow();
-        app.infoWindow.setContent('testing');
+        // app.infoWindow.setContent(infoContent);
 
         // first get standard place data - need place_id for details search
         //TODO: need onerror handler
@@ -225,7 +227,9 @@ var app = app || {};
             animation: google.maps.Animation.DROP,
             position: place.geometry.location,
             id: place.id,
-            content: place.name + '<br>' + 'Rating: ' + place.rating + '<br>' + 'Price Level (0 - 4): ' + place.priceLevel
+            content: place.name + 'Rating: ' + place.rating + '<br>' + 'Price Level (0 - 4): ' + place.priceLevel +
+                place.photos + place.website
+            // content: place.name + 'Rating: ' + place.rating + '<br>' + 'Price Level (0 - 4): ' + place.priceLevel
         });
 
         google.maps.event.addListener(place.mapMarker, 'click', function () {
@@ -304,7 +308,16 @@ var app = app || {};
             app.currentHighlight = this.mapMarker;
             // see this post re adding dynamic content using single infoWindow
             // http://stackoverflow.com/questions/9475830/google-maps-api-v3-markers-all-share-the-same-infowindow?rq=1
-            // RestaurantsViewModel.infoWindow.setContent(this.mapMarker.content);
+            // infoWindow template
+            //  attempt to use ko template but not working
+            // var infoContent =
+            //     '<div id="info-window"' +
+            //     'data-bind="template: { name: \'info-window-template\' }">' +
+            //     '</div>';
+            // app.infoWindow.setContent(infoContent);
+
+            app.infoWindow.setContent(this.mapMarker.content);
+
             app.infoWindow.open(app.map, this.mapMarker);
 
         }

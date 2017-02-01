@@ -226,9 +226,7 @@ var app = app || {};
             title: place.name,
             animation: google.maps.Animation.DROP,
             position: place.geometry.location,
-            id: place.id,
-            content: place.name + 'Rating: ' + place.rating + '<br>' + 'Price Level (0 - 4): ' + place.priceLevel +
-                place.photos + place.website
+            id: place.id
             // content: place.name + 'Rating: ' + place.rating + '<br>' + 'Price Level (0 - 4): ' + place.priceLevel
         });
 
@@ -260,7 +258,7 @@ var app = app || {};
         this.hours = restaurantObj.opening_hours;
         this.photos = restaurantObj.photos;
         this.reviews = restaurantObj.reviews;
-        this.website = restaurantObj.website;
+        this.website = '';
         this.id = restaurantObj.id;
         this.name = restaurantObj.name;
         this.placeId = restaurantObj.place_id;
@@ -299,10 +297,11 @@ var app = app || {};
                 placeId : this.placeId
             };
             app.service.getDetails(request, callback);
-            function callback(place, status) {
+            function callback(placeDetails, status) {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
                     console.log('google details received');
-                    console.log(place);
+                    console.log(placeDetails);
+                    this.addDetails(placeDetails);
                 }
             }
             app.currentHighlight = this.mapMarker;
@@ -316,12 +315,17 @@ var app = app || {};
             //     '</div>';
             // app.infoWindow.setContent(infoContent);
 
-            app.infoWindow.setContent(this.mapMarker.content);
-
+            app.infoWindow.setContent(makeInfoHTML(this));
             app.infoWindow.open(app.map, this.mapMarker);
-
         }
     };
+
+    function makeInfoHTML(place) {
+        var infoContent =  place.name +
+            place.address_formatted +
+            place.website;
+        return infoContent;
+    }
 
     function RestaurantsViewModel(mappedArray) {
         var self = this;

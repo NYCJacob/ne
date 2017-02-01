@@ -107,6 +107,16 @@ $content-height:  80vh;
         font-size: 2.0vh;
         @extend .infoWindow;
     }
+
+    .infoWindow-openNow {
+        font-size: 2.0vh;
+        @extend .infoWindow;
+    }
+
+    .infoWindow-open {
+        font-size: 2.0vh;
+        @extend .infoWindow;
+    }
     .infoWindow-website {
         font-size: 2.0vh;
         @extend .infoWindow;

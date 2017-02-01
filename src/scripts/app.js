@@ -305,15 +305,6 @@ var app = app || {};
                 }
             }
             app.currentHighlight = this.mapMarker;
-            // see this post re adding dynamic content using single infoWindow
-            // http://stackoverflow.com/questions/9475830/google-maps-api-v3-markers-all-share-the-same-infowindow?rq=1
-            // infoWindow template
-            //  attempt to use ko template but not working
-            // var infoContent =
-            //     '<div id="info-window"' +
-            //     'data-bind="template: { name: \'info-window-template\' }">' +
-            //     '</div>';
-            // app.infoWindow.setContent(infoContent);
 
             app.infoWindow.setContent(makeInfoHTML(this));
             app.infoWindow.open(app.map, this.mapMarker);
@@ -321,14 +312,63 @@ var app = app || {};
     };
 
     function makeInfoHTML(place) {
+        // for some reason cannot use .slice on address_formatted
+        var addressString = place.address_formatted;
         // remove USA from address
-        var addressDisplay = place.address_formatted.slice(0, -5);
+        var addressDisplay = addressString.slice(0, -5);
+
+        var openNow = function () {
+          if (place.hours.open_now === true) {
+              return 'YES';
+          }  else if (place.hours.open_now === false) {
+              return "NO";
+          } else
+              return 'unknown';
+        } ;
+
+        var openHours = function () {
+            var HTML = '<ul>';
+            for (var i = 0; i < place.hours.weekday_text.length; i++) {
+                // console.log(place.hours.weekday_text[i]);
+                HTML += '<li>' + place.hours.weekday_text[i] + '</li>';
+            };
+            HTML += '</ul>';
+            return HTML;
+        };
+
+        var priceIcon = function () {
+            switch (place.price_level) {
+                case 1:
+                    return '$';
+                    break;
+                case 2:
+                    return '$$';
+                    break;
+                case 3:
+                    return '$$$';
+                    break;
+                case 4:
+                    return '$$$$';
+                    break;
+                case 5:
+                    return '$$$$$';
+                    break;
+                default:
+                    return 'unknown';
+            }
+        };
 
         var infoContent =
             '<div class="infoWindow">' +
                 '<span class="infoWindow-name">' + place.name  + '</span>' +
                 '<span class="infoWindow-address">' + addressDisplay  + '</span>' +
-                '<span class="infoWindow-website">' + place.website  + '</span>';
+                '<span class="infoWindow-website">Website ' + place.website  + '</span>' +
+                '<span class="infoWindow-priceLevel">Price Level: ' + priceIcon()  + '</span>' + ' | ' +
+                '<span class="infoWindow-rating">Google Rating: ' + place.rating  + '</span>' +
+                '<span class="infoWindow-openNow">' + 'Open Now: ' + openNow()  + '</span>' +
+                '<span class="infoWindow-hours">' + '<strong>' + 'Hours: ' + '</strong>' + '</span>' +
+                '<span class="infoWindow-open">' + openHours() + '</span>' +
+                '<span class="infoWindow-reviews">' + 'There are ' + place.reviews.length + ' reviews-click to show/hide.' + '</span>';
 
         return infoContent;
     }

@@ -97,6 +97,11 @@ var app = app || {};
                 style: google.maps.NavigationControlStyle.SMALL
             }
         });
+
+        // single infoWindow instance
+        app.infoWindow = new google.maps.InfoWindow();
+        app.infoWindow.setContent('testing');
+
         // first get standard place data - need place_id for details search
         //TODO: need onerror handler
         getPlacesData();
@@ -104,9 +109,7 @@ var app = app || {};
 
     // based on google map place search api example
     // https://developers.google.com/maps/documentation/javascript/examples/place-search
-    // infowindow = new google.maps.InfoWindow();
     function getPlacesData(){
-        infowindow = new google.maps.InfoWindow();
         app.service = new google.maps.places.PlacesService(app.map);
         app.service.nearbySearch({
             location: app.neighborhood,
@@ -298,14 +301,11 @@ var app = app || {};
                     console.log(place);
                 }
             }
-
+            app.currentHighlight = this.mapMarker;
             // see this post re adding dynamic content using single infoWindow
             // http://stackoverflow.com/questions/9475830/google-maps-api-v3-markers-all-share-the-same-infowindow?rq=1
-            infowindow.setContent(this.mapMarker.content);
-            infowindow.open(app.map, this.mapMarker);
-            app.currentHighlight = this.mapMarker;
-
-            // search other api data
+            // RestaurantsViewModel.infoWindow.setContent(this.mapMarker.content);
+            app.infoWindow.open(app.map, this.mapMarker);
 
         }
     };

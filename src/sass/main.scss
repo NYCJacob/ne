@@ -99,6 +99,17 @@ $content-height:  80vh;
 .infoWindow {
     display: block;
 
+    .infoWindow-reviewsHead {
+        font-size: 2.0vh;
+        @extend .infoWindow;
+    }
+
+    .infoWindow-reviews {
+        font-size: 2.0vh;
+        //visibility: hidden;
+        @extend .infoWindow;
+    }
+
     .infoWindow-name {
         font-size: 3.0vh;
         @extend .infoWindow;

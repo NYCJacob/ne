@@ -358,6 +358,16 @@ var app = app || {};
             }
         };
 
+        var reviewsHTML = function () {
+            var HTML = '<ul>';
+            for (var x = 0; x < place.reviews.length; x++) {
+                HTML += '<li>' + place.reviews[x].author_name   + '</li>';
+            }
+
+            HTML += '</ul>';
+            return HTML;
+        };
+
         var infoContent =
             '<div class="infoWindow">' +
                 '<span class="infoWindow-name">' + place.name  + '</span>' +
@@ -368,7 +378,8 @@ var app = app || {};
                 '<span class="infoWindow-openNow">' + 'Open Now: ' + openNow()  + '</span>' +
                 '<span class="infoWindow-hours">' + '<strong>' + 'Hours: ' + '</strong>' + '</span>' +
                 '<span class="infoWindow-open">' + openHours() + '</span>' +
-                '<span class="infoWindow-reviews">' + 'There are ' + place.reviews.length + ' reviews-click to show/hide.' + '</span>';
+                '<span class="infoWindow-reviewsHead" data-bind="click: toggleReviews">' + 'There are ' + place.reviews.length + ' reviews-click to show/hide.' + '</span>' +
+                '<span class="infoWindow-reviews" data-bind="visible: showReviews">' + reviewsHTML() + '</span>';
 
         return infoContent;
     }
@@ -379,6 +390,12 @@ var app = app || {};
         self.getRestaurants = function () {
             return self.restaurants;
         };
+
+        self.showReviews = ko.observable(false);
+
+        self.toggleReviews =  function(){
+            self.showReviews(!self.showReviews());
+        }
 
     }
 

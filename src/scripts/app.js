@@ -321,9 +321,15 @@ var app = app || {};
     };
 
     function makeInfoHTML(place) {
-        var infoContent =  place.name +
-            place.address_formatted +
-            place.website;
+        // remove USA from address
+        var addressDisplay = place.address_formatted.slice(0, -5);
+
+        var infoContent =
+            '<div class="infoWindow">' +
+                '<span class="infoWindow-name">' + place.name  + '</span>' +
+                '<span class="infoWindow-address">' + addressDisplay  + '</span>' +
+                '<span class="infoWindow-website">' + place.website  + '</span>';
+
         return infoContent;
     }
 

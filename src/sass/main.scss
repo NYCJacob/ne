@@ -96,6 +96,23 @@ $warning-color: #ff0000;
 $blue-color: #0000ff;
 $content-height:  80vh;
 
+.infoWindow {
+    display: block;
+
+    .infoWindow-name {
+        font-size: 3.0vh;
+        @extend .infoWindow;
+    }
+    .infoWindow-address {
+        font-size: 2.0vh;
+        @extend .infoWindow;
+    }
+    .infoWindow-website {
+        font-size: 2.0vh;
+        @extend .infoWindow;
+    }
+}
+
 #weather {
     color: black;
     font-size: 3vh;

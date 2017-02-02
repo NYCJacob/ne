@@ -136,29 +136,6 @@ var app = app || {};
         }
     }  // end callback
 
-    // this was the details results callback
-    function BAD_callback(results, status) {
-        // details need to be stored for searching other api data not just to display in infoWindow
-        app.detailsArray = [];
-        if (status=== google.maps.places.PlacesServiceStatus.OK) {
-            results.forEach(function (item) {
-                // get details based on place_id
-                 googleDetails(item.place_id);
-            });
-            // app.detailsArray is array of detail results from google based
-            // places results place_id with each result pushed into app.detailsArray
-            app.RestaurantArray = app.detailsArray.map(function (item) {
-                return new Restaurant(item);
-            });
-
-            app.RestaurantArray.forEach(createMarker);
-            ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray), document.getElementById('mapView'));
-
-        } else {
-            console.log("place service status error");
-        }
-    }  // end callback
-
     function googleDetails(restaurant) {
         var serviceDetails =  new google.maps.places.PlacesService(app.map);
         var request = { placeId: restaurant.placeId };
@@ -178,37 +155,6 @@ var app = app || {};
         }
     } // end googleDetails
 
-    function processError(status) {
-        switch (status) {
-            case "UNKNOWN_ERROR":
-                // do something
-                console.log(status + "possible server-side error; trying again may be successful");
-                break;
-            case "ZERO_RESULTS":
-                // do something
-                console.log(status + "possible server-side error; trying again may be successful");
-                break;
-            case "OVER_QUERY_LIMIT":
-                // do something
-                console.log(status + "possible server-side error; trying again may be successful");
-                break;
-            case "REQUEST_DENIED":
-                // do something
-                console.log(status + "possible server-side error; trying again may be successful");
-                break;
-            case "INVALID_REQUEST":
-                // do something
-                console.log(status + "possible server-side error; trying again may be successful");
-                break;
-            case "NOT_FOUND":
-                // do something
-                console.log(status + "possible server-side error; trying again may be successful");
-                break;
-            default:
-                // do something
-                break;
-        }
-    }
 
     function createMarker(place) {
         // set icon for marker
@@ -284,6 +230,10 @@ var app = app || {};
             this.website = details.website;
         };
 
+        this.addInspections = function (inspectionData) {
+            console.log(inspectionData);
+        };
+
         // method called when either list or marker clicked
         this.octoHighlighter = function () {
             if (app.currentHighlight !== null) {
@@ -300,10 +250,11 @@ var app = app || {};
             function callback(placeDetails, status) {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
                     console.log('google details received');
-                    // search NYC inspection api based on name and address
-                    searchNYCinspections(placeDetails.name, placeDetails.address_components);
                     // console.log(placeDetails);
+                    // TODO: sometimes getting typeError 'Cannot read property 'addDetails' of null
                     this.addDetails(placeDetails);
+                    // search NYC inspection api based on name and address
+                    searchNYCinspections(placeDetails.place_id ,placeDetails.name, placeDetails.address_components);
                 }
             }
             app.currentHighlight = this.mapMarker;
@@ -393,13 +344,6 @@ var app = app || {};
             return self.restaurants;
         };
 
-        // this is modeled on this post but doesn't seem to work for dynamically loaded div
-        // http://stackoverflow.com/questions/11561756/knockout-how-do-i-toggle-visibility-of-multiple-divs-on-button-click#11561942
-        self.showReviews = ko.observable(false);
-        self.toggleReviews =  function(){
-            self.showReviews(!self.showReviews());
-        }
-
     }
 
     // NYC Restaurant inspection api request
@@ -416,7 +360,7 @@ var app = app || {};
     *  ....
     *  [7] types[0] = postal_code
     * */
-    function searchNYCinspections(name, address) {
+    function searchNYCinspections(placeId, name, address) {
         // name needs to be all caps
         var nycName = name.toUpperCase();
         // address must be stripped of dashes
@@ -434,6 +378,7 @@ var app = app || {};
                 "$select": "*"
             }
         }).done(function (data) {
+            //  this is the ajax request object
             console.log(data);
             // data is an array of objections returned from api
             // if request OK but no data

@@ -300,8 +300,9 @@ var app = app || {};
             function callback(placeDetails, status) {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
                     console.log('google details received');
-                    console.log(placeDetails);
+                    // console.log(placeDetails);
                     this.addDetails(placeDetails);
+                    searchNYCinspections(placeDetails.name, placeDetails.address_components);
                 }
             }
             app.currentHighlight = this.mapMarker;
@@ -337,7 +338,7 @@ var app = app || {};
         };
 
         var priceIcon = function () {
-            switch (place.price_level) {
+            switch (place.priceLevel) {
                 case 1:
                     return '$';
                     break;
@@ -373,8 +374,8 @@ var app = app || {};
                 '<span class="infoWindow-name">' + place.name  + '</span>' +
                 '<span class="infoWindow-address">' + addressDisplay  + '</span>' +
                 '<span class="infoWindow-website">Website ' + place.website  + '</span>' +
-                '<span class="infoWindow-priceLevel">Price Level: ' + priceIcon()  + '</span>' + ' | ' +
-                '<span class="infoWindow-rating">Google Rating: ' + place.rating  + '</span>' +
+                '<span class="infoWindow-priceLevel">Price Level: ' + '</span>' + '<span class="dollar-sign"><strong>' + priceIcon() + '</strong></span>'   + ' | ' +
+                '<span class="infoWindow-rating">Google Rating: ' + '</span>' + '<span><strong>' + place.rating + '</strong></span>'+
                 '<span class="infoWindow-openNow">' + 'Open Now: ' + openNow()  + '</span>' +
                 '<span class="infoWindow-hours">' + '<strong>' + 'Hours: ' + '</strong>' + '</span>' +
                 '<span class="infoWindow-open">' + openHours() + '</span>' +
@@ -391,8 +392,9 @@ var app = app || {};
             return self.restaurants;
         };
 
+        // this is modeled on this post but doesn't seem to work for dynamically loaded div
+        // http://stackoverflow.com/questions/11561756/knockout-how-do-i-toggle-visibility-of-multiple-divs-on-button-click#11561942
         self.showReviews = ko.observable(false);
-
         self.toggleReviews =  function(){
             self.showReviews(!self.showReviews());
         }
@@ -402,15 +404,15 @@ var app = app || {};
 
 
     // NYC Restaurant inspection api request
-    function searchNYCinspections(name, building, street, boro) {
+    function searchNYCinspections(name) {
         $.ajax({
             url: "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
             type: "GET",
             data: {
-                "zipcode" : '11372',
-                "$limit" : 500,
+                "zipcode" : "11372",
+                "dba"   : name,
+                "$limit" : 50,
                 "$$app_token" : "PCvLGVSSaI1KBWr0dwX7vhl1E",
-                "$q": search,
                 "$select": "*"
             }
         }).done(function(data) {
@@ -418,7 +420,6 @@ var app = app || {};
             // data is an array of objections returned from api
         });
     }
-
 
 
     // yelp oAuth request

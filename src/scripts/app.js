@@ -300,9 +300,10 @@ var app = app || {};
             function callback(placeDetails, status) {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
                     console.log('google details received');
+                    // search NYC inspection api based on name and address
+                    searchNYCinspections(placeDetails.name, placeDetails.address_components);
                     // console.log(placeDetails);
                     this.addDetails(placeDetails);
-                    searchNYCinspections(placeDetails.name, placeDetails.address_components);
                 }
             }
             app.currentHighlight = this.mapMarker;
@@ -332,7 +333,7 @@ var app = app || {};
             for (var i = 0; i < place.hours.weekday_text.length; i++) {
                 // console.log(place.hours.weekday_text[i]);
                 HTML += '<li>' + place.hours.weekday_text[i] + '</li>';
-            };
+            }
             HTML += '</ul>';
             return HTML;
         };
@@ -401,23 +402,44 @@ var app = app || {};
 
     }
 
-
-
     // NYC Restaurant inspection api request
-    function searchNYCinspections(name) {
+    /*
+    * address_components is an array of objects from google places details that can vary
+    * [0]
+    *      long_name = string
+    *      short_name = string
+    *      types = array[0] string of type name ie "street_number"
+    *
+    * [1] types[0] = route  (ie street name)
+    *
+    * [2] types[0] neighborhood  [1]  political   ie "Jackson Heights"
+    *  ....
+    *  [7] types[0] = postal_code
+    * */
+    function searchNYCinspections(name, address) {
+        // name needs to be all caps
+        var nycName = name.toUpperCase();
+        // address must be stripped of dashes
+        var nycStreetAddress = address[0].long_name;
+        //  street may be called route and should be all caps?
+
         $.ajax({
             url: "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
             type: "GET",
             data: {
-                "zipcode" : "11372",
-                "dba"   : name,
-                "$limit" : 50,
-                "$$app_token" : "PCvLGVSSaI1KBWr0dwX7vhl1E",
+                "zipcode": "11372",
+                "dba": nycName,
+                "$limit": 50,
+                "$$app_token": "PCvLGVSSaI1KBWr0dwX7vhl1E",
                 "$select": "*"
             }
-        }).done(function(data) {
+        }).done(function (data) {
             console.log(data);
             // data is an array of objections returned from api
+            // if request OK but no data
+            if (data.length === 0) {
+
+            }
         });
     }
 

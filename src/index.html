@@ -26,16 +26,15 @@
                         <div id="weather-headline">
                             <img class="weather-icon" data-bind="attr: {src: weatherImg}">
                             <span class="weather-summary" data-bind="text: summary"></span>
-                        </div>
-                        <div id="weather-details">
                             <span class="weather-summary" data-bind="text:temp"></span><span>˚</span>
                             <span>Feels like <span data-bind="text:tempFeel"></span><span>˚</span>
-                            <span>Chance of rain  <span data-bind="text:rainProb"></span>%</span>
+                            <span>Rain?  <span data-bind="text:rainProb"></span>%</span>
                             </span>
+                            <div>
+                                <span id="weather-fn">Weather data provided by <a href="https://forecast.io">forecast.io</a></span>
+                            </div>
                         </div>
-                        <div>
-                            <span id="weather-fn">Weather data provided by <a href="https://forecast.io">forecast.io</a></span>
-                        </div>
+
                     </aside>
                 </div>
             </header>
@@ -49,6 +48,9 @@
 
                 <section id="mapDiv">
 
+                </section>
+                <section id="details-sidebar">
+                    <p>This are the facts.</p>
                 </section>
             </div>
 

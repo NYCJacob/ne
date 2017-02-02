@@ -99,6 +99,12 @@ $content-height:  95vh;
 $footer-height: 5vh;
 $footer-margin-top: 95vh;
 
+header {
+    h1 {
+        margin: .3em 0;
+    }
+}
+
 .infoWindow {
     display: block;
 
@@ -157,7 +163,6 @@ $footer-margin-top: 95vh;
 
 #weather-fn {
     font-size: small;
-
     a {
         display: inline;
         color: #4AB1FF;
@@ -175,7 +180,14 @@ $footer-margin-top: 95vh;
 #mapDiv {
     border: 1px solid $map-color;
     float: right;
-    width: 74%;
+    width: 49%;
+    height: $content-height;
+}
+
+#details-sidebar {
+    border: 2px dashed $listing-color;
+    float: right;
+    width: 25%;
     height: $content-height;
 }
 

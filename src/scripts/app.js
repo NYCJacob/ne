@@ -199,6 +199,19 @@ var app = app || {};
         // location object and viewport object
         this.geometry = restaurantObj.geometry;
         this.address_formatted = restaurantObj.formatted_address;
+        /*
+         * address_components is an array of objects from google places details that can vary
+         * [0]
+         *      long_name = string
+         *      short_name = string
+         *      types = array[0] string of type name ie "street_number"
+         *
+         * [1] types[0] = route  (ie street name)
+         *
+         * [2] types[0] neighborhood  [1]  political   ie "Jackson Heights"
+         *  ....
+         *  [7] types[0] = postal_code
+         * */
         this.address_components = restaurantObj.address_components;
         this.phone = restaurantObj.formatted_phone_number;
         this.hours = restaurantObj.opening_hours;
@@ -217,6 +230,11 @@ var app = app || {};
             return this.name;
         };
 
+        this.inspectionData = {
+            'status_message' : '',
+
+        }
+
         // method to process details data into object
         this.addDetails = function(details){
             this.address_components = details.address_components;
@@ -230,8 +248,29 @@ var app = app || {};
             this.website = details.website;
         };
 
-        this.addInspections = function (inspectionData) {
-            console.log(inspectionData);
+        this.getNYCinspections = function () {
+            console.log('hit getNYCinspections method');
+            // todo call ajax request
+            $.ajax({
+                url: "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
+                type: "GET",
+                data: {
+                    "zipcode": "11372",
+                    "dba": this.name,
+                    "$limit": 50,
+                    "$$app_token": "PCvLGVSSaI1KBWr0dwX7vhl1E",
+                    "$select": "*"
+                }
+            }).done(function (data) {
+                //  this is the ajax request object
+                console.log(data);
+                // data is an array of objections returned from api
+                this.processInspections(data);
+            });
+        };
+
+        this.processInspections = function (inspections) {
+            var inspectionData = inspections;
         };
 
         // method called when either list or marker clicked
@@ -241,26 +280,12 @@ var app = app || {};
             }
             this.mapMarker.setIcon(this.mapIconRed);
 
-            // request google place details based on google placeI
-            // placeId was part of google placeSearch results
-/*            var request = {
-                placeId : this.placeId
-            };
-            app.service.getDetails(request, callback);
-            function callback(placeDetails, status) {
-                if (status == google.maps.places.PlacesServiceStatus.OK) {
-                    console.log('google details received');
-                    // console.log(placeDetails);
-                    // TODO: sometimes getting typeError 'Cannot read property 'addDetails' of null
-                    this.addDetails(placeDetails);
-                    // search NYC inspection api based on name and address
-                    searchNYCinspections(placeDetails.place_id ,placeDetails.name, placeDetails.address_components);
-                }
-            }*/
             app.currentHighlight = this.mapMarker;
 
             app.infoWindow.setContent(makeInfoHTML(this));
             app.infoWindow.open(app.map, this.mapMarker);
+            this.getNYCinspections();
+            // searchNYCinspections(this);
         }
     };
 
@@ -347,24 +372,11 @@ var app = app || {};
     }
 
     // NYC Restaurant inspection api request
-    /*
-    * address_components is an array of objects from google places details that can vary
-    * [0]
-    *      long_name = string
-    *      short_name = string
-    *      types = array[0] string of type name ie "street_number"
-    *
-    * [1] types[0] = route  (ie street name)
-    *
-    * [2] types[0] neighborhood  [1]  political   ie "Jackson Heights"
-    *  ....
-    *  [7] types[0] = postal_code
-    * */
-    function searchNYCinspections(placeId, name, address) {
+    function NOTUSED_searchNYCinspections(place) {
         // name needs to be all caps
-        var nycName = name.toUpperCase();
+        var nycName = place.name.toUpperCase();
         // address must be stripped of dashes
-        var nycStreetAddress = address[0].long_name;
+        var nycStreetAddress = place.address_components[0].long_name;
         //  street may be called route and should be all caps?
 
         $.ajax({
@@ -382,11 +394,12 @@ var app = app || {};
             console.log(data);
             // data is an array of objections returned from api
             // if request OK but no data
-            if (data.length === 0) {
-
+            if (data.length !== 0) {
+                app.processNYCdata(data);
             }
         });
     }
+
 
 
     // yelp oAuth request

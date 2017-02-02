@@ -243,7 +243,7 @@ var app = app || {};
 
             // request google place details based on google placeI
             // placeId was part of google placeSearch results
-            var request = {
+/*            var request = {
                 placeId : this.placeId
             };
             app.service.getDetails(request, callback);
@@ -256,7 +256,7 @@ var app = app || {};
                     // search NYC inspection api based on name and address
                     searchNYCinspections(placeDetails.place_id ,placeDetails.name, placeDetails.address_components);
                 }
-            }
+            }*/
             app.currentHighlight = this.mapMarker;
 
             app.infoWindow.setContent(makeInfoHTML(this));

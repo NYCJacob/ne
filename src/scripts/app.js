@@ -191,6 +191,8 @@ var app = app || {};
     //  see https://developers.google.com/maps/documentation/javascript/places#place_search_responses
     var Restaurant;
     Restaurant = function (restaurantObj, index) {
+        // self added to access object from ajax callback
+        var self = this;
         //todo decide whether to use index numbering in map- hard to place number in restaurant icon
         this.index = index + 1;   // 1 added for UI numbering ;
         this.mapIconNormal = 'img/mapMakerIcons/3b8dc8/restaurant.png';
@@ -250,27 +252,42 @@ var app = app || {};
 
         this.getNYCinspections = function () {
             console.log('hit getNYCinspections method');
+            // api request all caps
+            var nycPlaceName = this.name.toUpperCase();
             // todo call ajax request
             $.ajax({
                 url: "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
                 type: "GET",
                 data: {
                     "zipcode": "11372",
-                    "dba": this.name,
+                    "dba": nycPlaceName,
                     "$limit": 50,
                     "$$app_token": "PCvLGVSSaI1KBWr0dwX7vhl1E",
                     "$select": "*"
                 }
             }).done(function (data) {
                 //  this is the ajax request object
-                console.log(data);
+                console.log('nyc ajax done: ' + data);
                 // data is an array of objections returned from api
-                this.processInspections(data);
+                self.processInspections(data);
+            }).fail(function() {
+                console.log( "nycinspection ajax error" );
             });
         };
 
-        this.processInspections = function (inspections) {
+        self.processInspections = function (inspections) {
+            // todo a better api call might avoid this processing
             var inspectionData = inspections;
+            // array of graded inspection from all inspections because not all have grade
+            // all have score which could be used in future version
+            var gradedInspections = [];
+            inspectionData.forEach(function (inspection) {
+                if (inspection.hasOwnProperty('grade')) {
+                    gradedInspections.push(inspection);
+                }
+            });
+            console.log('gradedInspections = ' + gradedInspections);
+
         };
 
         // method called when either list or marker clicked

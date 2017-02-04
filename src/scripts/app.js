@@ -232,7 +232,7 @@ var app = app || {};
             return this.name;
         };
 
-        this.inspectionResults = [];
+        this.inspectionResults = ko.observableArray();
         // method to process details data into object
         this.addDetails = function(details){
             this.address_components = details.address_components;
@@ -284,15 +284,15 @@ var app = app || {};
                     // inspection.grade_date = inspection.grade_date.slice(0, timeIndex);
                     //
                     // todo figure out date sort and then send to view template
-                    // convert to date object for sorting
+                    // convert to date object for sorting/ easier display options
                     inspection.grade_date = new Date(inspection.grade_date);
                     gradedInspections.push(inspection);
                 }
             });
             console.log('gradedInspections = ' + gradedInspections);
             // sort inspections by date most recent first
-            gradedInspections.sort(function(a,b){return a.grade_date.getTime() - b.grade_date.getTime()});
-
+            gradedInspections.sort(function(a,b){return b.grade_date - a.grade_date});
+            this.inspectionResults = gradedInspections;
         };
 
         // method called when either list or marker clicked

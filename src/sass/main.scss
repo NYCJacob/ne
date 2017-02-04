@@ -99,6 +99,10 @@ $content-height:  95vh;
 $footer-height: 5vh;
 $footer-margin-top: 95vh;
 
+* {
+    box-sizing: border-box;
+}
+
 header {
     h1 {
         margin: .3em 0;
@@ -174,7 +178,8 @@ header {
     border: 2px dashed $listing-color;
     float: left;
     width: 25%;
-    height: $content-height;
+    max-height: $content-height;
+    overflow: auto;
 }
 
 #mapDiv {

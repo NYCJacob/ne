@@ -42,7 +42,9 @@
                 <section id="listings">
                     <h2>Restaurants</h2>
                     <ul data-bind="foreach: restaurants">
-                        <li><a data-bind="text: name, click: octoHighlighter" href="#"></a></li>
+                        <li><a data-bind="text: name, click: octoHighlighter" href="#"></a>
+                            <!--<button data-bind="click: function () { console.log($context); }">Context Log</button>-->
+                        </li>
                     </ul>
                 </section>
 
@@ -50,21 +52,12 @@
 
                 </section>
                 <section id="details-sidebar">
-                    <p>This are the facts.</p>
-                    <div id="inspection-results" data-bind="template: { name: 'inspection-template', foreach:inspectionData">
-
-                    </div>
-                    <script type="text/html" id="inspection-template">
-                        <h3 data-bind="text: grade_date"></h3>
-                        <h3 data-bind="text: grade"></h3>
-                        <p>Credits: <span data-bind="text: comments"></span></p>
-                    </script>
-
-
+                    <h3>These are the facts</h3>
+                    <ul  data-bind="foreach: inspectionResults, visible: inspectionResults().length > 0">
+                        <li data-bind="text: grade_date">  </li>
+                    </ul>
                 </section>
             </div>
-
-            <footer>social icons go here including github  <a href="https://mapicons.mapsmarker.com"><img src="img/mapMakerIcons/miclogo-88x31.gif"></a> </footer>
 
         </div>
 

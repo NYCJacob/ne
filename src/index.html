@@ -53,8 +53,8 @@
                 </section>
                 <section id="details-sidebar">
                     <h3>These are the facts</h3>
-                    <ul  data-bind="foreach: inspectionResults, visible: inspectionResults().length > 0">
-                        <li data-bind="text: grade_date">  </li>
+                    <ul data-bind="text: selectedPlace">
+                        <li></li>
                     </ul>
                 </section>
             </div>
@@ -65,12 +65,12 @@
         <script>window.jQuery || document.write('<script src="scripts/vendor/jquery/dist/jquery.js"><\/script>')</script>
         <script src="scripts/plugins.js"></script>
         <script src="scripts/vendor/knockout/dist/knockout.js"></script>
+        <script src="scripts/vendor/oauth-signature/dist/oauth-signature.js"></script>
         <script src="scripts/app.js"></script>
         <script async defer src="scripts/weather.js"></script>
         <script async defer src=
                         "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyBinHw_1SkBR4Otshx5nnA_KSuT_kNwk0g&v=3&callback=app.initMap">
         </script>
-        <!--<script type="text/javascript" src="scripts/vendor/jso/src/jso.js"></script>-->
 
     </body>
 </html>

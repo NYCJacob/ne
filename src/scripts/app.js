@@ -195,6 +195,7 @@ var app = app || {};
         var self = this;
         //todo decide whether to use index numbering in map- hard to place number in restaurant icon
         this.index = index + 1;   // 1 added for UI numbering ;
+        self.selected = false;
         this.mapIconNormal = 'img/mapMakerIcons/3b8dc8/restaurant.png';
         this.mapIconRed = 'img/mapMakerIcons/ff0000/restaurant.png';
         // details search geometry object includes
@@ -295,18 +296,37 @@ var app = app || {};
             this.inspectionResults = gradedInspections;
         };
 
+        this.getYelp = function () {
+            // oAuth token  yelp api2.0 uses oAuth 1.0  NOT FUSION which uses oauth2
+            //  consumer key   5e8aVm47PCOnFIqWNsAO3A
+            var  consumerSecret = 'gtnzS8XUXupQ7t3yEUM-zgJeNz8';
+            //  token           e9CjCBMdlA3nunOhtdN9xHkNyc_Qa329
+            var tokenSecret  = 'z9vc2A_2yoIUYqe34Z3hKZlddYI';
+
+            var httpMethod = 'GET';
+            var yelpUrl = 'https://api.yelp.com/v2/search/' + 'placeName';
+
+            var yelpSignature = oauthSignature.generate(httpMethod, yelpUrl, parameters, consumerSecret, tokenSecret, options);
+
+            // yelp oAuth request
+
+        };
+
         // method called when either list or marker clicked
         this.octoHighlighter = function () {
             if (app.currentHighlight !== null) {
                 app.currentHighlight.setIcon(this.mapIconNormal);
+                app.currentHighlight.selected = false;
             }
             this.mapMarker.setIcon(this.mapIconRed);
+            this.selected = true;
 
             app.currentHighlight = this.mapMarker;
 
             app.infoWindow.setContent(makeInfoHTML(this));
             app.infoWindow.open(app.map, this.mapMarker);
             this.getNYCinspections();
+            this.getYelp();
         }
     };
 
@@ -379,7 +399,6 @@ var app = app || {};
                 '<span class="infoWindow-open">' + openHours() + '</span>' +
                 '<span class="infoWindow-reviewsHead" data-bind="click: toggleReviews">' + 'There are ' + place.reviews.length + ' reviews-click to show/hide.' + '</span>' +
                 '<span class="infoWindow-reviews" data-bind="visible: showReviews">' + reviewsHTML() + '</span>';
-
         return infoContent;
     }
 
@@ -389,25 +408,12 @@ var app = app || {};
         self.getRestaurants = function () {
             return self.restaurants;
         };
-
+        // used to tell viewModel what to display
+        self.selectedPlace = ko.observable('');
+        var selectedPlaceId = ko.observable(function () {
+            
+        });
     }
 
-
-
-    // yelp oAuth request
-    // var yelpAuth = $.ajax({
-    //         url: "https://api.yelp.com/oauth2/token",
-    //         type: "POST",
-    //         data: {
-    //             "format" : "json",
-    //             "grant_type" : "client_credentials",
-    //             "client_id" : 'Nsxn2KaNaFNlZQkHoRj4XA',
-    //             "client_secret" : 'YaEwjUrVIT7UmS6eboSEE1XiNtv29uRZjloeBmnUC9bedaQKi0uPCvUintSLpFp4'
-    //         },
-    //     dataType : "jsonp"
-    //     }).done(function(data) {
-    //         console.log("yelp success");
-    //         console.log(data);
-    //     });
 
 })();

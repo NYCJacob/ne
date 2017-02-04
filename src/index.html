@@ -51,9 +51,16 @@
                 </section>
                 <section id="details-sidebar">
                     <p>This are the facts.</p>
-                    <div id="inspection-results">
+                    <div id="inspection-results" data-bind="template: { name: 'inspection-template', foreach:inspectionData">
 
                     </div>
+                    <script type="text/html" id="inspection-template">
+                        <h3 data-bind="text: grade_date"></h3>
+                        <h3 data-bind="text: grade"></h3>
+                        <p>Credits: <span data-bind="text: comments"></span></p>
+                    </script>
+
+
                 </section>
             </div>
 

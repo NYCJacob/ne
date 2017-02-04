@@ -232,11 +232,7 @@ var app = app || {};
             return this.name;
         };
 
-        this.inspectionData = {
-            'status_message' : '',
-
-        }
-
+        this.inspectionResults = [];
         // method to process details data into object
         this.addDetails = function(details){
             this.address_components = details.address_components;
@@ -284,12 +280,18 @@ var app = app || {};
             inspectionData.forEach(function (inspection) {
                 if (inspection.hasOwnProperty('grade')) {
                     // remove time value from date stamp
-                    var timeIndex = inspection.grade_date.indexOf('T');
-                    inspection.grade_date = inspection.grade_date.slice(0, timeIndex);
+                    // var timeIndex = inspection.grade_date.indexOf('T');
+                    // inspection.grade_date = inspection.grade_date.slice(0, timeIndex);
+                    //
+                    // todo figure out date sort and then send to view template
+                    // convert to date object for sorting
+                    inspection.grade_date = new Date(inspection.grade_date);
                     gradedInspections.push(inspection);
                 }
             });
             console.log('gradedInspections = ' + gradedInspections);
+            // sort inspections by date most recent first
+            gradedInspections.sort(function(a,b){return a.grade_date.getTime() - b.grade_date.getTime()});
 
         };
 

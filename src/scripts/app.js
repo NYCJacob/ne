@@ -283,6 +283,9 @@ var app = app || {};
             var gradedInspections = [];
             inspectionData.forEach(function (inspection) {
                 if (inspection.hasOwnProperty('grade')) {
+                    // remove time value from date stamp
+                    var timeIndex = inspection.grade_date.indexOf('T');
+                    inspection.grade_date = inspection.grade_date.slice(0, timeIndex);
                     gradedInspections.push(inspection);
                 }
             });
@@ -302,7 +305,6 @@ var app = app || {};
             app.infoWindow.setContent(makeInfoHTML(this));
             app.infoWindow.open(app.map, this.mapMarker);
             this.getNYCinspections();
-            // searchNYCinspections(this);
         }
     };
 
@@ -386,35 +388,6 @@ var app = app || {};
             return self.restaurants;
         };
 
-    }
-
-    // NYC Restaurant inspection api request
-    function NOTUSED_searchNYCinspections(place) {
-        // name needs to be all caps
-        var nycName = place.name.toUpperCase();
-        // address must be stripped of dashes
-        var nycStreetAddress = place.address_components[0].long_name;
-        //  street may be called route and should be all caps?
-
-        $.ajax({
-            url: "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
-            type: "GET",
-            data: {
-                "zipcode": "11372",
-                "dba": nycName,
-                "$limit": 50,
-                "$$app_token": "PCvLGVSSaI1KBWr0dwX7vhl1E",
-                "$select": "*"
-            }
-        }).done(function (data) {
-            //  this is the ajax request object
-            console.log(data);
-            // data is an array of objections returned from api
-            // if request OK but no data
-            if (data.length !== 0) {
-                app.processNYCdata(data);
-            }
-        });
     }
 
 

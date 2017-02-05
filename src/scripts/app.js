@@ -201,7 +201,7 @@ var app = app || {};
         // details search geometry object includes
         // location object and viewport object
         this.geometry = restaurantObj.geometry;
-        this.address_formatted = restaurantObj.formatted_address;
+        this.address_formatted = '';
         /*
          * address_components is an array of objects from google places details that can vary
          * [0]
@@ -409,10 +409,10 @@ var app = app || {};
             return self.restaurants;
         };
         // used to tell viewModel what to display
-        self.selectedPlace = ko.observable('');
-        var selectedPlaceId = ko.observable(function () {
-            
-        });
+        self.selectedPlace =  '';
+        self.setSelectedPlace = function(clickedPlace){
+            self.selectedPlace = clickedPlace;
+        }
     }
 
 

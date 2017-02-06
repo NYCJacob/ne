@@ -386,12 +386,12 @@ var app = app || {};
         // method called when either list or marker clicked
         self.octoHighlighter = function (clickedPlace) {
             if (self.currentPlace() !== null) {
-                self.currentPlace().setIcon(self.currentPlace.mapIconNormal);
+                self.currentPlace().mapMarker.setIcon(self.currentPlace().mapIconNormal);
             }
             clickedPlace.mapMarker.setIcon(clickedPlace.mapIconRed);
 
             app.infoWindow.setContent(makeInfoHTML(clickedPlace));
-            app.infoWindow.open(app.map, this.mapMarker);
+            app.infoWindow.open(app.map, clickedPlace.mapMarker);
             // make clicked place the current place
             self.currentPlace(clickedPlace);
 

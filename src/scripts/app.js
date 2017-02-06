@@ -128,8 +128,12 @@ var app = app || {};
                 return new Restaurant(item, itemIndex);
             });
             app.RestaurantArray.forEach(createMarker);
-            ko.applyBindings(new RestaurantsViewModel(app.RestaurantArray), document.getElementById('mapView'));
             app.RestaurantArray.forEach(googleDetails);
+            // make vm app globle so selector function works
+            app.vm = new RestaurantsViewModel(app.RestaurantArray);
+            // apply ko bindings
+            ko.applyBindings(app.vm, document.getElementById('mapView'));
+
 
         } else {
             console.log("place service status error");
@@ -178,7 +182,7 @@ var app = app || {};
 
         google.maps.event.addListener(place.mapMarker, 'click', function () {
             console.log('mapMarker clicked');
-            place.octoHighlighter();
+            app.vm.octoHighlighter(place);
         })
 
     } // end create marker
@@ -382,12 +386,14 @@ var app = app || {};
         // method called when either list or marker clicked
         self.octoHighlighter = function (clickedPlace) {
             if (self.currentPlace() !== null) {
-                self.currentPlace().setIcon(this.mapIconNormal);
+                self.currentPlace().setIcon(self.currentPlace.mapIconNormal);
             }
-            clickedPlace.mapMarker.setIcon(this.mapIconRed);
+            clickedPlace.mapMarker.setIcon(clickedPlace.mapIconRed);
 
-            app.infoWindow.setContent(makeInfoHTML(this));
+            app.infoWindow.setContent(makeInfoHTML(clickedPlace));
             app.infoWindow.open(app.map, this.mapMarker);
+            // make clicked place the current place
+            self.currentPlace(clickedPlace);
 
             // api calls
             // this.getNYCinspections();

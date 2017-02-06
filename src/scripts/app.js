@@ -202,19 +202,6 @@ var app = app || {};
         // location object and viewport object
         this.geometry = restaurantObj.geometry;
         this.address_formatted = '';
-        /*
-         * address_components is an array of objects from google places details that can vary
-         * [0]
-         *      long_name = string
-         *      short_name = string
-         *      types = array[0] string of type name ie "street_number"
-         *
-         * [1] types[0] = route  (ie street name)
-         *
-         * [2] types[0] neighborhood  [1]  political   ie "Jackson Heights"
-         *  ....
-         *  [7] types[0] = postal_code
-         * */
         this.address_components = restaurantObj.address_components;
         this.phone = restaurantObj.formatted_phone_number;
         this.hours = restaurantObj.opening_hours;
@@ -311,23 +298,6 @@ var app = app || {};
             // yelp oAuth request
 
         };
-
-        // method called when either list or marker clicked
-        this.octoHighlighter = function () {
-            if (app.currentHighlight !== null) {
-                app.currentHighlight.setIcon(this.mapIconNormal);
-                app.currentHighlight.selected = false;
-            }
-            this.mapMarker.setIcon(this.mapIconRed);
-            this.selected = true;
-
-            app.currentHighlight = this.mapMarker;
-
-            app.infoWindow.setContent(makeInfoHTML(this));
-            app.infoWindow.open(app.map, this.mapMarker);
-            this.getNYCinspections();
-            this.getYelp();
-        }
     };
 
     function makeInfoHTML(place) {
@@ -382,7 +352,6 @@ var app = app || {};
             for (var x = 0; x < place.reviews.length; x++) {
                 HTML += '<li>' + place.reviews[x].author_name   + '</li>';
             }
-
             HTML += '</ul>';
             return HTML;
         };
@@ -409,9 +378,20 @@ var app = app || {};
             return self.restaurants;
         };
         // used to tell viewModel what to display
-        self.selectedPlace =  '';
-        self.setSelectedPlace = function(clickedPlace){
-            self.selectedPlace = clickedPlace;
+        self.currentPlace = ko.observable(null);
+        // method called when either list or marker clicked
+        self.octoHighlighter = function (clickedPlace) {
+            if (self.currentPlace() !== null) {
+                self.currentPlace().setIcon(this.mapIconNormal);
+            }
+            clickedPlace.mapMarker.setIcon(this.mapIconRed);
+
+            app.infoWindow.setContent(makeInfoHTML(this));
+            app.infoWindow.open(app.map, this.mapMarker);
+
+            // api calls
+            // this.getNYCinspections();
+            // this.getYelp();
         }
     }
 

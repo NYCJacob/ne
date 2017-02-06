@@ -52,10 +52,20 @@
 
                 </section>
                 <section id="details-sidebar">
-                    <h3>These are the facts</h3>
-                    <ul>
-                        <li></li>
-                    </ul>
+                    <h3 data-bind="currentPlace">The facts</h3>
+                        <a class="infoWindow-reviewsHead" data-bind="text: reviewHeadline, visible: currentPlace!== null, click: toggleReviews"></a>
+                        <div data-bind="visible : showReviews, with: currentPlace">
+                            <ul data-bind="foreach: reviews">
+                                <li>
+                                    <strong><span>Rating: <span data-bind="text: rating"></span> </span></strong>
+                                    <span data-bind="text: text"></span>
+                                    <span data-bind="text: relative_time_description"></span>
+                                    <span data-bind="text: author_name"></span>
+                                    <hr>
+                                </li>
+                            </ul>
+                        </div>
+
                 </section>
             </div>
 

@@ -351,14 +351,6 @@ var app = app || {};
             }
         };
 
-        var reviewsHTML = function () {
-            var HTML = '<ul>';
-            for (var x = 0; x < place.reviews.length; x++) {
-                HTML += '<li>' + place.reviews[x].author_name   + '</li>';
-            }
-            HTML += '</ul>';
-            return HTML;
-        };
 
         var infoContent =
             '<div class="infoWindow">' +
@@ -369,9 +361,7 @@ var app = app || {};
                 '<span class="infoWindow-rating">Google Rating: ' + '</span>' + '<span><strong>' + place.rating + '</strong></span>'+
                 '<span class="infoWindow-openNow">' + 'Open Now: ' + openNow()  + '</span>' +
                 '<span class="infoWindow-hours">' + '<strong>' + 'Hours: ' + '</strong>' + '</span>' +
-                '<span class="infoWindow-open">' + openHours() + '</span>' +
-                '<span class="infoWindow-reviewsHead" data-bind="click: toggleReviews">' + 'There are ' + place.reviews.length + ' reviews-click to show/hide.' + '</span>' +
-                '<span class="infoWindow-reviews" data-bind="visible: showReviews">' + reviewsHTML() + '</span>';
+                '<span class="infoWindow-open">' + openHours() + '</span>';
         return infoContent;
     }
 
@@ -383,22 +373,46 @@ var app = app || {};
         };
         // used to tell viewModel what to display
         self.currentPlace = ko.observable(null);
+        // headline for review in sidebar- when clicked show reviews
+        self.reviewHeadline = ko.observable();
+        self.showReviews = ko.observable(false);
         // method called when either list or marker clicked
         self.octoHighlighter = function (clickedPlace) {
             if (self.currentPlace() !== null) {
                 self.currentPlace().mapMarker.setIcon(self.currentPlace().mapIconNormal);
+                // clear details sidebarhtml
+                self.reviewHeadline('');
             }
             clickedPlace.mapMarker.setIcon(clickedPlace.mapIconRed);
-
             app.infoWindow.setContent(makeInfoHTML(clickedPlace));
             app.infoWindow.open(app.map, clickedPlace.mapMarker);
             // make clicked place the current place
             self.currentPlace(clickedPlace);
+            self.reviewHeadline( self.currentPlace().name + ' has ' + self.currentPlace().reviews.length + ' reviews from Google.');
 
             // api calls
             // this.getNYCinspections();
             // this.getYelp();
-        }
+        };
+
+        self.toggleReviews = function () {
+            if ( self.showReviews() === false ) {
+                self.showReviews(true);
+            } else {
+                self.showReviews(false);
+            }
+        };
+
+        self.reviewsHTML = function () {
+            var HTML = '<ul>';
+            for (var x = 0; x < self.currentPlace.reviews.length; x++) {
+                HTML += '<li>' + self.currentPlace.reviews[x].author_name   + '</li>';
+            }
+            HTML += '</ul>';
+            return HTML;
+        };
+
+
     }
 
 

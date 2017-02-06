@@ -238,54 +238,6 @@ var app = app || {};
             this.website = details.website;
         };
 
-        this.getNYCinspections = function () {
-            console.log('hit getNYCinspections method');
-            // api request all caps
-            var nycPlaceName = this.name.toUpperCase();
-            // todo call ajax request
-            $.ajax({
-                url: "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
-                type: "GET",
-                data: {
-                    "zipcode": "11372",
-                    "dba": nycPlaceName,
-                    "$limit": 50,
-                    "$$app_token": "PCvLGVSSaI1KBWr0dwX7vhl1E",
-                    "$select": "*"
-                }
-            }).done(function (data) {
-                //  this is the ajax request object
-                console.log('nyc ajax done: ' + data);
-                // data is an array of objections returned from api
-                self.processInspections(data);
-            }).fail(function() {
-                console.log( "nycinspection ajax error" );
-            });
-        };
-
-        self.processInspections = function (inspections) {
-            // todo a better api call might avoid this processing
-            var inspectionData = inspections;
-            // array of graded inspection from all inspections because not all have grade
-            // all have score which could be used in future version
-            var gradedInspections = [];
-            inspectionData.forEach(function (inspection) {
-                if (inspection.hasOwnProperty('grade')) {
-                    // remove time value from date stamp
-                    // var timeIndex = inspection.grade_date.indexOf('T');
-                    // inspection.grade_date = inspection.grade_date.slice(0, timeIndex);
-                    //
-                    // todo figure out date sort and then send to view template
-                    // convert to date object for sorting/ easier display options
-                    inspection.grade_date = new Date(inspection.grade_date);
-                    gradedInspections.push(inspection);
-                }
-            });
-            console.log('gradedInspections = ' + gradedInspections);
-            // sort inspections by date most recent first
-            gradedInspections.sort(function(a,b){return b.grade_date - a.grade_date});
-            this.inspectionResults = gradedInspections;
-        };
 
         this.getYelp = function () {
             // oAuth token  yelp api2.0 uses oAuth 1.0  NOT FUSION which uses oauth2
@@ -391,7 +343,7 @@ var app = app || {};
             self.reviewHeadline( self.currentPlace().name + ' has ' + self.currentPlace().reviews.length + ' reviews from Google.');
 
             // api calls
-            // this.getNYCinspections();
+            self.getNYCinspections(self.currentPlace);
             // this.getYelp();
         };
 
@@ -403,15 +355,42 @@ var app = app || {};
             }
         };
 
-        self.reviewsHTML = function () {
-            var HTML = '<ul>';
-            for (var x = 0; x < self.currentPlace.reviews.length; x++) {
-                HTML += '<li>' + self.currentPlace.reviews[x].author_name   + '</li>';
-            }
-            HTML += '</ul>';
-            return HTML;
-        };
 
+        self.getNYCinspections = function (currentPlace) {
+            console.log('hit getNYCinspections method');
+            // api request all caps
+            var nycPlaceName = currentPlace().name.toUpperCase();
+            $.ajax({
+                url: "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
+                type: "GET",
+                data: {
+                    "zipcode": "11372",
+                    "dba": nycPlaceName,
+                    "$limit": 50,
+                    "$$app_token": "PCvLGVSSaI1KBWr0dwX7vhl1E",
+                    "$select": "*"
+                }
+            }).done(function (data) {
+                // data is an array of objections returned from api
+                console.log('nyc ajax done: ' + data);
+                // todo a better api call might avoid this processing
+                // array of graded inspection from all inspections because not all have grade
+                // although all inspections have a score which could be used in future version
+                var gradedInspections = [];
+                data.forEach(function (inspection) {
+                    if (inspection.hasOwnProperty('grade')) {
+                        // convert to date object for sorting/ easier display options
+                        inspection.grade_date = new Date(inspection.grade_date);
+                        gradedInspections.push(inspection);
+                    }
+                });
+                // sort inspections by date most recent first
+                gradedInspections.sort(function(a,b){return b.grade_date - a.grade_date});
+                self.currentPlace().inspectionResults(gradedInspections);
+            }).fail(function() {
+                console.log( "nycinspection ajax error" );
+            });
+        };
 
     }
 

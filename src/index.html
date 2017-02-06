@@ -52,7 +52,7 @@
 
                 </section>
                 <section id="details-sidebar">
-                    <h3 data-bind="currentPlace">The facts</h3>
+                    <h3 data-bind="currentPlace">Reviews</h3>
                         <a class="infoWindow-reviewsHead" data-bind="text: reviewHeadline, visible: currentPlace!== null, click: toggleReviews"></a>
                         <div data-bind="visible : showReviews, with: currentPlace">
                             <ul data-bind="foreach: reviews">
@@ -65,6 +65,18 @@
                                 </li>
                             </ul>
                         </div>
+                    <h3 data-bind="currentPlace">NYC Inspection Data</h3>
+                    <a class="more-inspections" data-bind="text: inspectionHeadline ,click: toggleInspections"></a>
+                    <div data-bind="visible: showInspections, with: currentPlace">
+                        <ul data-bind="foreach: inspectionResults">
+                            <li>
+                                <span data-bind="text: grade"></span>
+                                <span data-bind="text: grade_date"></span>
+                            </li>
+                        </ul>
+                    </div>
+
+
 
                 </section>
             </div>

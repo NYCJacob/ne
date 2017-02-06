@@ -328,6 +328,8 @@ var app = app || {};
         // headline for review in sidebar- when clicked show reviews
         self.reviewHeadline = ko.observable();
         self.showReviews = ko.observable(false);
+        self.inspectionHeadline = ko.observable();
+        self.showInspections = ko.observable(false);
         // method called when either list or marker clicked
         self.octoHighlighter = function (clickedPlace) {
             if (self.currentPlace() !== null) {
@@ -352,6 +354,14 @@ var app = app || {};
                 self.showReviews(true);
             } else {
                 self.showReviews(false);
+            }
+        };
+
+        self.toggleInspections = function () {
+            if ( self.showInspections() === false ) {
+                self.showInspections(true);
+            } else {
+                self.showInspections(false);
             }
         };
 
@@ -387,6 +397,7 @@ var app = app || {};
                 // sort inspections by date most recent first
                 gradedInspections.sort(function(a,b){return b.grade_date - a.grade_date});
                 self.currentPlace().inspectionResults(gradedInspections);
+                self.inspectionHeadline('Latest Grade: ' + gradedInspections[0].grade);
             }).fail(function() {
                 console.log( "nycinspection ajax error" );
             });

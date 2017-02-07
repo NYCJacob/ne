@@ -87,6 +87,7 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+@import "font-awesome.scss";
 
 $listing-color: #eaed83;
 $map-color: #bebebe;
@@ -98,6 +99,8 @@ $dollar-sign : gold;
 $content-height:  95vh;
 $footer-height: 5vh;
 $footer-margin-top: 95vh;
+$info-panel-background: #4AB1FF;
+
 
 * {
     box-sizing: border-box;
@@ -220,7 +223,7 @@ ul {
 }
 
 li {
-    background-color: #4AB1FF;
+    background-color: $info-panel-background;
 }
 
 a {
@@ -242,9 +245,25 @@ a:hover {
 
 
 
+.reviews-panel {
+    background-color: $info-panel-background;
 
+    h3 {
+        margin: 5px 0;
+        text-decoration: underline;
+    }
+    a {
+        font-size: small;
+    }
+}
 
+.inspections-panel {
+    @extend .reviews-panel;
+}
 
+.yelp-panel {
+    @extend .reviews-panel;
+}
 
 /* ==========================================================================
    Helper classes

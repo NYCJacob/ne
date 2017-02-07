@@ -51,9 +51,13 @@
                 <section id="mapDiv">
 
                 </section>
-                <section id="details-sidebar">
-                    <h3 data-bind="currentPlace">Reviews</h3>
-                        <a class="infoWindow-reviewsHead" data-bind="text: reviewHeadline, visible: currentPlace!== null, click: toggleReviews"></a>
+                <section id="details-sidebar" data-bind="currentPlace">
+                        <div class="reviews-panel" data-bind="click: toggleReviews">
+                            <h3>Reviews</h3>
+                            <a class="infoWindow-reviewsHead" data-bind="text: reviewHeadline, visible: currentPlace !== null"></a>
+                            <span class="fa fa-caret-down"></span>
+                            <span>Click for more</span>
+                        </div>
                         <div data-bind="visible : showReviews, with: currentPlace">
                             <ul data-bind="foreach: reviews">
                                 <li>
@@ -65,17 +69,26 @@
                                 </li>
                             </ul>
                         </div>
-                    <h3 data-bind="currentPlace">NYC Inspection Data</h3>
-                    <a class="more-inspections" data-bind="text: inspectionHeadline ,click: toggleInspections"></a>
-                    <div data-bind="visible: showInspections, with: currentPlace">
-                        <ul data-bind="foreach: inspectionResults">
-                            <li>
-                                <span data-bind="text: grade"></span>
-                                <span data-bind="text: grade_date_display"></span>
-                            </li>
-                        </ul>
-                    </div>
-                    <h3>Yelp Reviews</h3>
+
+                        <div class="inspections-panel" data-bind="click: toggleInspections">
+                            <h3>Health Inspections</h3>
+                            <a class="inspectionsHead" data-bind="text: inspectionHeadline"></a>
+                            <span class="fa fa-caret-down"></span>
+                            <span>Click for more</span>
+                        </div>
+                        <div data-bind="visible: showInspections, with: currentPlace">
+                            <table>
+                                <thead><tr><th>Grade</th><th>Date</th></tr></thead>
+                                <tbody data-bind="foreach: inspectionResults">
+                                    <tr><td data-bind="text: grade"></td><td data-bind="text: grade_date_display"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <div class="yelp-panel">
+                            <h3>Yelp Reviews</h3>
+                        </div>
 
                 </section>
             </div>

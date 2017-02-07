@@ -400,23 +400,23 @@ var app = app || {};
             function nonce_generate() {
                 return (Math.floor(Math.random() * 1e12).toString());
             }
-            //  consumer key   5e8aVm47PCOnFIqWNsAO3A
+
+            function cleanPhone(phone) {
+                return phone.replace(/\D/g,'');
+            }
+
             var  consumerSecret = 'gtnzS8XUXupQ7t3yEUM-zgJeNz8';
-            //  token           e9CjCBMdlA3nunOhtdN9xHkNyc_Qa329
             var tokenSecret  = 'z9vc2A_2yoIUYqe34Z3hKZlddYI';
             var httpMethod = 'GET';
-            var yelpUrl = 'https://api.yelp.com/v2/search?' + currentPlace().name;
+            var yelpUrl = 'https://api.yelp.com/v2/phone_search?phone=' + cleanPhone(currentPlace().phone) + '&cc=US';
 
             var yelpParams = {
-                term : currentPlace.name,
-                location : '11372',
                 oauth_consumer_key: '',
                 oauth_token: '',
                 oauth_nonce: nonce_generate(),
                 oauth_timestamp: Math.floor(Date.now()/1000),
                 oauth_signature_method: 'HMAC-SHA1',
-                oauth_version : '1.0',
-                callback: 'cb'              // This is crucial to include for jsonp implementation in AJAX or else the oauth-signature will be wrong.
+                oauth_version : '1.0'
             };
 
             var encodedSignature = oauthSignature.generate(httpMethod, yelpUrl, yelpParams, consumerSecret, tokenSecret);
@@ -427,7 +427,6 @@ var app = app || {};
                 data: yelpParams,
                 cache: true,                // This is crucial to include as well to prevent jQuery from adding on a cache-buster parameter "_=23489489749837", invalidating our oauth-signature
                 dataType: 'jsonp',
-                jsonpCallback: 'cb',
                 success: function(results) {
                     // Do stuff with results
                     console.log("SUCCCESS! %o", results);

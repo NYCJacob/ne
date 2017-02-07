@@ -237,23 +237,6 @@ var app = app || {};
             this.reviews = details.reviews;
             this.website = details.website;
         };
-
-
-        this.getYelp = function () {
-            // oAuth token  yelp api2.0 uses oAuth 1.0  NOT FUSION which uses oauth2
-            //  consumer key   5e8aVm47PCOnFIqWNsAO3A
-            var  consumerSecret = 'gtnzS8XUXupQ7t3yEUM-zgJeNz8';
-            //  token           e9CjCBMdlA3nunOhtdN9xHkNyc_Qa329
-            var tokenSecret  = 'z9vc2A_2yoIUYqe34Z3hKZlddYI';
-
-            var httpMethod = 'GET';
-            var yelpUrl = 'https://api.yelp.com/v2/search/' + 'placeName';
-
-            var yelpSignature = oauthSignature.generate(httpMethod, yelpUrl, parameters, consumerSecret, tokenSecret, options);
-
-            // yelp oAuth request
-
-        };
     };
 
     function makeInfoHTML(place) {
@@ -346,7 +329,7 @@ var app = app || {};
 
             // api calls
             self.getNYCinspections(self.currentPlace);
-            // this.getYelp();
+            self.getYelp(self.currentPlace);
         };
 
         self.toggleReviews = function () {
@@ -364,7 +347,6 @@ var app = app || {};
                 self.showInspections(false);
             }
         };
-
 
         self.getNYCinspections = function (currentPlace) {
             console.log('hit getNYCinspections method');
@@ -391,6 +373,11 @@ var app = app || {};
                     if (inspection.hasOwnProperty('grade')) {
                         // convert to date object for sorting/ easier display options
                         inspection.grade_date = new Date(inspection.grade_date);
+                        // short date for ui display
+                        inspection.grade_date_display = inspection.grade_date.getMonth() + '-' + inspection.grade_date.getDate() + '-' +
+                                inspection.grade_date.getFullYear();
+
+
                         gradedInspections.push(inspection);
                     }
                 });
@@ -401,6 +388,58 @@ var app = app || {};
             }).fail(function() {
                 console.log( "nycinspection ajax error" );
             });
+        };
+
+        self.getYelp = function (currentPlace) {
+            // oAuth token  yelp api2.0 uses oAuth 1.0  NOT FUSION which uses oauth2
+            /**
+             * Generates a random number and returns it as a string for OAuthentication
+             * @return {string}
+             *
+             */
+            function nonce_generate() {
+                return (Math.floor(Math.random() * 1e12).toString());
+            }
+            //  consumer key   5e8aVm47PCOnFIqWNsAO3A
+            var  consumerSecret = 'gtnzS8XUXupQ7t3yEUM-zgJeNz8';
+            //  token           e9CjCBMdlA3nunOhtdN9xHkNyc_Qa329
+            var tokenSecret  = 'z9vc2A_2yoIUYqe34Z3hKZlddYI';
+            var httpMethod = 'GET';
+            var yelpUrl = 'https://api.yelp.com/v2/search?' + currentPlace().name;
+
+            var yelpParams = {
+                term : currentPlace.name,
+                location : '11372',
+                oauth_consumer_key: '',
+                oauth_token: '',
+                oauth_nonce: nonce_generate(),
+                oauth_timestamp: Math.floor(Date.now()/1000),
+                oauth_signature_method: 'HMAC-SHA1',
+                oauth_version : '1.0',
+                callback: 'cb'              // This is crucial to include for jsonp implementation in AJAX or else the oauth-signature will be wrong.
+            };
+
+            var encodedSignature = oauthSignature.generate(httpMethod, yelpUrl, yelpParams, consumerSecret, tokenSecret);
+            yelpParams.oauth_signature = encodedSignature;
+
+            var settings = {
+                url: yelpUrl,
+                data: yelpParams,
+                cache: true,                // This is crucial to include as well to prevent jQuery from adding on a cache-buster parameter "_=23489489749837", invalidating our oauth-signature
+                dataType: 'jsonp',
+                jsonpCallback: 'cb',
+                success: function(results) {
+                    // Do stuff with results
+                    console.log("SUCCCESS! %o", results);
+                },
+                error: function(error) {
+                    // Do stuff on fail
+                    console.log(error);
+                }
+            };
+
+// Send AJAX query via jQuery library.
+            $.ajax(settings);
         };
 
     }

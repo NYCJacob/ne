@@ -237,6 +237,7 @@ var app = app || {};
             this.reviews = details.reviews;
             this.website = details.website;
         };
+        this.yelpResults = ko.observableArray();
     };
 
     function makeInfoHTML(place) {
@@ -405,18 +406,23 @@ var app = app || {};
                 return phone.replace(/\D/g,'');
             }
 
+            var phone = cleanPhone(currentPlace().phone);
             var  consumerSecret = 'gtnzS8XUXupQ7t3yEUM-zgJeNz8';
+            var  consumer_key  = '5e8aVm47PCOnFIqWNsAO3A';
+            var token  =  'e9CjCBMdlA3nunOhtdN9xHkNyc_Qa329';
             var tokenSecret  = 'z9vc2A_2yoIUYqe34Z3hKZlddYI';
             var httpMethod = 'GET';
-            var yelpUrl = 'https://api.yelp.com/v2/phone_search?phone=' + cleanPhone(currentPlace().phone) + '&cc=US';
+            var yelpUrl = 'https://api.yelp.com/v2/phone_search?phone=' + phone;
 
             var yelpParams = {
-                oauth_consumer_key: '',
-                oauth_token: '',
+                phone: phone,
+                oauth_consumer_key: consumer_key,
+                oauth_token: token,
                 oauth_nonce: nonce_generate(),
                 oauth_timestamp: Math.floor(Date.now()/1000),
                 oauth_signature_method: 'HMAC-SHA1',
-                oauth_version : '1.0'
+                oauth_version : '1.0',
+                callback: 'cb'
             };
 
             var encodedSignature = oauthSignature.generate(httpMethod, yelpUrl, yelpParams, consumerSecret, tokenSecret);
@@ -430,16 +436,28 @@ var app = app || {};
                 success: function(results) {
                     // Do stuff with results
                     console.log("SUCCCESS! %o", results);
+                    //  Yelp api sucks needs checking
+                    var cleanYelpResults;
+                    if (results.businesses.length > 1) {  // more than one business in results
+                        results.businesses.forEach(function (business) {
+                            if (business.name === currentPlace().name) {
+                                cleanYelpResults = business;
+                            }
+                        });
+                        self.currentPlace().yelpResults(cleanYelpResults);
+                    } else
+                        self.currentPlace().yelpResults(results);
                 },
                 error: function(error) {
                     // Do stuff on fail
                     console.log(error);
                 }
             };
-
-// Send AJAX query via jQuery library.
+// todo send yelp data to view
+            // Send AJAX query via jQuery library.
             $.ajax(settings);
-        };
+
+        };  // end getYelp
 
     }
 

@@ -27,14 +27,17 @@
                             <img class="weather-icon" data-bind="attr: {src: weatherImg}">
                             <span class="weather-summary" data-bind="text: summary"></span>
                             <span class="weather-summary" data-bind="text:temp"></span><span>˚</span>
-                            <span>Feels like <span data-bind="text:tempFeel"></span><span>˚</span>
-                            <span>Rain?  <span data-bind="text:rainProb"></span>%</span>
-                            </span>
-                            <div>
-                                <span id="weather-fn">Weather data provided by <a href="https://forecast.io">forecast.io</a></span>
-                            </div>
-                        </div>
+                            <span>Feels like</span>
+                            <span data-bind="text:tempFeel"></span>
+                            <span>˚</span>
+                            <span>Rain?</span>
+                            <span data-bind="text:rainProb"></span>
+                            <span>%</span>
 
+                        </div>
+                        <div>
+                            <span id="weather-fn">Weather data provided by <a href="https://forecast.io">forecast.io</a></span>
+                        </div>
                     </aside>
                 </div>
             </header>
@@ -90,7 +93,8 @@
                         </div>
                         <div data-bind="with: currentPlace">
                             <div data-bind="foreach: photos">
-                                <img  alt="" data-bind="attr: {src: $data.getUrl()}">
+                                <!--<button data-bind="click: function () { console.log($context); }">Context Log</button>-->
+                                <img  alt="" data-bind="attr: {src: $data.getUrl}">
                             </div>
                         </div>
 
@@ -98,7 +102,6 @@
                     <hr>
                         <div class="yelp-panel"  data-bind="click: toggleYelp">
                             <h3>Yelp Reviews</h3>
-                            <!--<button data-bind="click: function () { console.log($context); }">Context Log</button>-->
                             <a class="yelpHead" data-bind="text: yelpHeadline"></a>
                             <span class="fa fa-caret-down"></span>
                             <span>Click for more</span>

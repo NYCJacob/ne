@@ -85,8 +85,16 @@
                         </div>
                     <hr>
                         <div class="photos-panel">
-                            <i class="fa fa-caret-down"></i><h3>Photos</h3>
+                            <i class="fa fa-caret-down"></i>
+                            <h3>Photos</h3>
                         </div>
+                        <div data-bind="with: currentPlace">
+                            <div data-bind="foreach: photos">
+                                <img  alt="" data-bind="attr: {src: $data.getUrl()}">
+                            </div>
+                        </div>
+
+
                     <hr>
                         <div class="yelp-panel"  data-bind="click: toggleYelp">
                             <h3>Yelp Reviews</h3>
@@ -99,8 +107,10 @@
                             <table>
                                 <tbody data-bind="foreach: yelpResults">
                                 <tr><td><img data-bind="attr: {src: rating_img_url_large}"></tr>
-                                <tr><td>Categories: </td><td data-bind="text: categories"></td></tr>
-                                <tr><td>Snippet: </td><td data-bind="text: snippet_text"></td></tr>
+                                <tr><td><strong>Categories:</strong></td></tr>
+                                <tr><td data-bind="text: categories"></td></tr>
+                                <tr><td><strong>Review Snippet:</strong></td></tr>
+                                <tr><td data-bind="text: snippet_text"></td></tr>
                                 </tbody>
                             </table>
                         </div>

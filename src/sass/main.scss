@@ -261,9 +261,22 @@ a:hover {
     @extend .reviews-panel;
 }
 
+.photos-panel {
+    @extend .reviews-panel;
+
+    h3 {
+        display: inline;
+    }
+}
+
 .yelp-panel {
     @extend .reviews-panel;
 }
+
+
+//the off canvas sidebar
+
+
 
 /* ==========================================================================
    Helper classes

@@ -314,6 +314,8 @@ var app = app || {};
         self.showReviews = ko.observable(false);
         self.inspectionHeadline = ko.observable();
         self.showInspections = ko.observable(false);
+        self.showYelp = ko.observable(false);
+        self.yelpHeadline = ko.observable();
         // method called when either list or marker clicked
         self.octoHighlighter = function (clickedPlace) {
             if (self.currentPlace() !== null) {
@@ -327,7 +329,6 @@ var app = app || {};
             // make clicked place the current place
             self.currentPlace(clickedPlace);
             self.reviewHeadline( self.currentPlace().name + ' has ' + self.currentPlace().reviews.length + ' reviews from Google.');
-
             // api calls
             self.getNYCinspections(self.currentPlace);
             self.getYelp(self.currentPlace);
@@ -348,6 +349,14 @@ var app = app || {};
                 self.showInspections(false);
             }
         };
+
+        self.toggleYelp = function () {
+            if ( self.showYelp() == false ) {
+                self.showYelp(true);
+            } else {
+                self.showYelp(false);
+            }
+        }
 
         self.getNYCinspections = function (currentPlace) {
             console.log('hit getNYCinspections method');
@@ -385,6 +394,7 @@ var app = app || {};
                 // sort inspections by date most recent first
                 gradedInspections.sort(function(a,b){return b.grade_date - a.grade_date});
                 self.currentPlace().inspectionResults(gradedInspections);
+                // todo why headline doesn't work if in currentPlace()
                 self.inspectionHeadline('Latest Grade: ' + gradedInspections[0].grade);
             }).fail(function() {
                 console.log( "nycinspection ajax error" );
@@ -444,9 +454,11 @@ var app = app || {};
                                 cleanYelpResults = business;
                             }
                         });
-                        self.currentPlace().yelpResults(cleanYelpResults);
-                    } else
-                        self.currentPlace().yelpResults(results);
+                        self.currentPlace().yelpResults(cleanYelpResults.businesses[0]);  // assuming there is only one obj in array
+                    } else {
+                        self.currentPlace().yelpResults(results.businesses[0]);  // assuming there is only one obj in array
+                    }
+                    self.yelpHeadline("Yelp has " +  self.currentPlace().yelpResults().review_count + " reviews.");
                 },
                 error: function(error) {
                     // Do stuff on fail

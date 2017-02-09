@@ -132,7 +132,7 @@ var app = app || {};
             // make vm app globle so selector function works
             app.vm = new RestaurantsViewModel(app.RestaurantArray);
             // apply ko bindings
-            ko.applyBindings(app.vm, document.getElementById('mapView'));
+            ko.applyBindings(app.vm, document.getElementById('main-content'));
 
 
         } else {

@@ -41,85 +41,88 @@
                     </aside>
                 </div>
             </header>
-            <div id="mapView">
-                <section id="listings">
-                    <h2>Restaurants</h2>
-                    <ul data-bind="foreach: restaurants">
-                        <li><a data-bind="text: name, click: $parent.octoHighlighter" href="#"></a>
-                        </li>
-                    </ul>
+            <main id="main-content">
+                <div id="mapView">
+                    <section id="listings">
+                        <h2>Restaurants</h2>
+                        <ul data-bind="foreach: restaurants">
+                            <li><a data-bind="text: name, click: $parent.octoHighlighter" href="#"></a>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section id="mapDiv">
+
+                    </section>
+                </div>
+                <section id="details-sidebar">
+                    <div class="reviews-panel" data-bind="click: toggleReviews">
+                        <button data-bind="click: function () { console.log($context); }">Context Log</button>
+                        <h3>Reviews</h3>
+                        <a class="infoWindow-reviewsHead" data-bind="text: reviewHeadline, visible: currentPlace !== null"></a>
+                        <span class="fa fa-caret-down"></span>
+                        <span>Click for more</span>
+                    </div>
+                    <div data-bind="visible : showReviews, with: currentPlace">
+                        <ul data-bind="foreach: reviews">
+                            <li>
+                                <strong><span>Rating: <span data-bind="text: rating"></span> </span></strong>
+                                <span data-bind="text: text"></span>
+                                <span data-bind="text: relative_time_description"></span>
+                                <span data-bind="text: author_name"></span>
+                                <hr>
+                            </li>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="inspections-panel" data-bind="click: toggleInspections">
+                        <h3>Health Inspections</h3>
+                        <a class="inspectionsHead" data-bind="text: inspectionHeadline"></a>
+                        <span class="fa fa-caret-down"></span>
+                        <span>Click for more</span>
+                    </div>
+                    <div data-bind="visible: showInspections, with: currentPlace">
+                        <table>
+                            <thead><tr><th>Grade</th><th>Date</th></tr></thead>
+                            <tbody data-bind="foreach: inspectionResults">
+                            <tr><td data-bind="text: grade"></td><td data-bind="text: grade_date_display"></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr>
+                    <div class="photos-panel">
+                        <i class="fa fa-caret-down"></i>
+                        <h3>Photos</h3>
+                    </div>
+                    <div data-bind="with: currentPlace">
+                        <div data-bind="foreach: photos">
+                            <img  alt="" data-bind="attr: {src: $data.getUrl}">
+                        </div>
+                    </div>
+
+
+                    <hr>
+                    <div class="yelp-panel"  data-bind="click: toggleYelp">
+                        <h3>Yelp Reviews</h3>
+                        <a class="yelpHead" data-bind="text: yelpHeadline"></a>
+                        <span class="fa fa-caret-down"></span>
+                        <span>Click for more</span>
+                    </div>
+                    <div data-bind="visible: showYelp, with: currentPlace">
+                        <table>
+                            <tbody data-bind="foreach: yelpResults">
+                            <tr><td><img data-bind="attr: {src: rating_img_url_large}"></tr>
+                            <tr><td><strong>Categories:</strong></td></tr>
+                            <tr><td data-bind="text: categories"></td></tr>
+                            <tr><td><strong>Review Snippet:</strong></td></tr>
+                            <tr><td data-bind="text: snippet_text"></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </section>
 
-                <section id="mapDiv">
-
-                </section>
-                <section id="details-sidebar" data-bind="currentPlace">
-                        <div class="reviews-panel" data-bind="click: toggleReviews">
-                            <h3>Reviews</h3>
-                            <a class="infoWindow-reviewsHead" data-bind="text: reviewHeadline, visible: currentPlace !== null"></a>
-                            <span class="fa fa-caret-down"></span>
-                            <span>Click for more</span>
-                        </div>
-                        <div data-bind="visible : showReviews, with: currentPlace">
-                            <ul data-bind="foreach: reviews">
-                                <li>
-                                    <strong><span>Rating: <span data-bind="text: rating"></span> </span></strong>
-                                    <span data-bind="text: text"></span>
-                                    <span data-bind="text: relative_time_description"></span>
-                                    <span data-bind="text: author_name"></span>
-                                    <hr>
-                                </li>
-                            </ul>
-                        </div>
-                    <hr>
-                        <div class="inspections-panel" data-bind="click: toggleInspections">
-                            <h3>Health Inspections</h3>
-                            <a class="inspectionsHead" data-bind="text: inspectionHeadline"></a>
-                            <span class="fa fa-caret-down"></span>
-                            <span>Click for more</span>
-                        </div>
-                        <div data-bind="visible: showInspections, with: currentPlace">
-                            <table>
-                                <thead><tr><th>Grade</th><th>Date</th></tr></thead>
-                                <tbody data-bind="foreach: inspectionResults">
-                                    <tr><td data-bind="text: grade"></td><td data-bind="text: grade_date_display"></td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    <hr>
-                        <div class="photos-panel">
-                            <i class="fa fa-caret-down"></i>
-                            <h3>Photos</h3>
-                        </div>
-                        <div data-bind="with: currentPlace">
-                            <div data-bind="foreach: photos">
-                                <!--<button data-bind="click: function () { console.log($context); }">Context Log</button>-->
-                                <img  alt="" data-bind="attr: {src: $data.getUrl}">
-                            </div>
-                        </div>
-
-
-                    <hr>
-                        <div class="yelp-panel"  data-bind="click: toggleYelp">
-                            <h3>Yelp Reviews</h3>
-                            <a class="yelpHead" data-bind="text: yelpHeadline"></a>
-                            <span class="fa fa-caret-down"></span>
-                            <span>Click for more</span>
-                        </div>
-                        <div data-bind="visible: showYelp, with: currentPlace">
-                            <table>
-                                <tbody data-bind="foreach: yelpResults">
-                                <tr><td><img data-bind="attr: {src: rating_img_url_large}"></tr>
-                                <tr><td><strong>Categories:</strong></td></tr>
-                                <tr><td data-bind="text: categories"></td></tr>
-                                <tr><td><strong>Review Snippet:</strong></td></tr>
-                                <tr><td data-bind="text: snippet_text"></td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                </section>
-            </div>
+            </main>
 
         </div>
 

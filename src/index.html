@@ -1,141 +1,161 @@
 <!doctype html>
 <html lang="en" data-framework="knockoutjs">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Jackson Heights, New York Restaurant Guide</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Jackson Heights, New York Restaurant Guide</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="apple-touch-icon" href="apple-touch-icon.png">
-        <!-- Place favicon.ico in the root directory -->
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
 
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
-        <!--<script src="scripts/vendor/modernizr/bin/modernizr"></script>-->
-    </head>
-    <body>
-        <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+    <!--<script src="scripts/vendor/modernizr/bin/modernizr"></script>-->
+</head>
+<body>
+<!--[if lt IE 8]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
 
-        <div id="container">
-            <header><h1>Jackson Heights Neighborhood Map</h1>
-                <div id='weather'>
-                    <aside>
-                        <div id="weather-headline">
-                            <img class="weather-icon" data-bind="attr: {src: weatherImg}">
-                            <span class="weather-summary" data-bind="text: summary"></span>
-                            <span class="weather-summary" data-bind="text:temp"></span><span>˚</span>
-                            <span>Feels like</span>
-                            <span data-bind="text:tempFeel"></span>
-                            <span>˚</span>
-                            <span>Rain?</span>
-                            <span data-bind="text:rainProb"></span>
-                            <span>%</span>
+<div id="container">
+    <header><h1>Jackson Heights Neighborhood Map</h1>
+        <div id='weather'>
+            <aside>
+                <div id="weather-headline">
+                    <img class="weather-icon" data-bind="attr: {src: weatherImg}">
+                    <span class="weather-summary" data-bind="text: summary"></span>
+                    <span class="weather-summary" data-bind="text:temp"></span><span>˚</span>
+                    <span>Feels like</span>
+                    <span data-bind="text:tempFeel"></span>
+                    <span>˚</span>
+                    <span>Rain?</span>
+                    <span data-bind="text:rainProb"></span>
+                    <span>%</span>
 
-                        </div>
-                        <div>
-                            <span id="weather-fn">Weather data provided by <a href="https://forecast.io">forecast.io</a></span>
-                        </div>
-                    </aside>
                 </div>
-            </header>
-            <main id="main-content">
-                <div id="mapView">
-                    <section id="listings">
-                        <h2>Restaurants</h2>
-                        <ul data-bind="foreach: restaurants">
-                            <li><a data-bind="text: name, click: $parent.octoHighlighter" href="#"></a>
-                            </li>
-                        </ul>
-                    </section>
-
-                    <section id="mapDiv">
-
-                    </section>
+                <div>
+                    <span id="weather-fn">Weather data provided by <a href="https://forecast.io">forecast.io</a></span>
                 </div>
-                <section id="details-sidebar">
-                    <div class="reviews-panel" data-bind="click: toggleReviews">
-                        <button data-bind="click: function () { console.log($context); }">Context Log</button>
-                        <h3>Reviews</h3>
-                        <a class="infoWindow-reviewsHead" data-bind="text: reviewHeadline, visible: currentPlace !== null"></a>
-                        <span class="fa fa-caret-down"></span>
-                        <span>Click for more</span>
-                    </div>
-                    <div data-bind="visible : showReviews, with: currentPlace">
-                        <ul data-bind="foreach: reviews">
-                            <li>
-                                <strong><span>Rating: <span data-bind="text: rating"></span> </span></strong>
-                                <span data-bind="text: text"></span>
-                                <span data-bind="text: relative_time_description"></span>
-                                <span data-bind="text: author_name"></span>
-                                <hr>
-                            </li>
-                        </ul>
-                    </div>
-                    <hr>
-                    <div class="inspections-panel" data-bind="click: toggleInspections">
-                        <h3>Health Inspections</h3>
-                        <a class="inspectionsHead" data-bind="text: inspectionHeadline"></a>
-                        <span class="fa fa-caret-down"></span>
-                        <span>Click for more</span>
-                    </div>
-                    <div data-bind="visible: showInspections, with: currentPlace">
-                        <table>
-                            <thead><tr><th>Grade</th><th>Date</th></tr></thead>
-                            <tbody data-bind="foreach: inspectionResults">
-                            <tr><td data-bind="text: grade"></td><td data-bind="text: grade_date_display"></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <hr>
-                    <div class="photos-panel">
-                        <i class="fa fa-caret-down"></i>
-                        <h3>Photos</h3>
-                    </div>
-                    <div data-bind="with: currentPlace">
-                        <div data-bind="foreach: photos">
-                            <img  alt="" data-bind="attr: {src: $data.getUrl}">
-                        </div>
-                    </div>
-
-
-                    <hr>
-                    <div class="yelp-panel"  data-bind="click: toggleYelp">
-                        <h3>Yelp Reviews</h3>
-                        <a class="yelpHead" data-bind="text: yelpHeadline"></a>
-                        <span class="fa fa-caret-down"></span>
-                        <span>Click for more</span>
-                    </div>
-                    <div data-bind="visible: showYelp, with: currentPlace">
-                        <table>
-                            <tbody data-bind="foreach: yelpResults">
-                            <tr><td><img data-bind="attr: {src: rating_img_url_large}"></tr>
-                            <tr><td><strong>Categories:</strong></td></tr>
-                            <tr><td data-bind="text: categories"></td></tr>
-                            <tr><td><strong>Review Snippet:</strong></td></tr>
-                            <tr><td data-bind="text: snippet_text"></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                </section>
-
-            </main>
-
+            </aside>
         </div>
+    </header>
+    <main id="main-content">
+        <section id="listings">
+            <h2>Restaurants</h2>
+            <ul data-bind="foreach: restaurants">
+                <li><a data-bind="text: name, click: $parent.octoHighlighter" href="#"></a>
+                </li>
+            </ul>
+        </section>
 
-        <script src="scripts/vendor/jquery/dist/jquery.js"></script>
-        <script>window.jQuery || document.write('<script src="scripts/vendor/jquery/dist/jquery.js"><\/script>')</script>
-        <script src="scripts/plugins.js"></script>
-        <script src="scripts/vendor/knockout/dist/knockout.js"></script>
-        <script src="scripts/vendor/oauth-signature/dist/oauth-signature.js"></script>
-        <script src="scripts/app.js"></script>
-        <script async defer src="scripts/weather.js"></script>
-        <script async defer src=
-                        "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyBinHw_1SkBR4Otshx5nnA_KSuT_kNwk0g&v=3&callback=app.initMap">
-        </script>
+        <section id="mapDiv">
 
-    </body>
+        </section>
+        <section id="details-sidebar">
+            <div>
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            </div>
+            <div class="reviews-panel" data-bind="click: toggleReviews">
+                <!--<button data-bind="click: function () { console.log($context); }">Context Log</button>-->
+                <h3>Reviews</h3>
+                <a class="infoWindow-reviewsHead" data-bind="text: reviewHeadline, visible: currentPlace !== null"></a>
+                <span class="fa fa-caret-down"></span>
+                <span>Click for more</span>
+            </div>
+            <div data-bind="visible : showReviews, with: currentPlace">
+                <ul data-bind="foreach: reviews">
+                    <li>
+                        <strong><span>Rating: <span data-bind="text: rating"></span> </span></strong>
+                        <span data-bind="text: text"></span>
+                        <span data-bind="text: relative_time_description"></span>
+                        <span data-bind="text: author_name"></span>
+                        <hr>
+                    </li>
+                </ul>
+            </div>
+            <hr>
+            <div class="inspections-panel" data-bind="click: toggleInspections">
+                <h3>Health Inspections</h3>
+                <a class="inspectionsHead" data-bind="text: inspectionHeadline"></a>
+                <span class="fa fa-caret-down"></span>
+                <span>Click for more</span>
+            </div>
+            <div data-bind="visible: showInspections, with: currentPlace">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Grade</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: inspectionResults">
+                    <tr>
+                        <td data-bind="text: grade"></td>
+                        <td data-bind="text: grade_date_display"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <div class="photos-panel">
+                <i class="fa fa-caret-down"></i>
+                <h3>Photos</h3>
+            </div>
+            <div data-bind="with: currentPlace">
+                <div data-bind="foreach: photos">
+                    <img alt="" data-bind="attr: {src: $data.getUrl}">
+                </div>
+            </div>
+
+
+            <hr>
+            <div class="yelp-panel" data-bind="click: toggleYelp">
+                <h3>Yelp Reviews</h3>
+                <a class="yelpHead" data-bind="text: yelpHeadline"></a>
+                <span class="fa fa-caret-down"></span>
+                <span>Click for more</span>
+            </div>
+            <div data-bind="visible: showYelp, with: currentPlace">
+                <table>
+                    <tbody data-bind="foreach: yelpResults">
+                    <tr>
+                        <td><img data-bind="attr: {src: rating_img_url_large}">
+                    </tr>
+                    <tr>
+                        <td><strong>Categories:</strong></td>
+                    </tr>
+                    <tr>
+                        <td data-bind="text: categories"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Review Snippet:</strong></td>
+                    </tr>
+                    <tr>
+                        <td data-bind="text: snippet_text"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="scripts/vendor/jquery/dist/jquery.js"></script>
+<script>window.jQuery || document.write('<script src="scripts/vendor/jquery/dist/jquery.js"><\/script>')</script>
+<script src="scripts/plugins.js"></script>
+<script src="scripts/vendor/knockout/dist/knockout.js"></script>
+<script src="scripts/vendor/oauth-signature/dist/oauth-signature.js"></script>
+<script src="scripts/app.js"></script>
+<script async defer src="scripts/weather.js"></script>
+<script async defer src=
+        "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyBinHw_1SkBR4Otshx5nnA_KSuT_kNwk0g&v=3&callback=app.initMap">
+</script>
+
+</body>
 </html>

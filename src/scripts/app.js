@@ -5,6 +5,13 @@ var app = app || {};
 
 (function () {
     'use strict';
+
+    // global var for off canvas navigation functions
+    app.detailsSidebar = document.getElementById("details-sidebar");
+    app.mapDivEl = document.getElementById("mapDiv");
+    app.mapViewEl = document.getElementById("mapView");
+    app.listingEl = document.getElementById("listings");
+
     app.neighborhood =  {  // Jackson Heights MTA Train station lat ln
         "lat" : 40.7466891,
         "lng" : -73.8908579
@@ -332,6 +339,15 @@ var app = app || {};
             // api calls
             self.getNYCinspections(self.currentPlace);
             self.getYelp(self.currentPlace);
+            self.showDetailsSidebar();
+        };
+
+        self.showDetailsSidebar = function () {
+            app.detailsSidebar.style.width = "50%";
+            app.detailsSidebar.style.visibility = "visible";
+            // app.mapViewEl.style.marginRight = "250px";
+            app.mapDivEl.style.width = "50%";
+            app.listingEl.style.marginLeft = '-25%';
         };
 
         self.toggleReviews = function () {

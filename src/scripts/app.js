@@ -342,6 +342,13 @@ var app = app || {};
             self.showDetailsSidebar();
         };
 
+        self.closeNav = function () {
+            app.detailsSidebar.style.width = "0";
+            app.detailsSidebar.style.visibility = "hidden";
+            app.mapDivEl.style.width = "75%";
+            app.listingEl.style.marginLeft = '0';
+        };
+
         self.showDetailsSidebar = function () {
             app.detailsSidebar.style.width = "50%";
             app.detailsSidebar.style.visibility = "visible";

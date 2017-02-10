@@ -11,6 +11,7 @@ var app = app || {};
     app.mapDivEl = document.getElementById("mapDiv");
     app.mapViewEl = document.getElementById("mapView");
     app.listingEl = document.getElementById("listings");
+    app.leftHamburger = document.getElementById("leftHamburger");
 
     app.neighborhood =  {  // Jackson Heights MTA Train station lat ln
         "lat" : 40.7466891,
@@ -347,6 +348,8 @@ var app = app || {};
             app.detailsSidebar.style.visibility = "hidden";
             app.mapDivEl.style.width = "75%";
             app.listingEl.style.marginLeft = '0';
+            app.leftHamburger.style.transform = 'translate(-25vw, 0)';
+            app.leftHamburger.style.transition = 'transform 0.3s ease';
         };
 
         self.showDetailsSidebar = function () {
@@ -355,6 +358,8 @@ var app = app || {};
             // app.mapViewEl.style.marginRight = "250px";
             app.mapDivEl.style.width = "50%";
             app.listingEl.style.marginLeft = '-25%';
+            // show left hamburger icon for listingEl
+            app.leftHamburger.style.transform = 'translate(0, 0)';
         };
 
         self.toggleReviews = function () {

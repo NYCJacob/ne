@@ -192,6 +192,12 @@ header {
     height: $content-height;
 }
 
+#leftHamburger {
+    width : 3vw;
+    transform: translate(-25vw, 0);  /* move off screen by default */
+    transition: transform 0.3s ease;
+}
+
 #details-sidebar {
     //border: 2px dashed $listing-color;
     background-color: $blue-color;

@@ -13,6 +13,12 @@ var app = app || {};
     app.listingEl = document.getElementById("listings");
     app.leftHamburger = document.getElementById("leftHamburger");
 
+    // elements for google places autocomplete functionality
+    app.card = document.getElementById('pac-card');
+    app.input = document.getElementById('pac-input');
+    app.types = document.getElementById('type-selector');
+    app.strictBounds = document.getElementById('strict-bounds-selector');
+
     app.neighborhood =  {  // Jackson Heights MTA Train station lat ln
         "lat" : 40.7466891,
         "lng" : -73.8908579
@@ -106,6 +112,19 @@ var app = app || {};
             }
         });
 
+        //  autocomplete code based on google docs
+        // https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete
+
+        // places search box on map
+        app.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(app.card);
+
+        // google places autocomplete method attaches to search input field
+        var autocomplete = new google.maps.places.Autocomplete(app.input);
+
+        // Bind the map's bounds (viewport) property to the autocomplete object,
+        // so that the autocomplete requests use the current map bounds for the
+        // bounds option in the request.   -- from google autocomplete docs
+        autocomplete.bindTo('bounds', map);
 
 
         // single infoWindow instance

@@ -77,6 +77,20 @@
         </div>
         <section id="listings">
             <h2>Restaurants</h2>
+            <input placeholder="Search…" type="search" data-bind="textInput: searchTerm, event: {keyup: search }" >
+
+            <!--<form id="search-list-container" data-bind="submit: filteredItems">-->
+                <!--<input data-bind="textInput: searchTerm" id="search-list" type="text"-->
+                       <!--placeholder="Enter a location">-->
+                <!--<button type="submit">Search Listing</button>-->
+            <!--</form>-->
+            <!--<div id="filtered-list-container" data-bind="if: filterExists">-->
+                <!--<ul data-bind="foreach: filteredItems">-->
+                    <!--<li><a data-bind="text: name, click: $parent.octoHighlighter" href="#"></a>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+
             <ul data-bind="foreach: restaurants">
                 <li><a data-bind="text: name, click: $parent.octoHighlighter" href="#"></a>
                 </li>

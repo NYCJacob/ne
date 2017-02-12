@@ -124,7 +124,9 @@ var app = app || {};
         // Bind the map's bounds (viewport) property to the autocomplete object,
         // so that the autocomplete requests use the current map bounds for the
         // bounds option in the request.   -- from google autocomplete docs
-        autocomplete.bindTo('bounds', map);
+        autocomplete.bindTo('bounds', app.map);  // bias results to map bounds
+
+        //todo bindto option type for only restaurants
 
 
         // single infoWindow instance
@@ -331,9 +333,8 @@ var app = app || {};
     function RestaurantsViewModel(mappedArray) {
         var self = this;
         self.restaurants = ko.observableArray(mappedArray);
-        self.getRestaurants = function () {
-            return self.restaurants;
-        };
+        // duplicate array for search function
+        self.backupArray = ko.observableArray(mappedArray);
         // used to tell viewModel what to display
         self.currentPlace = ko.observable(null);
         // headline for review in sidebar- when clicked show reviews
@@ -343,6 +344,38 @@ var app = app || {};
         self.showInspections = ko.observable(false);
         self.showYelp = ko.observable(false);
         self.yelpHeadline = ko.observable();
+        self.filterExists = ko.observable(false);
+
+        // search filter method
+        // http://opensoul.org/2011/06/23/live-search-with-knockoutjs/
+
+        self.searchTerm = ko.observable("");
+
+        self.search = function(value) {;
+                self.restaurants.removeAll();
+
+                for(var x in self.backupArray) {
+                    if(self.backupArray[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                        self.restaurants.push(self.backupArray[x]);
+                    }
+                }
+            };
+
+        //filter the items using the filter text
+        // based on http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
+        self.filteredItems = ko.computed(function() {
+            self.filteredItems = true;
+            var filter = self.searchTerm().toLowerCase();
+            if (!filter) {
+                return self.restaurants();
+            } else {
+                return ko.utils.arrayFilter(self.restaurants(), function(item) {
+                    // return ko.utils.stringStartsWith(item.name.toLowerCase(), filter);
+                    return item.name.toLowerCase().indexOf(filter) !== -1;
+                });
+            }
+        }, self);
+
         // method called when either list or marker clicked
         self.octoHighlighter = function (clickedPlace) {
             if (self.currentPlace() !== null) {
@@ -512,13 +545,11 @@ var app = app || {};
                     console.log(error);
                 }
             };
-// todo send yelp data to view
-            // Send AJAX query via jQuery library.
+            // Send AJAX query passing settings object
             $.ajax(settings);
 
         };  // end getYelp
 
-    }
-
+    }  // end viewmodel
 
 })();

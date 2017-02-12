@@ -351,15 +351,14 @@ var app = app || {};
 
         self.searchTerm = ko.observable("");
 
-        self.search = function(value) {;
-                self.restaurants.removeAll();
-
-                for(var x in self.backupArray) {
-                    if(self.backupArray[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-                        self.restaurants.push(self.backupArray[x]);
-                    }
-                }
-            };
+        // self.search = function(value) {
+        //         self.restaurants.removeAll();
+        //         for(var x in self.backupArray) {
+        //             if(self.backupArray[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+        //                 self.restaurants.push(self.backupArray[x]);
+        //             }
+        //         }
+        //     };
 
         //filter the items using the filter text
         // based on http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html

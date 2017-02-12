@@ -363,14 +363,21 @@ var app = app || {};
         //filter the items using the filter text
         // based on http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
         self.filteredItems = ko.computed(function() {
-            self.filteredItems = true;
             var filter = self.searchTerm().toLowerCase();
             if (!filter) {
                 return self.restaurants();
             } else {
+                // remove all map icons
+                self.restaurants().forEach(function(place){
+                   place.mapMarker.setMap(null);
+                });
                 return ko.utils.arrayFilter(self.restaurants(), function(item) {
                     // return ko.utils.stringStartsWith(item.name.toLowerCase(), filter);
-                    return item.name.toLowerCase().indexOf(filter) !== -1;
+                    if (item.name.toLowerCase().indexOf(filter) !== -1) {
+                        item.mapMarker.setMap(app.map);
+                        return item;
+                    }
+                    // return item.name.toLowerCase().indexOf(filter) !== -1;
                 });
             }
         }, self);

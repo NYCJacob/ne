@@ -227,6 +227,11 @@ header {
     width: 25%;
     max-height: $content-height;
     overflow: auto;
+
+    input {
+        width: 100%;
+        box-sizing: border-box;
+    }
 }
 
 #mapDiv {

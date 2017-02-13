@@ -13,12 +13,6 @@ var app = app || {};
     app.listingEl = document.getElementById("listings");
     app.leftHamburger = document.getElementById("leftHamburger");
 
-    // elements for google places autocomplete functionality
-    app.card = document.getElementById('pac-card');
-    app.input = document.getElementById('pac-input');
-    app.types = document.getElementById('type-selector');
-    app.strictBounds = document.getElementById('strict-bounds-selector');
-
     app.neighborhood =  {  // Jackson Heights MTA Train station lat ln
         "lat" : 40.7466891,
         "lng" : -73.8908579
@@ -112,23 +106,6 @@ var app = app || {};
             }
         });
 
-        //  autocomplete code based on google docs
-        // https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete
-
-        // places search box on map
-        app.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(app.card);
-
-        // google places autocomplete method attaches to search input field
-        var autocomplete = new google.maps.places.Autocomplete(app.input);
-
-        // Bind the map's bounds (viewport) property to the autocomplete object,
-        // so that the autocomplete requests use the current map bounds for the
-        // bounds option in the request.   -- from google autocomplete docs
-        autocomplete.bindTo('bounds', app.map);  // bias results to map bounds
-
-        //todo bindto option type for only restaurants
-
-
         // single infoWindow instance
         app.infoWindow = new google.maps.InfoWindow();
         // app.infoWindow.setContent(infoContent);
@@ -162,8 +139,6 @@ var app = app || {};
             app.vm = new RestaurantsViewModel(app.RestaurantArray);
             // apply ko bindings
             ko.applyBindings(app.vm, document.getElementById('main-content'));
-
-
         } else {
             console.log("place service status error");
         }
@@ -346,19 +321,7 @@ var app = app || {};
         self.yelpHeadline = ko.observable();
         self.filterExists = ko.observable(false);
 
-        // search filter method
-        // http://opensoul.org/2011/06/23/live-search-with-knockoutjs/
-
         self.searchTerm = ko.observable("");
-
-        // self.search = function(value) {
-        //         self.restaurants.removeAll();
-        //         for(var x in self.backupArray) {
-        //             if(self.backupArray[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-        //                 self.restaurants.push(self.backupArray[x]);
-        //             }
-        //         }
-        //     };
 
         //filter the items using the filter text
         // based on http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html

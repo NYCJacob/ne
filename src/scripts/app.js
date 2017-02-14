@@ -9,9 +9,23 @@ var app = app || {};
     // global var for off canvas navigation functions
     app.detailsSidebar = document.getElementById("details-sidebar");
     app.mapDivEl = document.getElementById("mapDiv");
-    app.mapViewEl = document.getElementById("mapView");
     app.listingEl = document.getElementById("listings");
     app.leftHamburger = document.getElementById("leftHamburger");
+    app.headerEl = document.getElementById("weather");
+
+    // check if google maps responded
+    setTimeout(function () {
+        if (typeof google !== 'object'){
+            app.listingEl.innerHTML = "no response from Google";
+            var placeHolderMap = document.createElement('img');
+            placeHolderMap.src = 'img/staticmap.png';
+            app.mapDivEl.appendChild(placeHolderMap);
+            var badConnectMsg = document.createElement('h1');
+            badConnectMsg.innerHTML = 'Please check your internet connect and refresh browser.'
+            app.headerEl.appendChild(badConnectMsg);
+        }
+    }, 2000);
+
 
     app.neighborhood =  {  // Jackson Heights MTA Train station lat ln
         "lat" : 40.7466891,
@@ -97,7 +111,7 @@ var app = app || {};
 
         app.map = new google.maps.Map(mapEle, {
             center: app.neighborhood,
-            zoom: 16,
+            zoom: 15,
             styles: styles,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             navigationControl: true,
@@ -137,7 +151,7 @@ var app = app || {};
             app.RestaurantArray.forEach(googleDetails);
             // make vm app globle so selector function works
             app.vm = new RestaurantsViewModel(app.RestaurantArray);
-            // apply ko bindings
+            // apply ko bindings to main-content b/c weather bound to header
             ko.applyBindings(app.vm, document.getElementById('main-content'));
         } else {
             console.log("place service status error");
@@ -150,7 +164,7 @@ var app = app || {};
         serviceDetails.getDetails(request, callback);
         function callback(details, status){
             if (status == google.maps.places.PlacesServiceStatus.OK) {
-                console.log('Details received ' + details);
+                // console.log('Details received ' + details);
                 // need to send details to the restaurant object
                 restaurant.addDetails(details);
             }else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
@@ -358,8 +372,11 @@ var app = app || {};
         self.showReviews = ko.observable(false);
         self.inspectionHeadline = ko.observable();
         self.showInspections = ko.observable(false);
+        // toggle visibility of addition info html if ajax success
+        self.inspectionRequestSuccess = ko.observable(false);
         self.showYelp = ko.observable(false);
         self.yelpHeadline = ko.observable();
+        self.yelpRequestSuccess = ko.observable(false);
         self.filterExists = ko.observable(false);
 
         self.searchTerm = ko.observable("");
@@ -454,11 +471,9 @@ var app = app || {};
             } else {
                 self.showYelp(false);
             }
-        }
+        };
 
         self.getNYCinspections = function (currentPlace) {
-            console.log('hit getNYCinspections method');
-            // api request all caps
             var nycPlaceName = currentPlace().name.toUpperCase();
             $.ajax({
                 url: "https://data.cityofnewyork.us/resource/9w7m-hzhe.json",
@@ -473,10 +488,17 @@ var app = app || {};
             }).done(function (data) {
                 // data is an array of objections returned from api
                 console.log('nyc ajax done: ' + data);
+                // check if there are results returned (sometimes ajax success returns no data)
+                // this technique from SO http://stackoverflow.com/questions/23851337/check-if-ajax-response-data-is-empty-blank-null-undefined-0#23855590
+                if (!$.trim(data)) {
+                    self.inspectionRequestSuccess = false;
+                    self.inspectionHeadline('No NYC inspection data found.');
+                }
                 // todo a better api call might avoid this processing
                 // array of graded inspection from all inspections because not all have grade
                 // although all inspections have a score which could be used in future version
                 var gradedInspections = [];
+                self.inspectionRequestSuccess = true;
                 data.forEach(function (inspection) {
                     if (inspection.hasOwnProperty('grade')) {
                         // convert to date object for sorting/ easier display options
@@ -484,18 +506,17 @@ var app = app || {};
                         // short date for ui display
                         inspection.grade_date_display = inspection.grade_date.getMonth() + '-' + inspection.grade_date.getDate() + '-' +
                                 inspection.grade_date.getFullYear();
-
-
                         gradedInspections.push(inspection);
                     }
                 });
                 // sort inspections by date most recent first
                 gradedInspections.sort(function(a,b){return b.grade_date - a.grade_date});
                 self.currentPlace().inspectionResults(gradedInspections);
-                // todo why headline doesn't work if in currentPlace()
                 self.inspectionHeadline('Latest Grade: ' + gradedInspections[0].grade);
             }).fail(function() {
                 console.log( "nycinspection ajax error" );
+                self.inspectionRequestSuccess = false;
+                self.inspectionHeadline('Request failed, please try again later.');
             });
         };
 
@@ -542,9 +563,8 @@ var app = app || {};
                 cache: true,                // This is crucial to include as well to prevent jQuery from adding on a cache-buster parameter "_=23489489749837", invalidating our oauth-signature
                 dataType: 'jsonp',
                 success: function(results) {
-                    // Do stuff with results
-                    console.log("SUCCCESS! %o", results);
-                    //  Yelp api sucks needs checking
+                    // console.log("SUCCCESS! %o", results);
+                    self.yelpRequestSuccess(true);
                     var cleanYelpResults;
                     if (results.businesses.length > 1) {  // more than one business in results
                         results.businesses.forEach(function (business) {
@@ -560,7 +580,9 @@ var app = app || {};
                 },
                 error: function(error) {
                     // Do stuff on fail
-                    console.log(error);
+                    console.log('yelp error' , error);
+                    self.yelpRequestSuccess(false);
+                    self.yelpHeadline("There was an error, please try again later.")
                 }
             };
             // Send AJAX query passing settings object
@@ -572,7 +594,7 @@ var app = app || {};
 
     // this from knockout docs
     // Here's a custom Knockout binding that makes elements shown/hidden via jQuery's fadeIn()/fadeOut() methods
-// Could be stored in a separate utility library
+    // used for details sidebar dropdown panels
     ko.bindingHandlers.fadeVisible = {
         init: function(element, valueAccessor) {
             // Initially set the element to be instantly visible/hidden depending on the value

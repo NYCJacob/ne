@@ -22,10 +22,10 @@
 
 <div id="container">
     <header id="weather">
-        <div id="logo">Jackson Heights NYC</div>
+        <!--<div id="logo">Restaurants of Jackson Heights NYC</div>-->
         <ul>
-            <!--<li>Jackson Heights NYC</li>-->
-            <li class="weather-icon" data-bind="attr: {src: weatherImg}"></li>
+            <li>Jackson Heights Restaurants</li>
+            <li class="weather-icon"><img data-bind="attr: {src: weatherImg}"></li>
             <li class="weather-summary" data-bind="text: summary"></li>
             <li> <span class="weather-summary" data-bind="text:temp"></span><span>˚</span></li>
             <li>Feels like </li>
@@ -86,16 +86,13 @@
             <div class="inspections-panel" data-bind="click: toggleInspections">
                 <h3>Health Inspections</h3>
                 <a class="inspectionsHead" data-bind="text: inspectionHeadline"></a>
-                <span class="fa fa-caret-down"></span>
-                <span>Click for more</span>
+                <span class="fa fa-caret-down"  data-bind="visible: inspectionRequestSuccess"></span>
+                <span data-bind="visible: inspectionRequestSuccess">Click for more</span>
             </div>
             <div data-bind="visible: showInspections, with: currentPlace">
                 <table>
                     <thead>
-                    <tr>
-                        <th>Grade</th>
-                        <th>Date</th>
-                    </tr>
+                        <tr><th>Grade</th><th>Date</th></tr>
                     </thead>
                     <tbody data-bind="foreach: inspectionResults">
                     <tr>
@@ -123,13 +120,12 @@
                 </div>
             </div>
 
-
             <hr>
-            <div class="yelp-panel" data-bind="click: toggleYelp">
+            <div class="yelp-panel">
                 <h3>Yelp Reviews</h3>
                 <a class="yelpHead" data-bind="text: yelpHeadline"></a>
-                <span class="fa fa-caret-down"></span>
-                <span>Click for more</span>
+                <span class="fa fa-caret-down" data-bind="visible: yelpRequestSuccess, click: toggleYelp"></span>
+                <span data-bind="visible: yelpRequestSuccess, click: toggleYelp">Click for more</span>
             </div>
             <div data-bind="visible: showYelp, with: currentPlace">
                 <table>

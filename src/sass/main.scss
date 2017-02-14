@@ -90,8 +90,8 @@ textarea {
 @import "font-awesome.scss";
 
 $listing-color: #eaed83;
+$header-color: #FFAD00;
 $map-color: #bebebe;
-$header-color:  #eeffee;
 $footer-color:  #000;
 $warning-color: #ff0000;
 $blue-color: #0000ff;
@@ -109,7 +109,7 @@ $info-panel-background: #4AB1FF;
 
 header {
     text-align: center;
-    background-color: cadetblue;
+    background-color: $header-color;
     h1 {
         margin: 0;
         font-size: 1.5em;
@@ -128,7 +128,7 @@ header {
 }
 
 #main-content {
-  background-color: cadetblue;
+  background-color: $header-color;
 }
 
 #logo {
@@ -203,23 +203,31 @@ header {
 
 
 #listings {
-    border: 2px dashed $listing-color;
+    //border: 2px dashed $listing-color;
+    position: absolute;
+    z-index: 999;
     float: left;
     width: 25%;
     max-height: $content-height;
     overflow: auto;
-    opacity: 0.4;
+    opacity: 0.5;
+    li {
+      background-color: $blue-color;
+    }
 
     input {
         width: 100%;
         box-sizing: border-box;
+      background-color: $blue-color;
+      border-width: 0;
     }
 }
 
 #mapDiv {
     border: 1px solid $map-color;
     float: left;
-    width: 75%;   /* starts at 75 until place selected */
+    //width: 75%;   /* starts at 75 until place selected */
+    width: 100%;
     height: $content-height;
 }
 

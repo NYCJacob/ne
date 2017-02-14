@@ -21,27 +21,23 @@
 <![endif]-->
 
 <div id="container">
-    <header><h1>Jackson Heights NYC</h1>
-        <div id='weather'>
+    <header id="weather">
+        <div id="logo">Jackson Heights NYC</div>
+        <ul>
+            <!--<li>Jackson Heights NYC</li>-->
+            <li class="weather-icon" data-bind="attr: {src: weatherImg}"></li>
+            <li class="weather-summary" data-bind="text: summary"></li>
+            <li> <span class="weather-summary" data-bind="text:temp"></span><span>˚</span></li>
+            <li>Feels like </li>
+            <li data-bind="text:tempFeel"></li>
+            <li>˚</li>
+            <li>Rain? </li>
+            <li data-bind="text:rainProb"></li>
+            <li>%</li>
+        </ul>
 
-            <aside>
-                <div id="weather-headline">
-                    <img class="weather-icon" data-bind="attr: {src: weatherImg}">
-                    <span class="weather-summary" data-bind="text: summary"></span>
-                    <span class="weather-summary" data-bind="text:temp"></span><span>˚</span>
-                    <span>Feels like</span>
-                    <span data-bind="text:tempFeel"></span>
-                    <span>˚</span>
-                    <span>Rain?</span>
-                    <span data-bind="text:rainProb"></span>
-                    <span>%</span>
+            <span id="weather-fn">Weather by <a href="https://forecast.io">forecast.io</a></span>
 
-                </div>
-                <div>
-                    <span id="weather-fn">Weather data provided by <a href="https://forecast.io">forecast.io</a></span>
-                </div>
-            </aside>
-        </div>
     </header>
     <main id="main-content">
         <div id="leftHamburger" data-bind="click: closeNav">

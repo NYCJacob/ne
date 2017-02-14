@@ -45,8 +45,6 @@
             this.weatherImg = displayIcon(this.icon);
         };
 
-        //TODO: make the weatherIcons object work with the Weather class
-
         var weatherIcons = {
             "rain" : 'img/SVG/Cloud-Rain.svg',
             "snow" : 'img/SVG/Cloud-Snow.svg',

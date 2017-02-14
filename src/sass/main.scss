@@ -106,13 +106,33 @@ $info-panel-background: #4AB1FF;
     box-sizing: border-box;
 }
 
+
 header {
+    text-align: center;
     background-color: cadetblue;
     h1 {
         margin: 0;
         font-size: 1.5em;
         display: inline;
     }
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    li {
+        display: inline;
+        background-color: inherit;
+    }
+}
+
+#main-content {
+  background-color: cadetblue;
+}
+
+#logo {
+  font-weight: 600;
 }
 
 .infoWindow {
@@ -172,7 +192,8 @@ header {
 }
 
 #weather-fn {
-    font-size: small;
+    font-size: 1.5vh;
+    float: right;
     a {
         display: inline;
         color: #4AB1FF;
@@ -187,6 +208,7 @@ header {
     width: 25%;
     max-height: $content-height;
     overflow: auto;
+    opacity: 0.4;
 
     input {
         width: 100%;
@@ -202,6 +224,7 @@ header {
 }
 
 #leftHamburger {
+    background-color: cadetblue;
     width : 3vw;
     transform: translate(-25vw, 0);  /* move off screen by default */
     transition: transform 0.3s ease;
@@ -234,10 +257,6 @@ header {
     }
 }
 
-header {
-    color: $warning-color;
-    text-align: center;
-}
 
 footer {
     border: medium dashed $footer-color;

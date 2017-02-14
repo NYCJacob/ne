@@ -349,6 +349,9 @@ var app = app || {};
             }
             x[self.slideIndex-1].style.display = "block";
         };
+        self.nextSlide = function (n) {
+            self.slideShow(self.slideIndex+=n);
+        }
 
         // headline for review in sidebar- when clicked show reviews
         self.reviewHeadline = ko.observable();

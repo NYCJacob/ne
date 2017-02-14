@@ -21,8 +21,9 @@
 <![endif]-->
 
 <div id="container">
-    <header><h1>Jackson Heights Neighborhood Map</h1>
+    <header><h1>Jackson Heights NYC</h1>
         <div id='weather'>
+
             <aside>
                 <div id="weather-headline">
                     <img class="weather-icon" data-bind="attr: {src: weatherImg}">
@@ -119,8 +120,8 @@
                 </div>
             </div>
             <div id="photo-slideShow" data-bind="fadeVisible: showSlides">
-                <a class="w3-btn-floating w3-display-left" data-bind="click: slideShow(-1)">&#10094;</a>
-                <a class="w3-btn-floating w3-display-right" data-bind="click: slideShow(-1)">&#10095;</a>
+                <a class="w3-btn-floating w3-display-left" data-bind="click: nextSlide(-1)">&#10094;</a>
+                <a class="w3-btn-floating w3-display-right" data-bind="click: nextSlide(-1)">&#10095;</a>
                 <div id="slided" data-bind="foreach: slideUrlArray()">
                     <img alt="" class="mySlides" data-bind="attr: {src: $data}">
                 </div>

@@ -113,9 +113,16 @@
                 <i class="fa fa-caret-down"></i>
                 <h3>Photos</h3>
             </div>
-            <div data-bind="with: currentPlace">
-                <div data-bind="foreach: photos">
-                    <img alt="" data-bind="attr: {src: $data.getUrl}">
+            <div >
+                <div data-bind="foreach: photoUrlArray()">
+                    <img alt="" data-bind="attr: {src: $data}, click: $parent.toggleSlides">
+                </div>
+            </div>
+            <div id="photo-slideShow" data-bind="fadeVisible: showSlides">
+                <a class="w3-btn-floating w3-display-left" data-bind="click: slideShow(-1)">&#10094;</a>
+                <a class="w3-btn-floating w3-display-right" data-bind="click: slideShow(-1)">&#10095;</a>
+                <div id="slided" data-bind="foreach: slideUrlArray()">
+                    <img alt="" class="mySlides" data-bind="attr: {src: $data}">
                 </div>
             </div>
 

@@ -312,6 +312,44 @@ var app = app || {};
         self.backupArray = ko.observableArray(mappedArray);
         // used to tell viewModel what to display
         self.currentPlace = ko.observable(null);
+
+        // array of google place photos
+        self.placePhotos = ko.observableArray([]);
+        // make photo url object
+        self.photoUrlArray = function () {
+            var urlArray = [];
+            ko.utils.arrayForEach(self.placePhotos(), function (photo) {
+                urlArray.push(photo.getUrl({'maxHeight': 50, 'maxWidth': 50}))
+            });
+            return urlArray;
+        };
+        self.showSlides = ko.observable(false);
+
+        // todo unify url functions passing arg for size
+        self.slideUrlArray = function () {
+            var slidesArray = [];
+            // calculate width of photos parent div
+            var detailsSidebarWidth =  $('#details-sidebar').innerWidth();
+            var detailsSidebarHeight =  $('#details-sidebar').innerHeight();
+            ko.utils.arrayForEach(self.placePhotos(), function (photo) {   //url object must be integer
+                slidesArray.push(photo.getUrl({'maxHeight': Math.floor(detailsSidebarWidth * .75), 'maxWidth': Math.floor(detailsSidebarHeight * .25)}));
+            });
+            return slidesArray;
+        };
+
+        // slide show code from http://www.w3schools.com/w3css/w3css_slideshow.asp
+        self.slideIndex = 1;
+        self.slideShow = function (n) {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            if (n > x.length) {self.slideIndex = 1}
+            if (n < 1) {self.slideIndex = x.length}
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            x[self.slideIndex-1].style.display = "block";
+        };
+
         // headline for review in sidebar- when clicked show reviews
         self.reviewHeadline = ko.observable();
         self.showReviews = ko.observable(false);
@@ -354,6 +392,8 @@ var app = app || {};
             app.infoWindow.open(app.map, clickedPlace.mapMarker);
             // make clicked place the current place
             self.currentPlace(clickedPlace);
+            // array of google place photos to placePhotos ko observableArray
+            self.placePhotos(clickedPlace.photos);
             self.reviewHeadline( self.currentPlace().name + ' has ' + self.currentPlace().reviews.length + ' reviews from Google.');
             // api calls
             self.getNYCinspections(self.currentPlace);
@@ -378,6 +418,15 @@ var app = app || {};
             app.listingEl.style.marginLeft = '-25%';
             // show left hamburger icon for listingEl
             app.leftHamburger.style.transform = 'translate(0, 0)';
+        };
+
+        self.toggleSlides = function () {
+            if ( self.showSlides() === false ) {
+                self.showSlides(true);
+                self.slideShow(1);
+            } else {
+                self.showSlides(false);
+            }
         };
 
         self.toggleReviews = function () {
@@ -517,5 +566,21 @@ var app = app || {};
         };  // end getYelp
 
     }  // end viewmodel
+
+    // this from knockout docs
+    // Here's a custom Knockout binding that makes elements shown/hidden via jQuery's fadeIn()/fadeOut() methods
+// Could be stored in a separate utility library
+    ko.bindingHandlers.fadeVisible = {
+        init: function(element, valueAccessor) {
+            // Initially set the element to be instantly visible/hidden depending on the value
+            var value = valueAccessor();
+            $(element).toggle(ko.unwrap(value)); // Use "unwrapObservable" so we can handle values that may or may not be observable
+        },
+        update: function(element, valueAccessor) {
+            // Whenever the value subsequently changes, slowly fade the element in or out
+            var value = valueAccessor();
+            ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut();
+        }
+    };
 
 })();

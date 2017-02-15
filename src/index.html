@@ -34,8 +34,7 @@
             <li class="weather-details" data-bind="text:rainProb"></li>
             <li class="weather-details">%</li>
         </ul>
-
-            <span id="weather-fn">Weather by <a href="https://forecast.io">forecast.io</a></span>
+        <span id="weather-fn">Weather by <a href="https://forecast.io">forecast.io</a></span>
 
     </header>
     <main id="main-content">
@@ -112,8 +111,8 @@
                 </div>
             </div>
             <div id="photo-slideShow" data-bind="fadeVisible: showSlides">
-                <a class="w3-btn-floating w3-display-left" data-bind="click: nextSlide(-1)">&#10094;</a>
-                <a class="w3-btn-floating w3-display-right" data-bind="click: nextSlide(-1)">&#10095;</a>
+                <a class="slide-left" data-bind="click: nextSlide(-1)">&#10094;</a>
+                <a class="slide-right" data-bind="click: nextSlide(+1)">&#10095;</a>
                 <div id="slided" data-bind="foreach: slideUrlArray()">
                     <img alt="" class="mySlides" data-bind="attr: {src: $data}">
                 </div>
@@ -129,29 +128,17 @@
             <div data-bind="visible: showYelp, with: currentPlace">
                 <table>
                     <tbody data-bind="foreach: yelpResults">
-                    <tr>
-                        <td><img data-bind="attr: {src: rating_img_url_large}">
-                    </tr>
-                    <tr>
-                        <td><strong>Categories:</strong></td>
-                    </tr>
-                    <tr>
-                        <td data-bind="text: categories"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Review Snippet:</strong></td>
-                    </tr>
-                    <tr>
-                        <td data-bind="text: snippet_text"></td>
-                    </tr>
+                    <tr><td><img data-bind="attr: {src: rating_img_url_large}"></tr>
+                    <tr><td><strong>Categories:</strong></td></tr>
+                    <tr><td data-bind="text: categories"></td></tr>
+                    <tr><td><strong>Review Snippet:</strong></td></tr>
+                    <tr><td data-bind="text: snippet_text"></td></tr>
                     </tbody>
                 </table>
             </div>
 
         </section>
-
     </main>
-
 </div>
 
 <script src="scripts/vendor/jquery/dist/jquery.js"></script>

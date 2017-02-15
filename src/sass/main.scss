@@ -180,7 +180,7 @@ header {
 
 #weather {
     color: black;
-    font-size: 2.7vw;
+    font-size: 2.5vw;
 }
 
 #weather-headline {
@@ -192,8 +192,10 @@ header {
 }
 
 #weather-fn {
-    font-size: 1.2vh;
-    float: right;
+    position: absolute;
+    top: 9vh;
+    right: 0;
+    font-size: 1.1vh;
     a {
         display: inline;
         color: #4AB1FF;
@@ -207,7 +209,7 @@ header {
     position: absolute;
     z-index: 999;
     float: left;
-    width: 25%;
+    width: 25vw;
     max-height: $content-height;
     overflow: auto;
     opacity: 0.5;
@@ -236,10 +238,10 @@ header {
 }
 
 #leftHamburger {
-    background-color: cadetblue;
     width : 3vw;
     transform: translate(-25vw, 0);  /* move off screen by default */
     transition: transform 0.3s ease;
+    display: none;
 }
 
 #details-sidebar {
@@ -335,18 +337,33 @@ a:hover {
     @extend .reviews-panel;
 }
 
+.slide-left {
+    width: 5%;
+    margin-left: 40%;
+}
+
+.slide-right {
+    width: 5%;
+    margin-right: 40%;
+}
+
 
 // custom media queries
-@media (max-width: 600px) {
+
+@media (max-width: 700px) {
     .weather-details {
         display: none;
     }
     .weather-icon {
         height: 50px;
     }
+    #weather-fn {
+      top: 5vh;
+      font-size: 1.0vh;
+    }
 
     #listings {
-        width: 50%;
+        width: 40%;
     }
 }
 

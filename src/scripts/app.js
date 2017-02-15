@@ -223,6 +223,10 @@ var app = app || {};
         // details search geometry object includes
         // location object and viewport object
         this.geometry = restaurantObj.geometry;
+        this.getLatLn = function () {
+            var latln = this.geometry.location;
+          return latln;
+        };
         this.address_formatted = '';
         this.address_components = restaurantObj.address_components;
         this.phone = restaurantObj.formatted_phone_number;
@@ -305,7 +309,6 @@ var app = app || {};
             }
         };
 
-
         var infoContent =
             '<div class="infoWindow">' +
                 '<span class="infoWindow-name">' + place.name  + '</span>' +
@@ -322,8 +325,6 @@ var app = app || {};
     function RestaurantsViewModel(mappedArray) {
         var self = this;
         self.restaurants = ko.observableArray(mappedArray);
-        // duplicate array for search function
-        self.backupArray = ko.observableArray(mappedArray);
         // used to tell viewModel what to display
         self.currentPlace = ko.observable(null);
 
@@ -365,7 +366,7 @@ var app = app || {};
         };
         self.nextSlide = function (n) {
             self.slideShow(self.slideIndex+=n);
-        }
+        };
 
         // headline for review in sidebar- when clicked show reviews
         self.reviewHeadline = ko.observable();
@@ -377,8 +378,6 @@ var app = app || {};
         self.showYelp = ko.observable(false);
         self.yelpHeadline = ko.observable();
         self.yelpRequestSuccess = ko.observable(false);
-        self.filterExists = ko.observable(false);
-
         self.searchTerm = ko.observable("");
 
         //filter the items using the filter text
@@ -419,15 +418,18 @@ var app = app || {};
             self.getNYCinspections(self.currentPlace);
             self.getYelp(self.currentPlace);
             self.showDetailsSidebar();
+            // app.map.setCenter(self.currentPlace().getLatLn());
         };
 
         self.closeNav = function () {
             app.detailsSidebar.style.width = "0";
             app.detailsSidebar.style.visibility = "hidden";
-            app.mapDivEl.style.width = "75%";
+            app.mapDivEl.style.width = "100%";
             app.listingEl.style.marginLeft = '0';
             app.leftHamburger.style.transform = 'translate(-25vw, 0)';
             app.leftHamburger.style.transition = 'transform 0.3s ease';
+            app.leftHamburger.style.display = 'none';
+            app.infoWindow.close();
         };
 
         self.showDetailsSidebar = function () {
@@ -435,7 +437,7 @@ var app = app || {};
             app.detailsSidebar.style.visibility = "visible";
             // app.mapViewEl.style.marginRight = "250px";
             app.mapDivEl.style.width = "50%";
-            app.listingEl.style.marginLeft = '-25%';
+            app.listingEl.style.marginLeft = '-50%';
             // show left hamburger icon for listingEl
             app.leftHamburger.style.transform = 'translate(0, 0)';
         };
@@ -605,6 +607,18 @@ var app = app || {};
             // Whenever the value subsequently changes, slowly fade the element in or out
             var value = valueAccessor();
             ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut();
+        }
+    };
+
+    ko.bindingHandlers.toggleSlide = {
+        init: function(element, valueAccessor) {
+            // Initially set the element to be instantly visible/hidden depending on the value
+            var value = valueAccessor();
+            $(element).toggle(ko.unwrap(value)); // Use "unwrapObservable" so we can handle values that may or may not be observable
+        },
+        update: function(element) {
+            // Whenever the value subsequently changes, slowly fade the element in or out
+            $(element).toggle("slide");
         }
     };
 

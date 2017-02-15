@@ -180,7 +180,7 @@ header {
 
 #weather {
     color: black;
-    font-size: 3vh;
+    font-size: 2.7vw;
 }
 
 #weather-headline {
@@ -192,7 +192,7 @@ header {
 }
 
 #weather-fn {
-    font-size: 1.5vh;
+    font-size: 1.2vh;
     float: right;
     a {
         display: inline;
@@ -213,6 +213,10 @@ header {
     opacity: 0.5;
     li {
       background-color: $blue-color;
+        a:hover {
+            background-color: black;
+            font-weight: 600;
+        }
     }
 
     input {
@@ -303,8 +307,6 @@ a:hover {
     background:rgba(0,0,0,0.3);
 }
 
-
-
 .reviews-panel {
     background-color: $info-panel-background;
 
@@ -341,6 +343,10 @@ a:hover {
     }
     .weather-icon {
         height: 50px;
+    }
+
+    #listings {
+        width: 50%;
     }
 }
 

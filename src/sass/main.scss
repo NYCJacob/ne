@@ -276,7 +276,6 @@ footer {
 }
 
 ul {
-    border:1px solid black;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -335,7 +334,15 @@ a:hover {
 }
 
 
-//the off canvas sidebar
+// custom media queries
+@media (max-width: 600px) {
+    .weather-details {
+        display: none;
+    }
+    .weather-icon {
+        height: 50px;
+    }
+}
 
 
 

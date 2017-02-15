@@ -22,18 +22,17 @@
 
 <div id="container">
     <header id="weather">
-        <!--<div id="logo">Restaurants of Jackson Heights NYC</div>-->
         <ul>
             <li>Jackson Heights Restaurants</li>
-            <li class="weather-icon"><img data-bind="attr: {src: weatherImg}"></li>
+            <li class="weather-summary"><img class="weather-icon" data-bind="attr: {src: weatherImg}"></li>
             <li class="weather-summary" data-bind="text: summary"></li>
             <li> <span class="weather-summary" data-bind="text:temp"></span><span>˚</span></li>
-            <li>Feels like </li>
-            <li data-bind="text:tempFeel"></li>
-            <li>˚</li>
-            <li>Rain? </li>
-            <li data-bind="text:rainProb"></li>
-            <li>%</li>
+            <li class="weather-details">Feels like </li>
+            <li class="weather-details" data-bind="text:tempFeel"></li>
+            <li class="weather-details">˚</li>
+            <li class="weather-details">Rain? </li>
+            <li class="weather-details" data-bind="text:rainProb"></li>
+            <li class="weather-details">%</li>
         </ul>
 
             <span id="weather-fn">Weather by <a href="https://forecast.io">forecast.io</a></span>

@@ -13,20 +13,6 @@ var app = app || {};
     app.leftHamburger = document.getElementById("leftHamburger");
     app.headerEl = document.getElementById("weather");
 
-    // check if google maps responded
-    setTimeout(function () {
-        if (typeof google !== 'object'){
-            app.listingEl.innerHTML = "no response from Google";
-            var placeHolderMap = document.createElement('img');
-            placeHolderMap.src = 'img/staticmap.png';
-            app.mapDivEl.appendChild(placeHolderMap);
-            var badConnectMsg = document.createElement('h1');
-            badConnectMsg.innerHTML = 'Please check your internet connect and refresh browser.'
-            app.headerEl.appendChild(badConnectMsg);
-        }
-    }, 2000);
-
-
     app.neighborhood =  {  // Jackson Heights MTA Train station lat ln
         "lat" : 40.7466891,
         "lng" : -73.8908579
@@ -122,10 +108,8 @@ var app = app || {};
 
         // single infoWindow instance
         app.infoWindow = new google.maps.InfoWindow();
-        // app.infoWindow.setContent(infoContent);
 
         // first get standard place data - need place_id for details search
-        //TODO: need onerror handler
         getPlacesData();
     };  // end app.init
 
@@ -324,6 +308,15 @@ var app = app || {};
 
     function RestaurantsViewModel(mappedArray) {
         var self = this;
+
+        // check if google maps responded
+        setTimeout(function () {
+            if (typeof google !== 'object'){
+                self.noInternet(true);
+            }
+        }, 3000);
+
+        self.noInternet = ko.observable(false);
         self.restaurants = ko.observableArray(mappedArray);
         // used to tell viewModel what to display
         self.currentPlace = ko.observable(null);
@@ -332,24 +325,35 @@ var app = app || {};
         self.placePhotos = ko.observableArray([]);
         // make photo url object
         self.photoUrlArray = function () {
-            var urlArray = [];
-            ko.utils.arrayForEach(self.placePhotos(), function (photo) {
-                urlArray.push(photo.getUrl({'maxHeight': 50, 'maxWidth': 50}))
-            });
-            return urlArray;
+            if (self.placePhotos() !== undefined) {
+                var urlArray = [];
+                ko.utils.arrayForEach(self.placePhotos(), function (photo) {
+                    urlArray.push(photo.getUrl({'maxHeight': 50, 'maxWidth': 50}))
+                });
+                return urlArray;
+            } else {
+                self.noPhotos(true);
+                return [];
+            }
         };
         self.showSlides = ko.observable(false);
+        self.noPhotos = ko.observable(false);
 
         // todo unify url functions passing arg for size
         self.slideUrlArray = function () {
-            var slidesArray = [];
-            // calculate width of photos parent div
-            var detailsSidebarWidth =  $('#details-sidebar').innerWidth();
-            var detailsSidebarHeight =  $('#details-sidebar').innerHeight();
-            ko.utils.arrayForEach(self.placePhotos(), function (photo) {   //url object must be integer
-                slidesArray.push(photo.getUrl({'maxHeight': Math.floor(detailsSidebarWidth * .75), 'maxWidth': Math.floor(detailsSidebarHeight * .25)}));
-            });
-            return slidesArray;
+            if (self.noPhotos() === false) {
+                var slidesArray = [];
+                // calculate width of photos parent div
+                var detailsSidebarWidth =  $('#details-sidebar').innerWidth();
+                var detailsSidebarHeight =  $('#details-sidebar').innerHeight();
+                ko.utils.arrayForEach(self.placePhotos(), function (photo) {   //url object must be integer
+                    slidesArray.push(photo.getUrl({'maxHeight': Math.floor(detailsSidebarWidth * .75), 'maxWidth': Math.floor(detailsSidebarHeight * .25)}));
+                });
+                return slidesArray;
+            } else {
+                return -1;
+            }
+
         };
 
         // slide show code from http://www.w3schools.com/w3css/w3css_slideshow.asp
@@ -413,12 +417,22 @@ var app = app || {};
             self.currentPlace(clickedPlace);
             // array of google place photos to placePhotos ko observableArray
             self.placePhotos(clickedPlace.photos);
-            self.reviewHeadline( self.currentPlace().name + ' has ' + self.currentPlace().reviews.length + ' reviews from Google.');
+            self.reviewTotal = function () {    // avoids undefined error if no reviews
+                var reviewAmt;
+                if (self.currentPlace().reviews === undefined || self.currentPlace().reviews === 0) {
+                    reviewAmt = 0;
+                } else {
+                    reviewAmt = self.currentPlace().reviews.length;
+                }
+                return reviewAmt;
+            };
+            self.reviewHeadline( self.currentPlace().name + ' has ' + self.reviewTotal() + ' reviews from Google.');
             // api calls
             self.getNYCinspections(self.currentPlace);
             self.getYelp(self.currentPlace);
             self.showDetailsSidebar();
             // app.map.setCenter(self.currentPlace().getLatLn());
+            app.map.panTo(app.neighborhood);
         };
 
         self.closeNav = function () {
@@ -430,6 +444,7 @@ var app = app || {};
             app.leftHamburger.style.transition = 'transform 0.3s ease';
             app.leftHamburger.style.display = 'none';
             app.infoWindow.close();
+            app.map.panTo(app.neighborhood);
         };
 
         self.showDetailsSidebar = function () {
@@ -514,7 +529,14 @@ var app = app || {};
                 // sort inspections by date most recent first
                 gradedInspections.sort(function(a,b){return b.grade_date - a.grade_date});
                 self.currentPlace().inspectionResults(gradedInspections);
-                self.inspectionHeadline('Latest Grade: ' + gradedInspections[0].grade);
+                self.latestGrade = function () {
+                    if ( gradedInspections === undefined || gradedInspections.length === 0) {
+                        return 'unknown';
+                    } else {
+                        return  gradedInspections[0].grade;
+                    }
+                };
+                self.inspectionHeadline('Latest Grade: ' + self.latestGrade());
             }).fail(function() {
                 console.log( "nycinspection ajax error" );
                 self.inspectionRequestSuccess = false;
@@ -537,7 +559,14 @@ var app = app || {};
                 return phone.replace(/\D/g,'');
             }
 
-            var phone = cleanPhone(currentPlace().phone);
+            var phone = function () {
+                if (currentPlace().phone !== undefined) {
+                    return cleanPhone(currentPlace().phone);
+                } else {
+                    return 'unknown';
+                }
+            };
+
             var  consumerSecret = 'gtnzS8XUXupQ7t3yEUM-zgJeNz8';
             var  consumer_key  = '5e8aVm47PCOnFIqWNsAO3A';
             var token  =  'e9CjCBMdlA3nunOhtdN9xHkNyc_Qa329';

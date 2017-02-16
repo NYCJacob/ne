@@ -35,7 +35,6 @@
             <li class="weather-details">%</li>
         </ul>
         <span id="weather-fn">Weather by <a href="https://forecast.io">forecast.io</a></span>
-
     </header>
     <main id="main-content">
         <div id="leftHamburger" data-bind="click: closeNav">
@@ -56,6 +55,10 @@
         </section>
 
         <section id="mapDiv">
+            <div class="no-internet" data-bind="visible: noInternet"><strong>Please check your internet connection.</strong></div>
+            <div data-bind="visible:noInternet">
+                <img src="img/staticmap.png" alt="">
+            </div>
 
         </section>
         <section id="details-sidebar">
@@ -103,7 +106,8 @@
             <hr>
             <div class="photos-panel">
                 <i class="fa fa-caret-down"></i>
-                <h3>Photos</h3>
+                <h3>Photos (click to enlarge)</h3>
+                <h4 id="noPhotos" data-bind="fadeVisible: noPhotos">No Photos Returned</h4>
             </div>
             <div >
                 <div data-bind="foreach: photoUrlArray()">

@@ -203,6 +203,10 @@ header {
     }
 }
 
+.no-internet {
+    text-align: center;
+    color: red;
+}
 
 #listings {
     //border: 2px dashed $listing-color;
@@ -255,7 +259,6 @@ header {
     right: 0;
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
     overflow-x: hidden;  /* to stop horizontal scroll but also removed 0 width display of element when hidden why??  */
-
     .closebtn {
         //position: absolute;
         //top: 0;
@@ -270,7 +273,6 @@ header {
         margin: auto;
     }
 }
-
 
 footer {
     border: medium dashed $footer-color;
@@ -331,6 +333,12 @@ a:hover {
     h3 {
         display: inline;
     }
+}
+
+#noPhotos {
+  color: #FFF70D;
+  text-align: center;
+  font-weight: 100;
 }
 
 .yelp-panel {

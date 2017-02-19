@@ -12,6 +12,8 @@ var plugins = require('gulp-load-plugins')();
 var	browserSync	=	require('browser-sync');
 var htmlreplace = require('gulp-html-replace');
 var concatCss = require('gulp-concat-css');
+var cleanCSS = require('gulp-clean-css');
+
 
 // Temporary solution until gulp 4
 // https://github.com/gulpjs/gulp/issues/355
@@ -20,58 +22,7 @@ var runSequence = require('run-sequence');
 var pkg = require('./package.json');
 var dirs = pkg['h5bp-configs'].directories;
 
-// ---------------------------------------------------------------------
-// | Helper tasks                                                      |
-// ---------------------------------------------------------------------
-
-gulp.task('browserSync', function()	{
-    browserSync({
-        server:	{
-            baseDir: 'src'
-        }
-    })
-});
-
-
-gulp.task('watch', ['browserSync', 'sass'],	function(){
-    gulp.watch('src/sass/*.scss',	['sass']);
-    //	Other	watchers
-    //	Reloads	the	browser	when	a	JS	file	is	saved
-    gulp.watch('src/scripts/**/*.js',	browserSync.reload);
-});
-
-function	errorHandler(err)	{
-    //	Logs	out	error	in	the	command	line
-    console.log(err.toString());
-    //	Ends	the	current	pipe,	so	Gulp	watch	doesn't	break
-    this.emit('end');
-}
-
-function	customPlumber(errTitle)	{
-    return	plugins.plumber({
-        errorHandler:	plugins.notify.onError({
-            //	Customizing	error	title
-            title:	errTitle	||	"Error	running	Gulp",
-            message:	"Error:	<%=	error.message	%>"
-        })
-    });
-}
-
-
-gulp.task('jslint', function () {
-   return gulp.src('src/scripts/*.js')
-       .pipe(plugins.jshint())
-       .pipe(plugins.jshint.reporter('jshint-stylish'))
-});
-
-
-gulp.task('minJS', function () {
-    // returns a Node.js stream, but no handling of error messages
-    return gulp.src('src/*.js')
-        .pipe(uglify())
-        .pipe(gulp.dest('dist'));
-});
-
+// css tasks  ******************************************
 gulp.task('lint:sass',	function()	{
     return	gulp.src('src/sass/*.scss')
         .pipe(plugins.sassLint({
@@ -106,12 +57,27 @@ gulp.task('concatCss', function () {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('min-css', function() {
+    return gulp.src('src/css/*.css')
+        .pipe(concatCss("css/styles.min.css"))
+        .pipe(cleanCSS({compatibility: 'ie8'}))
+        .pipe(gulp.dest('dist/css'));
+});
 
-gulp.task('images',	function()	{
-    return	gulp.src('src/img/**/*.+(png|jpg|jpeg|gif|svg)')
-        .pipe(plugins.newer('dist/images'))
-        .pipe(plugins.imagemin())
-        .pipe(gulp.dest('dist/img'))
+
+// html tasks
+gulp.task('replace-min:html', function () {
+    return gulp.src('src/*.html')
+        .pipe(htmlreplace({
+            'css' : 'css/styles.min.css',
+            'js': ['scripts/app.min.js', 'scripts/vendor/vendor.min.js']
+        }))
+        .pipe(plugins.htmlmin({
+            collapseWhitespace: true,
+            removeComments: true,
+            removeEmptyAttributes: true
+        }))
+        .pipe(gulp.dest('dist'))
 });
 
 gulp.task('minHTML', function() {
@@ -124,15 +90,43 @@ gulp.task('minHTML', function() {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('replace', function () {
-    return gulp.src('src/*.html')
-        .pipe(htmlreplace({
-            'css' : 'css/styles.css',
-            'js': ['scripts/app.js', 'scripts/vendor/vendor.js']
-        }))
-        .pipe(gulp.dest('dist'))
+
+// js tasks  ***********************************//
+gulp.task('jslint', function () {
+    return gulp.src('src/scripts/*.js')
+        .pipe(plugins.jshint())
+        .pipe(plugins.jshint.reporter('jshint-stylish'))
 });
 
+gulp.task('concat-min:js', function() {
+    return gulp.src('./src/scripts/*.js')
+        .pipe(plugins.concat('app.min.js'))
+        .pipe(plugins.uglify())
+        .pipe(gulp.dest('./dist/scripts'));
+});
+
+gulp.task('concat-min:vendor', function() {
+    return gulp.src('./src/scripts/vendor/**/*.js')
+        .pipe(plugins.concat('vendor.min.js'))
+        .pipe(plugins.uglify())
+        .pipe(gulp.dest('./dist/scripts/vendor'));
+});
+
+gulp.task('min:JS', function () {
+    // returns a Node.js stream, but no handling of error messages
+    return gulp.src('src/scripts/*.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('dist'));
+});
+
+
+// utility tasks   *******************************************
+gulp.task('images',	function()	{
+    return	gulp.src('src/img/**/*.+(png|jpg|jpeg|gif|svg)')
+        .pipe(plugins.newer('dist/images'))
+        .pipe(plugins.imagemin())
+        .pipe(gulp.dest('dist/img'))
+});
 
 gulp.task('clean', function (done) {
     require('del')([
@@ -143,14 +137,42 @@ gulp.task('clean', function (done) {
     });
 });
 
-gulp.task('concant:js', function() {
-    return gulp.src('./src/scripts/*.js')
-        .pipe(plugins.concat('app.js'))
-        .pipe(gulp.dest('./dist/scripts'));
+
+gulp.task('watch', ['browserSync', 'sass'],	function(){
+    gulp.watch('src/sass/*.scss',	['sass']);
+    //	Other	watchers
+    //	Reloads	the	browser	when	a	JS	file	is	saved
+    gulp.watch('src/scripts/**/*.js',	browserSync.reload);
 });
 
-gulp.task('concant:vendor', function() {
-    return gulp.src('./src/scripts/vendor/**/*.js')
-        .pipe(plugins.concat('vendor.js'))
-        .pipe(gulp.dest('./dist/scripts/vendor'));
+function	errorHandler(err)	{
+    //	Logs	out	error	in	the	command	line
+    console.log(err.toString());
+    //	Ends	the	current	pipe,	so	Gulp	watch	doesn't	break
+    this.emit('end');
+}
+
+function	customPlumber(errTitle)	{
+    return	plugins.plumber({
+        errorHandler:	plugins.notify.onError({
+            //	Customizing	error	title
+            title:	errTitle	||	"Error	running	Gulp",
+            message:	"Error:	<%=	error.message	%>"
+        })
+    });
+}
+
+gulp.task('browserSync', function()	{
+    browserSync({
+        server:	{
+            baseDir: 'src'
+        }
+    })
+});
+
+
+gulp.task('build', function (done) {
+    runSequence(
+        'clean', 'min-css', 'replace-min:html', 'concat-min:vendor', 'concat-min:js',
+        done);
 });

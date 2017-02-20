@@ -179,6 +179,6 @@ gulp.task('copy', function () {
 
 gulp.task('build', function (done) {
     runSequence(
-        'clean', 'min-css', 'concat-min:vendor', 'concat-min:js', 'replace-min:html',
+        'clean', 'min-css', 'concat-min:vendor', 'concat-min:js', 'replace-min:html', 'copy',
         done);
 });

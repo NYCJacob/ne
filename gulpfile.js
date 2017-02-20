@@ -58,10 +58,10 @@ gulp.task('concatCss', function () {
 });
 
 gulp.task('min-css', function() {
-    return gulp.src('src/css/*.css')
+    return gulp.src('src/css/*.css', {base: 'src'})
         .pipe(concatCss("css/styles.min.css"))
         .pipe(cleanCSS({compatibility: 'ie8'}))
-        .pipe(gulp.dest('dist/css'));
+        .pipe(gulp.dest('dist'));
 });
 
 
@@ -70,7 +70,7 @@ gulp.task('replace-min:html', function () {
     return gulp.src('src/*.html')
         .pipe(htmlreplace({
             'css' : 'css/styles.min.css',
-            'js': ['scripts/app.min.js', 'scripts/vendor/vendor.min.js']
+            'js': [ 'scripts/vendor/vendor.min.js','scripts/app.min.js']
         }))
         .pipe(plugins.htmlmin({
             collapseWhitespace: true,
@@ -170,9 +170,15 @@ gulp.task('browserSync', function()	{
     })
 });
 
+gulp.task('copy', function () {
+    return gulp.src(['src/font-awesome-4.7.0/**/*', 'src/img/**/*'], {
+        base: 'src'
+    }).pipe(gulp.dest('dist'));
+});
+
 
 gulp.task('build', function (done) {
     runSequence(
-        'clean', 'min-css', 'replace-min:html', 'concat-min:vendor', 'concat-min:js',
+        'clean', 'min-css', 'concat-min:vendor', 'concat-min:js', 'replace-min:html',
         done);
 });

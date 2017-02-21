@@ -70,7 +70,9 @@ gulp.task('replace-min:html', function () {
     return gulp.src('src/*.html')
         .pipe(htmlreplace({
             'css' : 'css/styles.min.css',
-            'js': [ 'scripts/vendor/vendor.min.js','scripts/app.min.js']
+            'js': [ 'scripts/vendor/vendor.min.js',
+                    'https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js',
+                    'scripts/app.min.js']
         }))
         .pipe(plugins.htmlmin({
             collapseWhitespace: true,
@@ -105,8 +107,8 @@ gulp.task('concat-min:js', function() {
         .pipe(gulp.dest('./dist/scripts'));
 });
 
-gulp.task('concat-min:vendor', function() {
-    return gulp.src('./src/scripts/vendor/**/*.js')
+gulp.task('concat-min:vendor', function() {  // need to exclude knockout because undefined error when concat ko inot vendor
+    return gulp.src(['./src/scripts/vendor/**/*.js', '!./src/scripts/vendor/knockout/**/*.js'])
         .pipe(plugins.concat('vendor.min.js'))
         .pipe(plugins.uglify())
         .pipe(gulp.dest('./dist/scripts/vendor'));

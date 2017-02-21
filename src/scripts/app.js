@@ -25,6 +25,9 @@ var app = app || {};
     // used to track highlight for reset on next click
     app.currentHighlight = null;
 
+/*
+*   initMap is a callback in the google map api call in index.html that starts the map
+*/
     app.initMap = function() {
         var styles = [
             {
@@ -115,6 +118,10 @@ var app = app || {};
 
     // based on google map place search api example
     // https://developers.google.com/maps/documentation/javascript/examples/place-search
+    /*getPlacesData is called from the initMap function
+    * it executed a google places nearbySearch that obtains the
+    * restaurant array data via the callback function
+    * */
     function getPlacesData(){
         app.service = new google.maps.places.PlacesService(app.map);
         app.service.nearbySearch({
@@ -124,6 +131,9 @@ var app = app || {};
         }, callback);
     }
 
+    /*callback function is called from getPlacesData
+    * it executes a google places search
+    */
     function callback(results, status) {
         if (status=== google.maps.places.PlacesServiceStatus.OK) {
             app.RestaurantArray = results.map(function (item) {
@@ -141,7 +151,10 @@ var app = app || {};
             console.log("place service status error");
         }
     }  // end callback
-
+    /*
+    *  googleDetails executes a google details search to get information not returned
+    *  by nearbySearch
+    */
     function googleDetails(restaurant) {
         var serviceDetails =  new google.maps.places.PlacesService(app.map);
         var request = { placeId: restaurant.placeId };

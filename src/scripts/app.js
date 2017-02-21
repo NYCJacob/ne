@@ -333,6 +333,9 @@ var app = app || {};
         self.restaurants = ko.observableArray(mappedArray);
         // used to tell viewModel what to display
         self.currentPlace = ko.observable(null);
+        self.showSlides = ko.observable(false);
+        self.noPhotos = ko.observable(false);
+        self.showPhotos = ko.observable(true);
 
         // array of google place photos
         self.placePhotos = ko.observableArray([]);
@@ -346,13 +349,11 @@ var app = app || {};
                 return urlArray;
             } else {
                 self.noPhotos(true);
+                self.showPhotos(false);
                 return [];
             }
         };
-        self.showSlides = ko.observable(false);
-        self.noPhotos = ko.observable(false);
 
-        // todo unify url functions passing arg for size
         self.slideUrlArray = function () {
             if (self.noPhotos() === false) {
                 var slidesArray = [];
@@ -418,6 +419,9 @@ var app = app || {};
 
         // method called when either list or marker clicked
         self.octoHighlighter = function (clickedPlace) {
+            // reset photo toggles to clear prior click events
+            self.showPhotos(true);
+            self.noPhotos(false);
             if (self.currentPlace() !== null) {
                 self.currentPlace().mapMarker.setIcon(self.currentPlace().mapIconNormal);
                 // clear details sidebarhtml

@@ -113,7 +113,7 @@
                 <h3>Photos (click to enlarge)</h3>
                 <h4 id="noPhotos" data-bind="fadeVisible: noPhotos">No Photos Returned</h4>
             </div>
-            <div >
+            <div data-bind="fadeVisible: showPhotos">
                 <div data-bind="foreach: photoUrlArray()">
                     <img alt="" data-bind="attr: {src: $data}, click: $parent.toggleSlides">
                 </div>

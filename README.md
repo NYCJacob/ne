@@ -26,7 +26,8 @@ to minify the vendor files while I continue investigating the issue
 unicode is used in the weather header.
 - further details could be provided when right sidebar details are clicked.  
 For example, lots of NYC inspection data is being recieved but not displayed.
-- No link to go to Yelp.com
+- Yelp api seems to be having issues as reported by many students on the discussions boards.
+The yelp request was working until mid-January 2017.
 
 
 **Acknowledgments**

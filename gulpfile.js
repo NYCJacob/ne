@@ -70,9 +70,7 @@ gulp.task('replace-min:html', function () {
     return gulp.src('src/*.html')
         .pipe(htmlreplace({
             'css' : 'css/styles.min.css',
-            'js': [ 'scripts/vendor/vendor.min.js',
-                    'https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js',
-                    'scripts/app.min.js']
+            'js': 'scripts/app.min.js'
         }))
         .pipe(plugins.htmlmin({
             collapseWhitespace: true,
@@ -172,8 +170,10 @@ gulp.task('browserSync', function()	{
     })
 });
 
+// todo: resolve this minified issue
+// vendor js files copied instead of minified because of undefined errors on module.exports when minified
 gulp.task('copy', function () {
-    return gulp.src(['src/font-awesome-4.7.0/**/*', 'src/img/**/*'], {
+    return gulp.src(['src/font-awesome-4.7.0/**/*', 'src/img/**/*', 'src/scripts/vendor/**/*.js'], {
         base: 'src'
     }).pipe(gulp.dest('dist'));
 });
@@ -181,6 +181,6 @@ gulp.task('copy', function () {
 
 gulp.task('build', function (done) {
     runSequence(
-        'clean', 'min-css', 'concat-min:vendor', 'concat-min:js', 'replace-min:html', 'copy',
+        'clean', 'min-css', 'concat-min:js', 'replace-min:html', 'copy',
         done);
 });

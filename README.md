@@ -15,7 +15,19 @@ displayed in the header and list of restaurants in a left sidebar.
     - right side bar slides out displaying further details from Google, NYC Socrata data, and Yelp
     - the left sidebar list goes off-screen when details location is clicked and returns
     when the details sidebar is closed.
+-  Would like to integrate a restaurant menu api but could not find one with good coverage for NYC.
 - Admittedly the site could use some better visual design.
+
+**Known issues**
+- During the build process constant undefined errors occurred when minifying and 
+concating js files.  Issue probably is Jquery and/or Knockout.  For now I decided not
+to minify the vendor files while I continue investigating the issue
+- Gulp HTML minifier removed white space used in weather header.  Therefore whitespace
+unicode is used in the weather header.
+- further details could be provided when right sidebar details are clicked.  
+For example, lots of NYC inspection data is being recieved but not displayed.
+- No link to go to Yelp.com
+
 
 **Acknowledgments**
 - As always much help was found on Stackoverflow and Udacity discussion forums.
@@ -25,4 +37,4 @@ displayed in the header and list of restaurants in a left sidebar.
 - Udacity/Google maps course example code
 - https://forecast.ion  weather data api
 - https://data.cityofnewyork.us/
--
+- https://www.yelp.com/

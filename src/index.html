@@ -24,14 +24,17 @@
 <div id="container">
     <header id="weather">
         <ul>
+            <!--white space will be removed when minified => &#32;-->
             <li>Jackson Heights Restaurants</li>
             <li class="weather-summary"><img class="weather-icon" data-bind="attr: {src: weatherImg}"></li>
             <li class="weather-summary" data-bind="text: summary"></li>
+            <li>&#32;</li>
             <li> <span class="weather-summary" data-bind="text:temp"></span><span>˚</span></li>
-            <li class="weather-details">Feels like </li>
+            <li class="weather-details">Feels like&#32;</li>
             <li class="weather-details" data-bind="text:tempFeel"></li>
             <li class="weather-details">˚</li>
-            <li class="weather-details">Rain? </li>
+            <li>&#32;</li>
+            <li class="weather-details">Rain?&#32;</li>
             <li class="weather-details" data-bind="text:rainProb"></li>
             <li class="weather-details">%</li>
         </ul>
@@ -146,12 +149,12 @@
     </main>
 </div>
 
-<!-- build:js -->
 <script src="scripts/vendor/jquery/dist/jquery.js"></script>
 <script>window.jQuery || document.write('<script src="scripts/vendor/jquery/dist/jquery.js"><\/script>')</script>
 <script src="scripts/plugins.js"></script>
 <script src="scripts/vendor/knockout/dist/knockout.js"></script>
 <script src="scripts/vendor/oauth-signature/dist/oauth-signature.js"></script>
+<!-- build:js -->
 <script src="scripts/app.js"></script>
 <script async defer src="scripts/weather.js"></script>
 <!-- endbuild -->

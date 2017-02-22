@@ -89,7 +89,7 @@
             </div>
             <hr>
             <div class="inspections-panel" data-bind="click: toggleInspections">
-                <h3>Health Inspections</h3>
+                <h3>New York Dept. of Health Inspections</h3>
                 <a class="inspectionsHead" data-bind="text: inspectionHeadline"></a>
                 <span class="fa fa-caret-down"  data-bind="visible: inspectionRequestSuccess"></span>
                 <span data-bind="visible: inspectionRequestSuccess">Click for more</span>
@@ -109,11 +109,12 @@
             </div>
             <hr>
             <div class="photos-panel">
-                <i class="fa fa-caret-down"></i>
-                <h3>Photos (click to enlarge)</h3>
+                <i class="fa fa-caret-down" data-bind="click: togglePhotos"></i>
+                <h3 data-bind="click: togglePhotos">Photos</h3>
                 <h4 id="noPhotos" data-bind="fadeVisible: noPhotos">No Photos Returned</h4>
             </div>
             <div data-bind="fadeVisible: showPhotos">
+                <span>Click photo to enlarge</span>
                 <div data-bind="foreach: photoUrlArray()">
                     <img alt="" data-bind="attr: {src: $data}, click: $parent.toggleSlides">
                 </div>
@@ -128,10 +129,9 @@
 
             <hr>
             <div class="yelp-panel">
-                <h3>Yelp Reviews</h3>
+                <i class="fa fa-caret-down" data-bind="visible: yelpRequestSuccess, click: toggleYelp"></i>
+                <h3 data-bind="click: toggleYelp">Yelp Reviews</h3>
                 <a class="yelpHead" data-bind="text: yelpHeadline"></a>
-                <span class="fa fa-caret-down" data-bind="visible: yelpRequestSuccess, click: toggleYelp"></span>
-                <span data-bind="visible: yelpRequestSuccess, click: toggleYelp">Click for more</span>
             </div>
             <div data-bind="visible: showYelp, with: currentPlace">
                 <table>

@@ -343,6 +343,10 @@ a:hover {
 
 .yelp-panel {
     @extend .reviews-panel;
+
+    h3 {
+        display: inline;
+    }
 }
 
 .slide-left {

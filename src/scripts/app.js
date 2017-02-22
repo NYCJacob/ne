@@ -335,7 +335,14 @@ var app = app || {};
         self.currentPlace = ko.observable(null);
         self.showSlides = ko.observable(false);
         self.noPhotos = ko.observable(false);
-        self.showPhotos = ko.observable(true);
+        self.showPhotos = ko.observable(false);
+        self.togglePhotos = function () {
+            if ( self.showPhotos() === false ) {
+                self.showPhotos(true);
+            } else {
+                self.showPhotos(false);
+            }
+        };
 
         // array of google place photos
         self.placePhotos = ko.observableArray([]);
@@ -420,7 +427,7 @@ var app = app || {};
         // method called when either list or marker clicked
         self.octoHighlighter = function (clickedPlace) {
             // reset photo toggles to clear prior click events
-            self.showPhotos(true);
+            self.showPhotos(false);
             self.noPhotos(false);
             if (self.currentPlace() !== null) {
                 self.currentPlace().mapMarker.setIcon(self.currentPlace().mapIconNormal);
@@ -446,7 +453,12 @@ var app = app || {};
             self.reviewHeadline( self.currentPlace().name + ' has ' + self.reviewTotal() + ' reviews from Google.');
             // api calls
             self.getNYCinspections(self.currentPlace);
-            self.getYelp(self.currentPlace);
+            if (self.currentPlace().phone !== undefined) {
+                self.getYelp(self.currentPlace);
+            } else {
+                self.yelpHeadline(self.currentPlace().name   + ' has insufficient data to perform Yelp search.');
+            }
+
             self.showDetailsSidebar();
             // app.map.setCenter(self.currentPlace().getLatLn());
             app.map.panTo(app.neighborhood);
@@ -580,7 +592,7 @@ var app = app || {};
                 if (currentPlace().phone !== undefined) {
                     return cleanPhone(currentPlace().phone);
                 } else {
-                    return 'unknown';
+                    return -1;
                 }
             };
 

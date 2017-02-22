@@ -589,10 +589,10 @@ var app = app || {};
             var token  =  'e9CjCBMdlA3nunOhtdN9xHkNyc_Qa329';
             var tokenSecret  = 'z9vc2A_2yoIUYqe34Z3hKZlddYI';
             var httpMethod = 'GET';
-            var yelpUrl = 'https://api.yelp.com/v2/phone_search?phone=' + phone;
+            var yelpUrl = 'https://api.yelp.com/v2/phone_search?phone=' + phone();
 
             var yelpParams = {
-                phone: phone,
+                phone: phone(),
                 oauth_consumer_key: consumer_key,
                 oauth_token: token,
                 oauth_nonce: nonce_generate(),
@@ -620,9 +620,9 @@ var app = app || {};
                                 cleanYelpResults = business;
                             }
                         });
-                        self.currentPlace().yelpResults(cleanYelpResults.businesses[0]);  // assuming there is only one obj in array
-                    } else {
-                        self.currentPlace().yelpResults(results.businesses[0]);  // assuming there is only one obj in array
+                        self.currentPlace().yelpResults(cleanYelpResults);  // business with exact name
+                    } else {  // assuming there is only one obj in array or no exact match use first
+                        self.currentPlace().yelpResults(results.businesses[0]);
                     }
                     self.yelpHeadline("Yelp has " +  self.currentPlace().yelpResults().review_count + " reviews.");
                 },

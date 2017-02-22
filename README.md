@@ -31,11 +31,13 @@ The yelp request was working until mid-January 2017.
 
 
 **Acknowledgments**
+- http://knockmeout.net
 - As always much help was found on Stackoverflow and Udacity discussion forums.
 - http://jsfiddle.net/SittingFox/nr8tr5oo/  for showing single infoWindow + ko template
 - https://zellwk.com/books/  Gulp book was great to up my Gulp skills
 - HTML5 boilerplate - I removed a lot of the code but didn't want to go the Bootstrap route
 - Udacity/Google maps course example code
-- https://forecast.ion  weather data api
-- https://data.cityofnewyork.us/
+- https://forecast.ion  easy to use unique weather data api
+- https://data.cityofnewyork.us/  
 - https://www.yelp.com/
+- search box styling https://webdesign.tutsplus.com/tutorials/css-experiments-with-a-search-form-input-and-button--cms-22069

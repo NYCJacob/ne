@@ -47,7 +47,10 @@
             </svg>
         </div>
         <section id="listings">
-            <input placeholder="Search…" type="search" data-bind="textInput: searchTerm, event: {keyup: filteredItems }" >
+            <div class="search-container">
+                <span class="icon"><i class="fa fa-search"></i></span>
+                <input id="search" placeholder="Search…" type="search" data-bind="textInput: searchTerm, event: {keyup: filteredItems }" >
+            </div>
 
             <div id="filtered-list-container" >
                 <ul data-bind="foreach: filteredItems">
@@ -149,11 +152,11 @@
     </main>
 </div>
 
-<script src="scripts/vendor/jquery/dist/jquery.js"></script>
-<script>window.jQuery || document.write('<script src="scripts/vendor/jquery/dist/jquery.js"><\/script>')</script>
-<script src="scripts/plugins.js"></script>
-<script src="scripts/vendor/knockout/dist/knockout.js"></script>
-<script src="scripts/vendor/oauth-signature/dist/oauth-signature.js"></script>
+<!--<script src="scripts/vendor/jquery/dist/jquery.min.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<!--<script src="scripts/vendor/knockout/dist/knockout.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
+<script src="scripts/vendor/oauth-signature/dist/oauth-signature.min.js"></script>
 <!-- build:js -->
 <script src="scripts/app.js"></script>
 <script async defer src="scripts/weather.js"></script>

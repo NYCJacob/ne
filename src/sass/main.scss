@@ -27,18 +27,6 @@ html {
     text-shadow: none;
 }
 
-/*
- * A better looking default horizontal rule
- */
-
-hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
-    padding: 0;
-}
 
 /*
  * Remove the gap between audio, canvas, iframes,
@@ -249,7 +237,7 @@ header {
 
 #details-sidebar {
     //border: 2px dashed $listing-color;
-    background-color: $blue-color;
+    background-color: $info-panel-background;
     float: right;
     width: 0; /* 0 width - change this with JavaScript */
     height: $content-height;
@@ -271,6 +259,13 @@ header {
         box-sizing: border-box;
         margin: auto;
     }
+
+    li {
+        font-size: 1.75vh !important;
+    }
+}
+#close-details {
+    cursor: pointer;
 }
 
 footer {
@@ -318,11 +313,11 @@ a:hover {
 }
 
 .search-container input#search{
-    background: #0000ff;
+    background: $blue-color;
     border: solid black;
     font-size: 2.5vh;
     float: left;
-    color: #000000;
+    color: #fff70d;
     padding-left: 45px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -332,17 +327,20 @@ a:hover {
 .search-container .icon{
   position: absolute;
   top: 50%;
-  margin-left: 1vw;
+  margin-left: 1.5vw;
+  margin-top: 5px;
   z-index: 1;
   color: #fbfe00;
 }
 
 .reviews-panel {
     background-color: $info-panel-background;
+    cursor: pointer;
 
     h3 {
         margin: 5px 0;
         text-decoration: underline;
+        display: inline;
     }
     a {
         font-size: small;
@@ -355,24 +353,16 @@ a:hover {
 
 .photos-panel {
     @extend .reviews-panel;
+}
 
-    h3 {
-        display: inline;
-    }
+.yelp-panel {
+    @extend .reviews-panel;
 }
 
 #noPhotos {
   color: #FFF70D;
   text-align: center;
   font-weight: 100;
-}
-
-.yelp-panel {
-    @extend .reviews-panel;
-
-    h3 {
-        display: inline;
-    }
 }
 
 .slide-left {

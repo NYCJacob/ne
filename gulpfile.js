@@ -13,7 +13,7 @@ var	browserSync	=	require('browser-sync');
 var htmlreplace = require('gulp-html-replace');
 var concatCss = require('gulp-concat-css');
 var cleanCSS = require('gulp-clean-css');
-
+var serve = require('gulp-serve');
 
 // Temporary solution until gulp 4
 // https://github.com/gulpjs/gulp/issues/355
@@ -178,6 +178,8 @@ gulp.task('copy', function () {
     }).pipe(gulp.dest('dist'));
 });
 
+gulp.task('serve:dist', serve('dist'));
+gulp.task('serve:src', serve('src'));
 
 gulp.task('build', function (done) {
     runSequence(

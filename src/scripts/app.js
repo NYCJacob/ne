@@ -397,6 +397,7 @@ var app = app || {};
         self.reviewHeadline = ko.observable();
         self.showReviews = ko.observable(false);
         self.inspectionHeadline = ko.observable();
+        self.photosHeadline = ko.observable();
         self.showInspections = ko.observable(false);
         // toggle visibility of addition info html if ajax success
         self.inspectionRequestSuccess = ko.observable(false);
@@ -506,6 +507,9 @@ var app = app || {};
         self.toggleInspections = function () {
             if ( self.showInspections() === false ) {
                 self.showInspections(true);
+                if (self.showReviews() === true) {
+                    self.showReviews(false);
+                }
             } else {
                 self.showInspections(false);
             }

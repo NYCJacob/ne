@@ -22,7 +22,11 @@
                     displayIcon(weather.getIcon());
                     ko.applyBindings(weather, document.getElementById('weather'));
                 },
-                error : function () {console.log('ajax request failed.');}
+                error : function () {
+                    console.log('ajax request failed.');
+                    var header = document.getElementById('weather');
+                    header.innerHTML = 'Sorry no weather data, please check your internet connection.'
+                }
             });
 
 

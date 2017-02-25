@@ -25,7 +25,7 @@
                 error : function () {
                     console.log('ajax request failed.');
                     var header = document.getElementById('weather');
-                    header.innerHTML = 'Sorry no weather data, please check your internet connection.'
+                    header.innerHTML = 'Sorry no weather data, please check your internet connection.';
                 }
             });
 
@@ -39,10 +39,10 @@
             };
             this.rainProb =  ko.observable(data.currently.precipProbability);
             this.temp =  ko.computed(function () {
-                return Math.round(data.currently.temperature)
+                return Math.round(data.currently.temperature);
             } );
             this.tempFeel =  ko.computed(function () {
-                return Math.round(data.currently.apparentTemperature)
+                return Math.round(data.currently.apparentTemperature);
             } );
             this.dailySummary =  ko.observable(data.daily.summary);
             // this.weatherImg = ko.computed(displayIcon(this.icon)).extend({ deferred: true });

@@ -19,7 +19,6 @@ var app = app || {};
     };
     // google place search global because needed for google's getDetails method
     app.service;
-    var infowindow;
     app.inspectionsArray = [];
     app.RestaurantArray= [];
     // used to track highlight for reset on next click
@@ -160,7 +159,7 @@ var app = app || {};
         var request = { placeId: restaurant.placeId };
         serviceDetails.getDetails(request, callback);
         function callback(details, status){
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
                 // console.log('Details received ' + details);
                 // need to send details to the restaurant object
                 restaurant.addDetails(details);
@@ -196,9 +195,9 @@ var app = app || {};
         });
 
         google.maps.event.addListener(place.mapMarker, 'click', function () {
-            console.log('mapMarker clicked');
+            // console.log('mapMarker clicked');
             app.vm.octoHighlighter(place);
-        })
+        });
 
     } // end create marker
 
@@ -220,10 +219,6 @@ var app = app || {};
         // details search geometry object includes
         // location object and viewport object
         this.geometry = restaurantObj.geometry;
-        this.getLatLn = function () {
-            var latln = this.geometry.location;
-          return latln;
-        };
         this.address_formatted = '';
         this.address_components = restaurantObj.address_components;
         this.phone = restaurantObj.formatted_phone_number;
@@ -239,10 +234,6 @@ var app = app || {};
         this.vicinity = restaurantObj.vicinity;
         this.mapIcon = this.mapIconNormal;
         this.mapMarker = '';
-        this.getName = function () {
-            return this.name;
-        };
-
         this.inspectionResults = ko.observableArray();
         // method to process details data into object
         this.addDetails = function(details){
@@ -288,19 +279,14 @@ var app = app || {};
             switch (place.priceLevel) {
                 case 1:
                     return '$';
-                    break;
                 case 2:
                     return '$$';
-                    break;
                 case 3:
                     return '$$$';
-                    break;
                 case 4:
                     return '$$$$';
-                    break;
                 case 5:
                     return '$$$$$';
-                    break;
                 default:
                     return 'unknown';
             }
@@ -351,7 +337,7 @@ var app = app || {};
             if (self.placePhotos() !== undefined) {
                 var urlArray = [];
                 ko.utils.arrayForEach(self.placePhotos(), function (photo) {
-                    urlArray.push(photo.getUrl({'maxHeight': 50, 'maxWidth': 50}))
+                    urlArray.push(photo.getUrl({'maxHeight': 50, 'maxWidth': 50}));
                 });
                 return urlArray;
             } else {
@@ -368,7 +354,7 @@ var app = app || {};
                 var detailsSidebarWidth =  $('#details-sidebar').innerWidth();
                 var detailsSidebarHeight =  $('#details-sidebar').innerHeight();
                 ko.utils.arrayForEach(self.placePhotos(), function (photo) {   //url object must be integer
-                    slidesArray.push(photo.getUrl({'maxHeight': Math.floor(detailsSidebarWidth * .75), 'maxWidth': Math.floor(detailsSidebarHeight * .25)}));
+                    slidesArray.push(photo.getUrl({'maxHeight': Math.floor(detailsSidebarWidth * 0.75), 'maxWidth': Math.floor(detailsSidebarHeight * 0.25)}));
                 });
                 return slidesArray;
             } else {
@@ -382,8 +368,8 @@ var app = app || {};
         self.slideShow = function (n) {
             var i;
             var x = document.getElementsByClassName("mySlides");
-            if (n > x.length) {self.slideIndex = 1}
-            if (n < 1) {self.slideIndex = x.length}
+            if (n > x.length) {self.slideIndex = 1;}
+            if (n < 1) {self.slideIndex = x.length;}
             for (i = 0; i < x.length; i++) {
                 x[i].style.display = "none";
             }
@@ -516,7 +502,7 @@ var app = app || {};
         };
 
         self.toggleYelp = function () {
-            if ( self.showYelp() == false ) {
+            if ( self.showYelp() === false ) {
                 self.showYelp(true);
             } else {
                 self.showYelp(false);
@@ -560,7 +546,7 @@ var app = app || {};
                     }
                 });
                 // sort inspections by date most recent first
-                gradedInspections.sort(function(a,b){return b.grade_date - a.grade_date});
+                gradedInspections.sort(function(a,b){return b.grade_date - a.grade_date;});
                 self.currentPlace().inspectionResults(gradedInspections);
                 self.latestGrade = function () {
                     if ( gradedInspections === undefined || gradedInspections.length === 0) {
@@ -646,7 +632,7 @@ var app = app || {};
                     // Do stuff on fail
                     console.log('yelp error' , error);
                     self.yelpRequestSuccess(false);
-                    self.yelpHeadline("There was an error, please try again later.")
+                    self.yelpHeadline("There was an error, please try again later.");
                 }
             };
             // Send AJAX query passing settings object

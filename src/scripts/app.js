@@ -27,6 +27,15 @@ var app = app || {};
 /*
 *   initMap is a callback in the google map api call in index.html that starts the map
 */
+    app.googleErr = function () {
+        console.log("googleErr hit");
+        var listings = document.getElementById('listings');
+        var errMsg = document.createElement('h3');
+        errMsg.innerHTML= "There is a problem with Google Maps, please check your internet connection";
+        errMsg.style.color = 'red';
+        listings.append(errMsg);
+    };
+
     app.initMap = function() {
         var styles = [
             {

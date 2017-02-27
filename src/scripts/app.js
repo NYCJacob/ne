@@ -436,7 +436,9 @@ var app = app || {};
             // make clicked place the current place
             self.currentPlace(clickedPlace);
             // array of google place photos to placePhotos ko observableArray
-            self.placePhotos(clickedPlace.photos);
+            if ( self.currentPlace().photos  !== undefined ) {
+                self.placePhotos(self.currentPlace().photos);
+            }
             self.reviewTotal = function () {    // avoids undefined error if no reviews
                 var reviewAmt;
                 if (self.currentPlace().reviews === undefined || self.currentPlace().reviews === 0) {
@@ -532,7 +534,7 @@ var app = app || {};
                 }
             }).done(function (data) {
                 // data is an array of objections returned from api
-                console.log('nyc ajax done: ' + data);
+                // console.log('nyc ajax done: ' + data);
                 // check if there are results returned (sometimes ajax success returns no data)
                 // this technique from SO http://stackoverflow.com/questions/23851337/check-if-ajax-response-data-is-empty-blank-null-undefined-0#23855590
                 if (!$.trim(data)) {

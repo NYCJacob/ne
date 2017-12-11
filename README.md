@@ -6,6 +6,9 @@ to other neighborhoods by allowing the user to input a location.  However, only 
 system as far as I know.  Foursquare api request feature has been started and will be added soon. Foursquare has
 access to menus which I would like to show but the menu data is complicated.
 
+** Demo **
+Demo available at http://www.jbsherman.com/projects/nycrestaurantinspector/
+
 **INSTALLING APP**
 - You **must** run bower install to install dependencies
 - gulp serve:src starts server root ./src port 300 then open index.html in src folder
